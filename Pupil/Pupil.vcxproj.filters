@@ -1,27 +1,75 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="源文件">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="platform">
+      <UniqueIdentifier>{4A63C33C-3630-1E48-5F49-0CF04B7553D6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="platform\Windows">
+      <UniqueIdentifier>{84B77CA1-70B0-9BF3-99E2-8078853A7BFF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="资源文件">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="pupil">
+      <UniqueIdentifier>{4FCB2B10-BBDF-53C1-8461-F720F03450F2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pupil\Events">
+      <UniqueIdentifier>{53C85FB9-3F2B-EF5D-E8B0-2714D4F2BAE0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Test.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="src\Pupil.h" />
+    <ClInclude Include="src\platform\Windows\WindowsWindow.h">
+      <Filter>platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pppch.h" />
+    <ClInclude Include="src\pupil\Application.h">
+      <Filter>pupil</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pupil\Core.h">
+      <Filter>pupil</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pupil\EntryPoint.h">
+      <Filter>pupil</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pupil\Events\ApplicationEvent.h">
+      <Filter>pupil\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pupil\Events\Event.h">
+      <Filter>pupil\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pupil\Events\KeyEvent.h">
+      <Filter>pupil\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pupil\Events\MouseEvent.h">
+      <Filter>pupil\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pupil\Layer.h">
+      <Filter>pupil</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pupil\LayerStack.h">
+      <Filter>pupil</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pupil\Log.h">
+      <Filter>pupil</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pupil\Window.h">
+      <Filter>pupil</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Test.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="src\platform\Windows\WindowsWindow.cpp">
+      <Filter>platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pppch.cpp" />
+    <ClCompile Include="src\pupil\Application.cpp">
+      <Filter>pupil</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pupil\Layer.cpp">
+      <Filter>pupil</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pupil\LayerStack.cpp">
+      <Filter>pupil</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pupil\Log.cpp">
+      <Filter>pupil</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
