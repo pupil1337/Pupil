@@ -7,7 +7,7 @@ Entry Point
 Logging(spdlog)  
     ↓  
 Event System  
-    ↓  
+  ↓  
 Window Abstraction and GLFW  
     ↓  
 Window Events  
