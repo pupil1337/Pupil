@@ -62,7 +62,6 @@
 #endif
 
 #include "pppch.h"
-#include "imgui.h"
 #include "ImGuiOpenGLRender.h"
 #include "glad/glad.h"
 #if defined(_MSC_VER) && _MSC_VER <= 1500 // MSVC 2008 or earlier
@@ -74,7 +73,6 @@
 #include "TargetConditionals.h"
 #endif
 
-#include"glad/glad.h"
 #include"GLFW/glfw3.h"
 
 

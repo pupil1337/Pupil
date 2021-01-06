@@ -9,7 +9,7 @@ namespace Pupil {
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
-		KeyPressed, KeyReleased,
+		KeyPressed, KeyReleased, KeyTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
@@ -53,10 +53,9 @@ namespace Pupil {
 		: m_Event(event) { }
 
 		template<typename T>
-		bool Dispatch(EventFn<T> func) {
+		void Dispatch(EventFn<T> func) {
 			if (m_Event.GetEventType() == T::GetStaticType()) {
 				m_Event.m_Handled = func(*(T*)&m_Event);
-				return true;
 			}
 		}
 

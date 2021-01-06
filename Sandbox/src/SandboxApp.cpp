@@ -8,7 +8,7 @@ public:
 	}
 
 	void OnUpdate() override {
-		PP_INFO("ExampleLayer::Update");
+		//PP_INFO("ExampleLayer::Update");
 	}
 
 	void OnEvent(Pupil::Event& event) override {

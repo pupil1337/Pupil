@@ -5,9 +5,9 @@
 
 namespace Pupil {
 
-	class PP_API WindowResizeEvent : public Event {
+	class PP_API WindowResizedEvent : public Event {
 	public:
-		WindowResizeEvent(unsigned int width, unsigned int height)
+		WindowResizedEvent(unsigned int width, unsigned int height)
 			: m_Width(width), m_Height(height) { }
 
 		inline unsigned int GetWidth() const { return m_Width; }
@@ -26,9 +26,9 @@ namespace Pupil {
 		unsigned int m_Width, m_Height;
 	};
 
-	class PP_API WindowCloseEvent : public Event {
+	class PP_API WindowClosedEvent : public Event {
 	public:
-		WindowCloseEvent() { }
+		WindowClosedEvent() { }
 
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 		EVENT_CLASS_TYPE(WindowClose)
