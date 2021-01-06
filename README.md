@@ -1,6 +1,6 @@
 # Pupil Engine 制作中。。。<br>
-***allow TheCherno!***  
-https://www.youtube.com/channel/UCQ-W1KE9EYfdxhL6S4twUNw  
+***allow [TheCherno!](https://github.com/TheCherno)***  
+[TheCherno->YouTube](https://www.youtube.com/user/TheChernoProject)
 制作顺序:  
 Entry Point  
 ↓  
