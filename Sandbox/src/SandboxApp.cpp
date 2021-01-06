@@ -21,6 +21,7 @@ class Sandbox : public Pupil::Application {
 public:
 	Sandbox() {
 		PushLayer(new ExampleLayer());
+		PushOverlay(new Pupil::ImGuiLayer());
 	}
 
 	~Sandbox() {
