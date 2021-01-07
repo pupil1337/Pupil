@@ -16,7 +16,7 @@ project "GLFW"
 		"src/vulkan.c",
 		"src/window.c"
 	}
-	
+
 	filter "system:windows"
 		buildoptions { "-std=c11", "-lgdi32" }
 		systemversion "10.0.18362.0"

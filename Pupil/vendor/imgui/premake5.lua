@@ -17,11 +17,12 @@ project "ImGui"
         "imgstb_textedit.h",
         "imgstb_truetype.h"
 	}
-	
+
 	filter "system:windows"
 		systemversion "10.0.18362.0"
         cppdialect "C++17"
 		staticruntime "On"
+
 
 	filter { "system:windows", "configurations:Release" }
 		buildoptions "/MT"

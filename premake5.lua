@@ -1,5 +1,6 @@
 workspace "Pupil"
 	architecture "x64"
+	startproject "Sandbox"
 
 	configurations {
 		"Debug",
@@ -14,6 +15,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Pupil/vendor/GLFW/include"
 IncludeDir["Glad"] = "Pupil/vendor/Glad/include"
 IncludeDir["ImGui"] = "Pupil/vendor/imgui"
+IncludeDir["glm"] = "Pupil/vendor/glm"
 
 include "Pupil/vendor/GLFW"
 include "Pupil/vendor/Glad"
@@ -24,6 +26,7 @@ project "Pupil"
 	location "Pupil"
 	kind "SharedLib"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -33,7 +36,9 @@ project "Pupil"
 
 	files {
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl",
 	}
 
 	includedirs {
@@ -41,7 +46,8 @@ project "Pupil"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}"
 	}
 
 	links {
@@ -53,17 +59,16 @@ project "Pupil"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "10.0.18362.0"
 
 		defines {
 			"PP_PLATFORM_WINDOWS",
 			"PP_BUILD_DLL",
-			"PP_ENABLE_ASSERTS"
+			"PP_DEBUG"
 		}
 
 		postbuildcommands {
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
 		}
 
 		filter "configurations:Debug"
@@ -85,6 +90,7 @@ project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -96,16 +102,16 @@ project "Sandbox"
 
 	includedirs {
 		"Pupil/vendor/spdlog/include",
-		"Pupil/src"
+		"Pupil/src",
+		"%{IncludeDir.glm}"
 	}
 
 	links {
-		"Pupil"
+		"Pupil",
 	}
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "10.0.18362.0"
 
 		defines {

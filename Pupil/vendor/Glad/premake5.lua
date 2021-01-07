@@ -14,12 +14,12 @@ project "Glad"
 	includedirs {
 		"include"
 	}
-	
+
 	filter "system:windows"
 		systemversion "10.0.18362.0"
 		staticruntime "On"
 
-		
+
 
 	filter { "system:windows", "configurations:Release" }
 		buildoptions "/MT"

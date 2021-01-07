@@ -1,5 +1,5 @@
-#include"pppch.h"
-#include"Pupil.h"
+#include "pppch.h"
+#include "Pupil.h"
 
 class ExampleLayer :public Pupil::Layer {
 public:
@@ -7,12 +7,18 @@ public:
 		:Layer("Example") {
 	}
 
-	void OnUpdate() override {
-		PP_INFO("ExampleLayer::Update");
+	virtual void OnUpdate() override {
+
+		if (Pupil::Input::IsKeyPressed(PP_KEY_TAB)) {
+			PP_TRACE("Tab key is pressed");
+		}
 	}
 
-	void OnEvent(Pupil::Event& event) override {
-		PP_TRACE("{0}", event);
+	virtual void OnEvent(Pupil::Event& event) override {
+		if (event.GetEventType() == Pupil::EventType::KeyPressed) {
+			Pupil::KeyPressedEvent& e = (Pupil::KeyPressedEvent&)event;
+			PP_TRACE("{0}", (char)e.GetKeyCode());
+		}
 	}
 };
 
@@ -21,7 +27,6 @@ class Sandbox : public Pupil::Application {
 public:
 	Sandbox() {
 		PushLayer(new ExampleLayer());
-		PushOverlay(new Pupil::ImGuiLayer());
 	}
 
 	~Sandbox() {

@@ -1,12 +1,15 @@
 #pragma once
 
-#include"Core.h"
+#include "Core.h"
 
-#include"Window.h"
-#include"pupil/Events/Event.h"
-#include"pupil/Events/ApplicationEvent.h"
+#include "Window.h"
 
-#include"pupil/LayerStack.h"
+#include "pupil/Events/Event.h"
+#include "pupil/Events/ApplicationEvent.h"
+
+#include "pupil/LayerStack.h"
+
+#include "pupil/ImGui/ImGuiLayer.h"
 
 namespace Pupil {
 
@@ -26,9 +29,10 @@ namespace Pupil {
 		inline Window& GetWindow() { return *m_Window; }
 
 	private:
-		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowClose(WindowClosedEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 	private:
