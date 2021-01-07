@@ -40,8 +40,9 @@ namespace Pupil {
 		dispatcher.Dispatch<WindowClosedEvent>(PP_BIND_EVENT_FN(Application::OnWindowClose));
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it) {
-			if (e.m_Handled) break;
 			(*it)->OnEvent(e);
+			if (e.m_Handled) break;
+			
 		}
 
 	}

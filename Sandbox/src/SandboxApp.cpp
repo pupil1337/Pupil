@@ -8,10 +8,7 @@ public:
 	}
 
 	virtual void OnUpdate() override {
-
-		if (Pupil::Input::IsKeyPressed(PP_KEY_TAB)) {
-			PP_TRACE("Tab key is pressed");
-		}
+		
 	}
 
 	virtual void OnEvent(Pupil::Event& event) override {
