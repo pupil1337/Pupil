@@ -5,11 +5,8 @@
 
 #include "pupil/Input.h"
 
-<<<<<<< HEAD
 namespace Pupil {
 
-=======
->>>>>>> fbb57b5050c9e8a49872d13e72b5d6ea531c356a
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application() {
