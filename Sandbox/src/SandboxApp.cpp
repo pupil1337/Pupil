@@ -7,11 +7,16 @@ public:
 		:Layer("Example") {
 	}
 
+<<<<<<< HEAD
 	virtual void OnUpdate() override {
 
 		if (Pupil::Input::IsKeyPressed(PP_KEY_TAB)) {
 			PP_TRACE("Tab key is pressed");
 		}
+=======
+	void OnUpdate() override {
+		//PP_INFO("ExampleLayer::Update");
+>>>>>>> fbb57b5050c9e8a49872d13e72b5d6ea531c356a
 	}
 
 	virtual void OnEvent(Pupil::Event& event) override {
