@@ -9,6 +9,10 @@ public:
 		:Layer("Example") {
 	}
 
+	virtual void OnUpdate() override {
+
+	}
+
 	virtual void OnImGuiRender() override {
 		ImGui::Begin("Test");
 		ImGui::Text("Hello World");
