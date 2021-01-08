@@ -1352,7 +1352,5 @@
     <ClCompile Include="src\pupil\Log.cpp">
       <Filter>src\pupil</Filter>
     </ClCompile>
-    <ClCompile Include="vendor\imgui\examples\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="vendor\imgui\examples\imgui_impl_glfw.cpp" />
   </ItemGroup>
 </Project>

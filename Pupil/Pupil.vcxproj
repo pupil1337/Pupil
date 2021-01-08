@@ -592,8 +592,6 @@
     <ClCompile Include="src\pupil\Layer.cpp" />
     <ClCompile Include="src\pupil\LayerStack.cpp" />
     <ClCompile Include="src\pupil\Log.cpp" />
-    <ClCompile Include="vendor\imgui\examples\imgui_impl_glfw.cpp" />
-    <ClCompile Include="vendor\imgui\examples\imgui_impl_opengl3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
