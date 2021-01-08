@@ -1,10 +1,14 @@
 #pragma once
 
 #ifdef PP_PLATFORM_WINDOWS
-	#ifdef PP_BUILD_DLL
-		#define PP_API __declspec(dllexport)
+	#if HZ_DYNAMIC_LINK
+		#ifdef PP_BUILD_DLL
+			#define PP_API __declspec(dllexport)
+		#else
+			#define PP_API __declspec(dllimport)
+		#endif
 	#else
-		#define PP_API __declspec(dllimport)
+		#define PP_API
 	#endif
 #else
 	#error Pupil only supports Windows!

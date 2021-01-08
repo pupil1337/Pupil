@@ -24,9 +24,10 @@ include "Pupil/vendor/imgui"
 
 project "Pupil"
 	location "Pupil"
-	kind "SharedLib"
+	kind "Staticlib"
 	language "C++"
-	staticruntime "off"
+	cppdialect"C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -58,7 +59,6 @@ project "Pupil"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		systemversion "10.0.18362.0"
 
 		defines {
@@ -67,30 +67,27 @@ project "Pupil"
 			"PP_DEBUG"
 		}
 
-		postbuildcommands {
-			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
-		}
-
 		filter "configurations:Debug"
 			defines "PP_DEBUG"
-			buildoptions "/MDd"
-			symbols "On"
+			runtime "Debug"
+			symbols "on"
 
 		filter "configurations:Release"
 			defines "PP_Release"
-			buildoptions "/MD"
-			optimize "On"
+			runtime "Release"
+			symbols "on"
 
 		filter "configurations:Dist"
 			defines "PP_Dist"
-			buildoptions "/MD"
-			optimize "On"
+			runtime "Release"
+			symbols "on"
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
-	staticruntime "off"
+	cppdialect"C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -103,6 +100,7 @@ project "Sandbox"
 	includedirs {
 		"Pupil/vendor/spdlog/include",
 		"Pupil/src",
+		"Pupil/vendor",
 		"%{IncludeDir.glm}"
 	}
 
@@ -120,15 +118,15 @@ project "Sandbox"
 
 		filter "configurations:Debug"
 			defines "PP_DEBUG"
-			buildoptions "/MDd"
-			symbols "On"
+			runtime "Debug"
+			symbols "on"
 
 		filter "configurations:Release"
 			defines "PP_Release"
-			buildoptions "/MD"
-			optimize "On"
+			runtime "Release"
+			optimize "on"
 
 		filter "configurations:Dist"
 			defines "PP_Dist"
-			buildoptions "/MD"
-			optimize "On"
+			runtime "Release"
+			optimize "on"

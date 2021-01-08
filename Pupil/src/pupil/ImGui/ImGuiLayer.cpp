@@ -90,4 +90,8 @@ namespace Pupil {
 
 	}
 
+	void ImGuiLayer::OnImGuiRender() {
+	
+	}
+
 }
