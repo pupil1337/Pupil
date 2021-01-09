@@ -42,6 +42,10 @@ project "Pupil"
 		"%{prj.name}/vendor/glm/glm/**.inl",
 	}
 
+	defines {
+		"_CRT_SECURE_NO_WARNINGS"
+	}
+
 	includedirs {
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
@@ -59,7 +63,7 @@ project "Pupil"
 	}
 
 	filter "system:windows"
-		systemversion "10.0.18362.0"
+		systemversion "latest"
 
 		defines {
 			"PP_PLATFORM_WINDOWS",
@@ -75,12 +79,12 @@ project "Pupil"
 		filter "configurations:Release"
 			defines "PP_Release"
 			runtime "Release"
-			symbols "on"
+			optimize "on"
 
 		filter "configurations:Dist"
 			defines "PP_Dist"
 			runtime "Release"
-			symbols "on"
+			optimize "on"
 
 project "Sandbox"
 	location "Sandbox"
@@ -110,7 +114,7 @@ project "Sandbox"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		systemversion "10.0.18362.0"
+		systemversion "latest"
 
 		defines {
 			"PP_PLATFORM_WINDOWS"

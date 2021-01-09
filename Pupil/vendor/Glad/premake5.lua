@@ -17,14 +17,12 @@ project "Glad"
 	}
 
 	filter "system:windows"
-		systemversion "10.0.18362.0"
+		systemversion "latest"
 
+		filter "configurations:Debug"
+			runtime "Debug"
+			symbols "on"
 
-
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "on"
-
-	filter "configurations:Release"
-		runtime "Release"
-		symbols "on"
+		filter "configurations:Release"
+			runtime "Release"
+			optimize "on"
