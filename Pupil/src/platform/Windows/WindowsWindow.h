@@ -2,8 +2,10 @@
 
 #include"pupil/Window.h"
 
-#include"glad/glad.h"
-#include<GLFW/glfw3.h>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include "pupil/Renderer/GraphicsContext.h"
 
 namespace Pupil {
 
@@ -31,6 +33,7 @@ namespace Pupil {
 
 	private:
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 
 		struct WindowData {
 			std::string Title;

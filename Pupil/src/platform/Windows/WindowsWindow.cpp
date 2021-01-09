@@ -6,6 +6,8 @@
 #include "pupil/Events/MouseEvent.h"
 #include "pupil/Events/KeyEvent.h"
 
+#include "platform/OpenGL/OpenGLContext.h"
+
 namespace Pupil {
 
 	static bool s_GLFWInitialized = false;
@@ -32,7 +34,7 @@ namespace Pupil {
 		m_Data.Height = props.Height;
 
 		PP_CORE_INFO("Create window {0} ({1}, {2})", props.Title, props.Width, props.Height);
-	
+		
 		if (!s_GLFWInitialized) {
 			int success = glfwInit();
 			PP_CORE_ASSERT(success, "Could not intialize GLFW!");
@@ -41,9 +43,10 @@ namespace Pupil {
 		}
 
 		m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_Window);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		PP_CORE_ASSERT(status, "Failed to initialized Glad!");
+		
+		m_Context = new OpenGLContext(m_Window);
+		m_Context->Init();
+		
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 		
@@ -130,7 +133,7 @@ namespace Pupil {
 
 	void WindowsWindow::OnUpdate() {
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled) {

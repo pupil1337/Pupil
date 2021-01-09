@@ -9,7 +9,7 @@
 #include "pupil/Application.h"
 
 // TEMPORARY
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 namespace Pupil {
 
