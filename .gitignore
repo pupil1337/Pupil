@@ -6,5 +6,6 @@ bin-int/
 # files
 *.user
 *.sln
-*.filters
 *.vcxproj
+*.vcxproj.filters
+imgui.ini
