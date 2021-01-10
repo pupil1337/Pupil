@@ -41,6 +41,32 @@ namespace Pupil {
 		glGenBuffers(1, &m_IndexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		std::string vertexSrc = R"(
+			#version 330 core
+			layout(location = 0) in vec3 aPos;
+
+			out vec3 FragPos;			
+
+			void main() {
+				FragPos = aPos;
+				gl_Position = vec4(aPos, 1.0f);
+			}
+		)";
+		
+		std::string fragmentSrc = R"(
+			#version 330 core
+			out vec4 FragColor;
+
+			in vec3 FragPos;
+			
+			void main() {
+				FragColor = vec4(FragPos + 0.5f, 1.0f);
+			}
+		)";
+
+
+		m_Shader = std::unique_ptr<Shader>(new Shader(vertexSrc, fragmentSrc));
 	}
 	
 	Application::~Application() {
@@ -71,6 +97,7 @@ namespace Pupil {
 
 	void Application::Run() {
 
+		m_Shader->Bind();
 		while (m_Running) {
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);

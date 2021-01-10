@@ -11,6 +11,8 @@
 
 #include "pupil/ImGui/ImGuiLayer.h"
 
+#include "pupil/Renderer/Shader.h"
+
 namespace Pupil {
 
 	class PP_API Application {
@@ -37,6 +39,7 @@ namespace Pupil {
 		LayerStack m_LayerStack;
 
 		unsigned int m_VertexArrays, m_VertexBuffer, m_IndexBuffer;
+		std::unique_ptr<Shader> m_Shader;
 	private:
 		static Application* s_Instance;
 	};

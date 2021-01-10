@@ -160,6 +160,7 @@
     <ClInclude Include="src\pupil\Log.h" />
     <ClInclude Include="src\pupil\MouseButtonCodes.h" />
     <ClInclude Include="src\pupil\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\pupil\Renderer\Shader.h" />
     <ClInclude Include="src\pupil\Window.h" />
     <ClInclude Include="vendor\glm\glm\common.hpp" />
     <ClInclude Include="vendor\glm\glm\detail\_features.hpp" />
@@ -583,6 +584,7 @@
     <ClCompile Include="src\pupil\Layer.cpp" />
     <ClCompile Include="src\pupil\LayerStack.cpp" />
     <ClCompile Include="src\pupil\Log.cpp" />
+    <ClCompile Include="src\pupil\Renderer\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
