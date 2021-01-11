@@ -31,7 +31,8 @@ namespace Pupil {
 	//////////////////////////////////////////////////////////////////////
 	///IndexBuffer ///////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////
-	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indieces, uint32_t count) {
+	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indieces, uint32_t count)
+		: m_count(count) {
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indieces, GL_STATIC_DRAW);

@@ -7,6 +7,7 @@
 
 namespace Pupil {
 
+	// *****VertexBuffer***** //
 	VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size) {
 		switch (Renderer::GetAPI()) {
 			case RendererAPI::None:     PP_CORE_ASSERT(false, "RenderAPI:None is supported!"); return nullptr;
@@ -18,6 +19,7 @@ namespace Pupil {
 		return nullptr;
 	}
 
+	// *****IndexBuffer***** //
 	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count) {
 		switch (Renderer::GetAPI()) {
 			case RendererAPI::None:     PP_CORE_ASSERT(false, "RenderAPI:None is supported!"); return nullptr;
