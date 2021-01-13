@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pupil/Core.h"
 
 #include "pupil/renderer/Buffer.h"
@@ -12,8 +14,8 @@ namespace Pupil {
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
 
-		virtual const BufferLayout& GetLayout() const override { return m_Layout; }
-		virtual void SetLayout(const BufferLayout& layout) override { m_Layout = layout; }
+		inline virtual const BufferLayout& GetLayout() const override { return m_Layout; }
+		inline virtual void SetLayout(const BufferLayout& layout) override { m_Layout = layout; }
 	private:
 		uint32_t m_RendererID;
 		BufferLayout m_Layout;

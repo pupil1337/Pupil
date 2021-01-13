@@ -9,25 +9,6 @@ namespace Pupil {
 
 	Application* Application::s_Instance = nullptr;
 
-	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type){
-		switch (type) {
-			case Pupil::ShaderDataType::Bool:   return GL_BOOL;
-			case Pupil::ShaderDataType::Int:    return GL_INT;
-			case Pupil::ShaderDataType::Int2:   return GL_INT;
-			case Pupil::ShaderDataType::Int3:   return GL_INT;
-			case Pupil::ShaderDataType::Int4:   return GL_INT;
-			case Pupil::ShaderDataType::Float:  return GL_FLOAT;
-			case Pupil::ShaderDataType::Float2: return GL_FLOAT;
-			case Pupil::ShaderDataType::Float3: return GL_FLOAT;
-			case Pupil::ShaderDataType::Float4: return GL_FLOAT;
-			case Pupil::ShaderDataType::Mat3:   return GL_FLOAT;
-			case Pupil::ShaderDataType::Mat4:   return GL_FLOAT;
-		}
-
-		PP_CORE_ASSERT(false, "Cant make this ShaderDataType to OpenGLBaseType!");
-		return 0;
-	}
-
 	Application::Application() {
 		
 		PP_CORE_ASSERT(!s_Instance, "Application already exists!");
@@ -45,37 +26,19 @@ namespace Pupil {
 			 0.0f,  0.5f, 0.0f,  0.8f,  0.8f, 0.2f, 1.0f,
 			 0.5f, -0.5f, 0.0f,  0.8f,  0.2f, 0.8f, 1.0f,
 		};
+		m_VertexArray.reset(VertexArray::Create());
+
+		m_VertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
+		BufferLayout layout = {
+			{ ShaderDataType::Float3, "aPos"},
+			{ ShaderDataType::Float4, "aColor"}
+		};
+		m_VertexBuffer->SetLayout(layout);
+		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+
 		uint32_t indices[3] = { 0, 1, 2 };
-
-		glGenVertexArrays(1, &m_VertexArrays);
-		glBindVertexArray(m_VertexArrays);
-
-		m_VertexBuffer = std::unique_ptr<VertexBuffer>(VertexBuffer::Create(vertices, sizeof(vertices)));
-		m_VertexBuffer->Bind();
-		
-		{
-			BufferLayout layout = {
-				{ ShaderDataType::Float3, "aPos"},
-				{ ShaderDataType::Float4, "aColor"}
-			};
-			m_VertexBuffer->SetLayout(layout);
-		}
-
-		uint32_t index = 0;
-		const auto& layout = m_VertexBuffer->GetLayout();
-		for (const auto& element : layout) {
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index,
-				element.GetComponetCount(element.Type),
-				ShaderDataTypeToOpenGLBaseType(element.Type),
-				element.Normalized ? GL_TRUE : GL_FALSE,
-				layout.GetStride(),
-				(const void*)element.Offset);
-			++index;
-		}
-
-		m_IndexBuffer = std::unique_ptr<IndexBuffer>(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		m_IndexBuffer->Bind();
+		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
 		// --shader-----------------------------------------
 		std::string vertexSrc = R"(

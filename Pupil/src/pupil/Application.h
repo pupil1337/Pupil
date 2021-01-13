@@ -13,6 +13,7 @@
 
 #include "pupil/Renderer/Shader.h"
 #include "pupil/Renderer/Buffer.h"
+#include "pupil/Renderer/VertexArray.h"
 
 namespace Pupil {
 
@@ -40,9 +41,11 @@ namespace Pupil {
 		LayerStack m_LayerStack;
 
 		unsigned int m_VertexArrays;
-		std::unique_ptr<Shader> m_Shader;
-		std::unique_ptr<VertexBuffer> m_VertexBuffer;
-		std::unique_ptr<IndexBuffer>  m_IndexBuffer;
+		std::shared_ptr<Shader> m_Shader;
+		std::shared_ptr<VertexArray>  m_VertexArray;
+		std::shared_ptr<VertexBuffer>  m_VertexBuffer;
+		std::shared_ptr<IndexBuffer>  m_IndexBuffer;
+		
 	private:
 		static Application* s_Instance;
 	};
