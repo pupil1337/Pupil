@@ -5,6 +5,9 @@
 
 #include "pupil/Input.h"
 
+#include "pupil/Renderer/Renderer.h"
+
+
 namespace Pupil {
 
 	Application* Application::s_Instance = nullptr;
@@ -21,10 +24,11 @@ namespace Pupil {
 		PushOverlay(m_ImGuiLayer);
 		// -------------------------------------
 
-		float vertices[3 * 7] = {
-			-0.5f, -0.5f, 0.0f,  0.2f,  0.3f, 0.3f, 1.0f,
-			 0.0f,  0.5f, 0.0f,  0.8f,  0.8f, 0.2f, 1.0f,
+		float vertices[4 * 7] = {
+			-0.5f, -0.5f, 0.0f,  0.8f,  0.2f, 0.8f, 1.0f,
+			-0.5f,  0.5f, 0.0f,  0.8f,  0.2f, 0.8f, 1.0f,
 			 0.5f, -0.5f, 0.0f,  0.8f,  0.2f, 0.8f, 1.0f,
+			 0.5f,  0.5f, 0.0f,  0.8f,  0.2f, 0.8f, 1.0f
 		};
 		m_VertexArray.reset(VertexArray::Create());
 
@@ -36,7 +40,7 @@ namespace Pupil {
 		m_VertexBuffer->SetLayout(layout);
 		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
-		uint32_t indices[3] = { 0, 1, 2 };
+		uint32_t indices[6] = { 0, 1, 2, 1, 3, 2 };
 		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
@@ -102,10 +106,14 @@ namespace Pupil {
 
 		m_Shader->Bind();
 		while (m_Running) {
-			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			RenderCommand::SetClearColor(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));
+			RenderCommand::Clear();
 
-			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::BeginScene();
+
+			Renderer::Submit(m_VertexArray);
+
+			Renderer::EndScene();
 
 			for (Layer* layer : m_LayerStack) {
 				layer->OnUpdate();

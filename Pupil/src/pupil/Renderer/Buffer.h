@@ -32,10 +32,12 @@ namespace Pupil {
 	}
 
 	struct BufferElement {
+		// input
 		ShaderDataType Type;
 		std::string Name;
-		uint32_t Size;
 		bool Normalized;
+		// to calculate
+		uint32_t Size;
 		uint32_t Offset;
 
 		BufferElement() { }

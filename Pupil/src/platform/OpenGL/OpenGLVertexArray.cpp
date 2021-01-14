@@ -54,12 +54,19 @@ namespace Pupil {
 				(const void*)element.Offset);
 			++index;
 		}
+
+		vertexBuffer->UnBind();
+		glBindVertexArray(0);
+
 		m_VertexBuffers.push_back(vertexBuffer);
 	}
 
 	void Pupil::OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& IndexBuffer) {
 		glBindVertexArray(m_RendererID);
 		IndexBuffer->Bind();
+
+		IndexBuffer->UnBind();
+		glBindVertexArray(0);
 
 		m_IndexBuffer = IndexBuffer;
 	}

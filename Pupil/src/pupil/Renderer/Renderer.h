@@ -1,21 +1,19 @@
 #pragma once
-
 #include "pupil/Core.h"
+
+#include "pupil/Renderer/RendererAPI.h"
+#include "pupil/Renderer/RenderCommand.h"
 
 namespace Pupil {
 
-	enum class RendererAPI {
-		None     = 0,
-		OpenGL   = 1,
-		Direct3D = 2,
-		Vulcan	 = 3
-	};
-
 	class PP_API Renderer {
 	public:
-		inline static RendererAPI GetAPI() { return s_RendererAPI; }
-	private:
-		static RendererAPI s_RendererAPI;
+		static void BeginScene();
+		static void EndScene();
+
+		static void Submit(const std::shared_ptr<VertexArray>& vertexArray);
+
+		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 	};
 
 }

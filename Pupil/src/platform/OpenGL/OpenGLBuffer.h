@@ -6,6 +6,7 @@
 
 namespace Pupil {
 
+	/// VertexBuffer ///
 	class PP_API OpenGLVertexBuffer : public VertexBuffer {
 	public:
 		OpenGLVertexBuffer(float* vertices, uint32_t size);
@@ -21,6 +22,7 @@ namespace Pupil {
 		BufferLayout m_Layout;
 	};
 
+	/// IndexBuffer ///
 	class PP_API OpenGLIndexBuffer : public IndexBuffer {
 	public:
 		OpenGLIndexBuffer(uint32_t* indices, uint32_t count);

@@ -15,7 +15,7 @@ namespace Pupil {
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
-
+		// on update
 		virtual void OnImGuiRender() override;
 
 		void Begin();
