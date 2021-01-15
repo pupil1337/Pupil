@@ -15,6 +15,8 @@
 #include "pupil/Renderer/Buffer.h"
 #include "pupil/Renderer/VertexArray.h"
 
+#include "pupil/Renderer/OrthographicCamera.h"
+
 namespace Pupil {
 
 	class PP_API Application {
@@ -46,6 +48,7 @@ namespace Pupil {
 		std::shared_ptr<VertexBuffer>  m_VertexBuffer;
 		std::shared_ptr<IndexBuffer>  m_IndexBuffer;
 		
+		std::shared_ptr<OrthographicCamera> m_OrthoCamera;
 	private:
 		static Application* s_Instance;
 	};

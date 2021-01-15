@@ -12,7 +12,8 @@ namespace Pupil {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application() {
+	Application::Application()
+		: m_OrthoCamera(new OrthographicCamera(-1.6f, 1.6f, -0.9f, 0.9f)) {
 		
 		PP_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
@@ -49,14 +50,16 @@ namespace Pupil {
 			#version 330 core
 			layout(location = 0) in vec3 aPos;
 			layout(location = 1) in vec4 aColor;
-
+			
+			uniform mat4 view;
+			
 			out vec3 FragPos;			
 			out vec4 Color;
 			
 			void main() {
 				FragPos = aPos;
 				Color = aColor;
-				gl_Position = vec4(aPos, 1.0f);
+				gl_Position = view * vec4(aPos, 1.0f);
 			}
 		)";
 		
@@ -104,14 +107,16 @@ namespace Pupil {
 
 	void Application::Run() {
 
-		m_Shader->Bind();
 		while (m_Running) {
 			RenderCommand::SetClearColor(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));
 			RenderCommand::Clear();
 
-			Renderer::BeginScene();
-
-			Renderer::Submit(m_VertexArray);
+			m_OrthoCamera->SetPosition(glm::vec3(0.5f, 0.5f, 1.0f));
+			m_OrthoCamera->SetRotation(45.0f);
+			
+			Renderer::BeginScene(m_OrthoCamera);
+			
+			Renderer::Submit(m_Shader, m_VertexArray);
 
 			Renderer::EndScene();
 

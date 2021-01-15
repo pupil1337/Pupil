@@ -129,4 +129,9 @@ namespace Pupil {
 		glUseProgram(0);
 	}
 
+	// uniform --------------------------------------------------------
+	void Shader::SetMat4(const std::string& name, const glm::mat4& mat4) {
+		glUniformMatrix4fv(glGetUniformLocation(m_RendererID, name.c_str()), 1, GL_FALSE, &mat4[0][0]);
+	}
+
 }
