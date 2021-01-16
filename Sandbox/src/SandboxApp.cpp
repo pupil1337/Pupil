@@ -3,6 +3,8 @@
 
 #include "imgui/imgui.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 class ExampleLayer :public Pupil::Layer {
 public:
 	ExampleLayer()
@@ -34,15 +36,16 @@ public:
 			layout(location = 0) in vec3 aPos;
 			layout(location = 1) in vec4 aColor;
 			
-			uniform mat4 view;
+			uniform mat4 ProjectonView;
+			uniform mat4 Model;
 			
-			out vec3 FragPos;			
+			out vec3 FragPos;
 			out vec4 Color;
 			
 			void main() {
 				FragPos = aPos;
 				Color = aColor;
-				gl_Position = view * vec4(aPos, 1.0f);
+				gl_Position = ProjectonView * Model * vec4(aPos, 1.0f);
 			}
 		)";
 
@@ -73,7 +76,6 @@ public:
 		if (Pupil::Input::IsKeyPressed(PP_KEY_E)) m_CameraRotation += m_CameraRotateSpeed * ts;
 
 
-
 		Pupil::RenderCommand::SetClearColor(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));
 		Pupil::RenderCommand::Clear();
 
@@ -82,8 +84,15 @@ public:
 
 		Pupil::Renderer::BeginScene(m_OrthoCamera);
 
-		Pupil::Renderer::Submit(m_Shader, m_VertexArray);
-
+		for (int i = 0; i != 8; ++i) {
+			for (int j = 0; j != 8; ++j) {
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(i*0.205f, j*0.205f, 0.0f));
+				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+				model = glm::scale(model, glm::vec3(0.2f));
+				Pupil::Renderer::Submit(m_Shader, m_VertexArray, model);
+			}
+		}
 		Pupil::Renderer::EndScene();
 	}
 
@@ -107,7 +116,6 @@ private:
 	Pupil::OrthographicCamera m_OrthoCamera;
 	glm::vec3 m_CameraPosition;
 	float m_CameraRotation = 0.0f;
-
 	float m_CameraMoveSpeed = 1.0f;
 	float m_CameraRotateSpeed = 90.0f;
 };

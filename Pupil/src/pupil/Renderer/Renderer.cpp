@@ -12,9 +12,10 @@ namespace Pupil {
 	void Renderer::EndScene() {
 	}
 
-	void Renderer::Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray) {
+	void Renderer::Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4& model) {
 		shader->Bind();
-		shader->SetMat4("view", m_ScenceData->ProjectionView);
+		shader->SetMat4("ProjectonView", m_ScenceData->ProjectionView);
+		shader->SetMat4("Model", model);
 		RenderCommand::DrawIndexed(vertexArray);
 		shader->UnBind();
 	}
