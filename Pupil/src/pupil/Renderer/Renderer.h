@@ -11,7 +11,7 @@ namespace Pupil {
 
 	class PP_API Renderer {
 	public:
-		static void BeginScene(std::shared_ptr<OrthographicCamera>& camera);
+		static void BeginScene(const OrthographicCamera& camera);
 		static void EndScene();
 
 		static void Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);

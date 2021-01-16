@@ -12,6 +12,17 @@
 #include "pupil/Layer.h"
 #include "pupil/ImGui/ImGuiLayer.h"
 
+// ------Renderer------------------
+#include "pupil/Renderer/Shader.h"
+#include "pupil/Renderer/VertexArray.h"
+#include "pupil/Renderer/Buffer.h"
+
+#include "pupil/Renderer/Renderer.h"
+#include "pupil/Renderer/RenderCommand.h"
+// -------------------------------
+
+#include "pupil/Renderer/OrthographicCamera.h"
+
 // ------Entry Point--------------
 #include "pupil/EntryPoint.h"
 // -------------------------------

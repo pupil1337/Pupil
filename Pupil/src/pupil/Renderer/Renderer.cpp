@@ -5,8 +5,8 @@ namespace Pupil {
 
 	Renderer::ScenceData* Renderer::m_ScenceData = new Renderer::ScenceData;
 
-	void Renderer::BeginScene(std::shared_ptr<OrthographicCamera>& camera) {
-		m_ScenceData->ProjectionView = camera->GetProjectionView();
+	void Renderer::BeginScene(const OrthographicCamera& camera) {
+		m_ScenceData->ProjectionView = camera.GetProjectionView();
 	}
 
 	void Renderer::EndScene() {
