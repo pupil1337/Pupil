@@ -12,6 +12,8 @@
 #include "pupil/Layer.h"
 #include "pupil/ImGui/ImGuiLayer.h"
 
+#include "pupil/Core/TimeStep.h"
+
 // ------Renderer------------------
 #include "pupil/Renderer/Shader.h"
 #include "pupil/Renderer/VertexArray.h"

@@ -1,7 +1,9 @@
 #pragma once
 
-#include"pupil/Core.h"
-#include"pupil/Events/Event.h"
+#include "pupil/Core.h"
+#include "pupil/Events/Event.h"
+
+#include "pupil/Core/TimeStep.h"
 
 namespace Pupil {
 	
@@ -13,7 +15,7 @@ namespace Pupil {
 
 		virtual void OnAttach() { }
 		virtual void OnDetach() { }
-		virtual void OnUpdate() { }
+		virtual void OnUpdate(Pupil::TimeStep ts) { }
 		virtual void OnImGuiRender() { }
 		virtual void OnEvent(Event& event) { }
 		inline const std::string& GetName() const { return m_DebugName; }

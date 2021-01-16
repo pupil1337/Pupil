@@ -62,14 +62,15 @@ public:
 		m_Shader = std::unique_ptr<Pupil::Shader>(new Pupil::Shader(vertexSrc, fragmentSrc));
 	}
 
-	virtual void OnUpdate() override {
-		if (Pupil::Input::IsKeyPressed(PP_KEY_A)) m_CameraPosition.x -= m_CameraMoveSpeed;
-		if (Pupil::Input::IsKeyPressed(PP_KEY_D)) m_CameraPosition.x += m_CameraMoveSpeed;
-		if (Pupil::Input::IsKeyPressed(PP_KEY_S)) m_CameraPosition.y -= m_CameraMoveSpeed;
-		if (Pupil::Input::IsKeyPressed(PP_KEY_W)) m_CameraPosition.y += m_CameraMoveSpeed;
+	virtual void OnUpdate(Pupil::TimeStep ts) override {
 
-		if (Pupil::Input::IsKeyPressed(PP_KEY_Q)) m_CameraRotation -= m_CameraRotateSpeed;
-		if (Pupil::Input::IsKeyPressed(PP_KEY_E)) m_CameraRotation += m_CameraRotateSpeed;
+		if (Pupil::Input::IsKeyPressed(PP_KEY_A)) m_CameraPosition.x -= m_CameraMoveSpeed * ts;
+		if (Pupil::Input::IsKeyPressed(PP_KEY_D)) m_CameraPosition.x += m_CameraMoveSpeed * ts;
+		if (Pupil::Input::IsKeyPressed(PP_KEY_S)) m_CameraPosition.y -= m_CameraMoveSpeed * ts;
+		if (Pupil::Input::IsKeyPressed(PP_KEY_W)) m_CameraPosition.y += m_CameraMoveSpeed * ts;
+
+		if (Pupil::Input::IsKeyPressed(PP_KEY_Q)) m_CameraRotation -= m_CameraRotateSpeed * ts;
+		if (Pupil::Input::IsKeyPressed(PP_KEY_E)) m_CameraRotation += m_CameraRotateSpeed * ts;
 
 
 
@@ -105,10 +106,10 @@ private:
 
 	Pupil::OrthographicCamera m_OrthoCamera;
 	glm::vec3 m_CameraPosition;
-	float m_CameraMoveSpeed = 0.01;
+	float m_CameraRotation = 0.0f;
 
-	float m_CameraRotation = 0.01;
-	float m_CameraRotateSpeed = 1.0f;
+	float m_CameraMoveSpeed = 1.0f;
+	float m_CameraRotateSpeed = 90.0f;
 };
 
 class Sandbox : public Pupil::Application {
