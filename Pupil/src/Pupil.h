@@ -19,6 +19,7 @@
 
 // ------Renderer------------------
 #include "pupil/Renderer/Shader.h"
+#include "platform/OpenGL/OpenGLShader.h"
 #include "pupil/Renderer/VertexArray.h"
 #include "pupil/Renderer/Buffer.h"
 

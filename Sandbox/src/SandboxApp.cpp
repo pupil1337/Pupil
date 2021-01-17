@@ -1,9 +1,10 @@
 #include "pppch.h"
 #include "Pupil.h"
 
-#include "imgui/imgui.h"
+#include <imgui/imgui.h>
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class ExampleLayer :public Pupil::Layer {
 public:
@@ -54,7 +55,7 @@ public:
 		)";
 
 
-		m_Shader = std::unique_ptr<Pupil::Shader>(new Pupil::Shader(vertexSrc, fragmentSrc));
+		m_Shader = std::unique_ptr<Pupil::Shader>(Pupil::Shader::Create(vertexSrc, fragmentSrc));
 	}
 
 	virtual void OnUpdate(Pupil::TimeStep ts) override {
@@ -76,9 +77,9 @@ public:
 
 		Pupil::Renderer::BeginScene(m_OrthoCamera);
 
-		static Pupil::Material gold = Pupil::GetMaterial(Pupil::Material_BPhong_Type::gold);
+		//Pupil::Material gold = Pupil::GetMaterial(Pupil::Material_BPhong_Type::gold);
 		m_Shader->Bind();
-		m_Shader->SetVec3("Color", gold.diffuse);
+		std::dynamic_pointer_cast<Pupil::OpenGLShader>(m_Shader)->SetVec3("Color", m_Color);
 		m_Shader->UnBind();
 		for (int i = 0; i != 8; ++i) {
 			for (int j = 0; j != 8; ++j) {
@@ -93,8 +94,8 @@ public:
 	}
 
 	virtual void OnImGuiRender() override {
-		ImGui::Begin("Test");
-		ImGui::Text("Hello World");
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Color", glm::value_ptr(m_Color));
 		ImGui::End();
 	}
 
@@ -108,6 +109,8 @@ private:
 	std::shared_ptr<Pupil::VertexArray>  m_VertexArray;
 	std::shared_ptr<Pupil::VertexBuffer>  m_VertexBuffer;
 	std::shared_ptr<Pupil::IndexBuffer>  m_IndexBuffer;
+
+	glm::vec3 m_Color = glm::vec3(0.8f, 0.2f, 0.8f);
 
 	Pupil::OrthographicCamera m_OrthoCamera;
 	glm::vec3 m_CameraPosition;
