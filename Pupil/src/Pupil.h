@@ -12,7 +12,10 @@
 #include "pupil/Layer.h"
 #include "pupil/ImGui/ImGuiLayer.h"
 
+// ------Core----------------------
 #include "pupil/Core/TimeStep.h"
+#include "pupil/Core/Material_BPhong.h"
+// -------------------------------
 
 // ------Renderer------------------
 #include "pupil/Renderer/Shader.h"

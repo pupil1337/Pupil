@@ -17,7 +17,8 @@ namespace Pupil {
 		void Bind() const;
 		void UnBind() const;
 
-		void SetMat4(const std::string& name, const glm::mat4& mat4);
+		void SetMat4(const std::string& name, const glm::mat4& mat4) const;
+		void SetVec3(const std::string& name, const glm::vec3& vec3) const;
 	private:
 		uint32_t m_RendererID;
 	};

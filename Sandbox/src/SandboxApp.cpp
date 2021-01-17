@@ -10,18 +10,17 @@ public:
 	ExampleLayer()
 		:Layer("Example"), m_OrthoCamera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f) {
 
-		float vertices[4 * 7] = {
-			-0.5f, -0.5f, 0.0f,  0.8f,  0.2f, 0.8f, 1.0f,
-			-0.5f,  0.5f, 0.0f,  0.8f,  0.2f, 0.8f, 1.0f,
-			 0.5f, -0.5f, 0.0f,  0.8f,  0.2f, 0.8f, 1.0f,
-			 0.5f,  0.5f, 0.0f,  0.8f,  0.2f, 0.8f, 1.0f
+		float vertices[4 * 3] = {
+			-0.5f, -0.5f, 0.0f,
+			-0.5f,  0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.5f,  0.5f, 0.0f,
 		};
 		m_VertexArray.reset(Pupil::VertexArray::Create());
 
 		m_VertexBuffer.reset(Pupil::VertexBuffer::Create(vertices, sizeof(vertices)));
 		Pupil::BufferLayout layout = {
-			{ Pupil::ShaderDataType::Float3, "aPos"},
-			{ Pupil::ShaderDataType::Float4, "aColor"}
+			{ Pupil::ShaderDataType::Float3, "aPos"}
 		};
 		m_VertexBuffer->SetLayout(layout);
 		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
@@ -34,17 +33,11 @@ public:
 		std::string vertexSrc = R"(
 			#version 330 core
 			layout(location = 0) in vec3 aPos;
-			layout(location = 1) in vec4 aColor;
 			
 			uniform mat4 ProjectonView;
 			uniform mat4 Model;
 			
-			out vec3 FragPos;
-			out vec4 Color;
-			
 			void main() {
-				FragPos = aPos;
-				Color = aColor;
 				gl_Position = ProjectonView * Model * vec4(aPos, 1.0f);
 			}
 		)";
@@ -52,12 +45,11 @@ public:
 		std::string fragmentSrc = R"(
 			#version 330 core
 			out vec4 FragColor;
-
-			in vec3 FragPos;
-			in vec4 Color;
+			
+			uniform vec3 Color;
 			
 			void main() {
-				FragColor = vec4(Color);
+				FragColor = vec4(Color, 1.0f);
 			}
 		)";
 
@@ -84,6 +76,10 @@ public:
 
 		Pupil::Renderer::BeginScene(m_OrthoCamera);
 
+		static Pupil::Material gold = Pupil::GetMaterial(Pupil::Material_BPhong_Type::gold);
+		m_Shader->Bind();
+		m_Shader->SetVec3("Color", gold.diffuse);
+		m_Shader->UnBind();
 		for (int i = 0; i != 8; ++i) {
 			for (int j = 0; j != 8; ++j) {
 				glm::mat4 model = glm::mat4(1.0f);
