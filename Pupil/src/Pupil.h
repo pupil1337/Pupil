@@ -18,13 +18,13 @@
 // -------------------------------
 
 // ------Renderer------------------
+#include "pupil/Renderer/Renderer.h"
 #include "pupil/Renderer/Shader.h"
-#include "platform/OpenGL/OpenGLShader.h"
 #include "pupil/Renderer/VertexArray.h"
 #include "pupil/Renderer/Buffer.h"
+#include "pupil/Renderer/Texture.h"
 
-#include "pupil/Renderer/Renderer.h"
-#include "pupil/Renderer/RenderCommand.h"
+#include "platform/OpenGL/OpenGLShader.h"
 // -------------------------------
 
 #include "pupil/Renderer/OrthographicCamera.h"

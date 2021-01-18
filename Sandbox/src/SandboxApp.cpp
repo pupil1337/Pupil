@@ -11,34 +11,39 @@ public:
 	ExampleLayer()
 		:Layer("Example"), m_OrthoCamera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f) {
 
-		float vertices[4 * 3] = {
-			-0.5f, -0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
+		float vertices[4 * 5] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f
 		};
-		m_VertexArray.reset(Pupil::VertexArray::Create());
+		m_VertexArray = Pupil::VertexArray::Create();
 
-		m_VertexBuffer.reset(Pupil::VertexBuffer::Create(vertices, sizeof(vertices)));
+		m_VertexBuffer = Pupil::VertexBuffer::Create(vertices, sizeof(vertices));
 		Pupil::BufferLayout layout = {
-			{ Pupil::ShaderDataType::Float3, "aPos"}
+			{ Pupil::ShaderDataType::Float3, "aPos"},
+			{ Pupil::ShaderDataType::Float2, "aTexCoord"}
 		};
 		m_VertexBuffer->SetLayout(layout);
 		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
 		uint32_t indices[6] = { 0, 1, 2, 1, 3, 2 };
-		m_IndexBuffer.reset(Pupil::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		m_IndexBuffer = Pupil::Ref<Pupil::IndexBuffer>(Pupil::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
 		// --shader-----------------------------------------
 		std::string vertexSrc = R"(
 			#version 330 core
 			layout(location = 0) in vec3 aPos;
-			
+			layout(location = 1) in vec2 aTexCoord;
+						
 			uniform mat4 ProjectonView;
 			uniform mat4 Model;
 			
+			out vec2 TexCoord;
+			
 			void main() {
+				TexCoord = aTexCoord;
 				gl_Position = ProjectonView * Model * vec4(aPos, 1.0f);
 			}
 		)";
@@ -47,19 +52,27 @@ public:
 			#version 330 core
 			out vec4 FragColor;
 			
-			uniform vec3 Color;
+			in vec2 TexCoord;
+			
+			uniform sampler2D Texture1;
 			
 			void main() {
-				FragColor = vec4(Color, 1.0f);
+				FragColor = vec4(texture(Texture1, TexCoord).rgb, 1.0f);
 			}
 		)";
 
+		m_Shader = Pupil::Shader::Create(vertexSrc, fragmentSrc);
+		
+		m_Texture2D = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
 
-		m_Shader = std::unique_ptr<Pupil::Shader>(Pupil::Shader::Create(vertexSrc, fragmentSrc));
+		m_Shader->Bind();
+		std::dynamic_pointer_cast<Pupil::OpenGLShader>(m_Shader)->SetInt("Texture1", 0);
+		m_Shader->UnBind();
+
 	}
 
 	virtual void OnUpdate(Pupil::TimeStep ts) override {
-
+		//PP_TRACE("Fps:{0}", 1.0f / ts);
 		if (Pupil::Input::IsKeyPressed(PP_KEY_A)) m_CameraPosition.x -= m_CameraMoveSpeed * ts;
 		if (Pupil::Input::IsKeyPressed(PP_KEY_D)) m_CameraPosition.x += m_CameraMoveSpeed * ts;
 		if (Pupil::Input::IsKeyPressed(PP_KEY_S)) m_CameraPosition.y -= m_CameraMoveSpeed * ts;
@@ -77,10 +90,6 @@ public:
 
 		Pupil::Renderer::BeginScene(m_OrthoCamera);
 
-		//Pupil::Material gold = Pupil::GetMaterial(Pupil::Material_BPhong_Type::gold);
-		m_Shader->Bind();
-		std::dynamic_pointer_cast<Pupil::OpenGLShader>(m_Shader)->SetVec3("Color", m_Color);
-		m_Shader->UnBind();
 		for (int i = 0; i != 8; ++i) {
 			for (int j = 0; j != 8; ++j) {
 				glm::mat4 model = glm::mat4(1.0f);
@@ -90,12 +99,18 @@ public:
 				Pupil::Renderer::Submit(m_Shader, m_VertexArray, model);
 			}
 		}
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-1.0f, -0.5f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.5f));
+
+		m_Texture2D->Bind(0);
+		Pupil::Renderer::Submit(m_Shader, m_VertexArray, model);
 		Pupil::Renderer::EndScene();
 	}
 
 	virtual void OnImGuiRender() override {
 		ImGui::Begin("Settings");
-		ImGui::ColorEdit3("Color", glm::value_ptr(m_Color));
+		//ImGui::ColorEdit3("Color", glm::value_ptr(m_Color));
 		ImGui::End();
 	}
 
@@ -110,7 +125,7 @@ private:
 	Pupil::Ref<Pupil::VertexBuffer>  m_VertexBuffer;
 	Pupil::Ref<Pupil::IndexBuffer>  m_IndexBuffer;
 
-	glm::vec3 m_Color = glm::vec3(0.8f, 0.2f, 0.8f);
+	Pupil::Ref<Pupil::Texture2D> m_Texture2D;
 
 	Pupil::OrthographicCamera m_OrthoCamera;
 	glm::vec3 m_CameraPosition;
