@@ -38,7 +38,7 @@ namespace Pupil {
 		glBindVertexArray(0);
 	}
 
-	void Pupil::OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer) {
+	void Pupil::OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) {
 		glBindVertexArray(m_RendererID);
 		vertexBuffer->Bind();
 
@@ -61,7 +61,7 @@ namespace Pupil {
 		m_VertexBuffers.push_back(vertexBuffer);
 	}
 
-	void Pupil::OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& IndexBuffer) {
+	void Pupil::OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& IndexBuffer) {
 		glBindVertexArray(m_RendererID);
 		IndexBuffer->Bind();
 

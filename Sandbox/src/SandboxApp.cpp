@@ -105,10 +105,10 @@ public:
 
 private:
 	unsigned int m_VertexArrays;
-	std::shared_ptr<Pupil::Shader> m_Shader;
-	std::shared_ptr<Pupil::VertexArray>  m_VertexArray;
-	std::shared_ptr<Pupil::VertexBuffer>  m_VertexBuffer;
-	std::shared_ptr<Pupil::IndexBuffer>  m_IndexBuffer;
+	Pupil::Ref<Pupil::Shader> m_Shader;
+	Pupil::Ref<Pupil::VertexArray>  m_VertexArray;
+	Pupil::Ref<Pupil::VertexBuffer>  m_VertexBuffer;
+	Pupil::Ref<Pupil::IndexBuffer>  m_IndexBuffer;
 
 	glm::vec3 m_Color = glm::vec3(0.8f, 0.2f, 0.8f);
 
