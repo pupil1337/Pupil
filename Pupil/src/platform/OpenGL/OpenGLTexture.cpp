@@ -19,8 +19,8 @@ namespace Pupil {
 		m_Height = height;
 		PP_CORE_ASSERT(data, "Failed to load texture2D!");
 		{
-			GLenum internalFormat;
-			GLenum format;
+			GLenum internalFormat = 0;
+			GLenum format = 0;
 			if (nrComponents == 1) {
 				internalFormat = GL_RED;
 				format = GL_RED;

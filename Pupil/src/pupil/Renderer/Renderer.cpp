@@ -7,6 +7,10 @@ namespace Pupil {
 
 	Renderer::ScenceData* Renderer::m_ScenceData = new Renderer::ScenceData;
 
+	void Renderer::Init() {
+		RenderCommand::Init();
+	}
+
 	void Renderer::BeginScene(const OrthographicCamera& camera) {
 		m_ScenceData->ProjectionView = camera.GetProjectionView();
 	}

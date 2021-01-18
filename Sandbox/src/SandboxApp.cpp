@@ -11,6 +11,8 @@ public:
 	ExampleLayer()
 		:Layer("Example"), m_OrthoCamera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f) {
 
+		Pupil::Renderer::Init();
+
 		float vertices[4 * 5] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
@@ -57,13 +59,14 @@ public:
 			uniform sampler2D Texture1;
 			
 			void main() {
-				FragColor = vec4(texture(Texture1, TexCoord).rgb, 1.0f);
+				FragColor = texture(Texture1, TexCoord).rgba;
 			}
 		)";
 
 		m_Shader = Pupil::Shader::Create(vertexSrc, fragmentSrc);
 		
-		m_Texture2D = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
+		m_Texture2D1 = Pupil::Texture2D::Create("assets/textures/container.jpg");
+		m_Texture2D2 = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
 
 		m_Shader->Bind();
 		std::dynamic_pointer_cast<Pupil::OpenGLShader>(m_Shader)->SetInt("Texture1", 0);
@@ -96,6 +99,7 @@ public:
 				model = glm::translate(model, glm::vec3(i*0.205f, j*0.205f, 0.0f));
 				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 				model = glm::scale(model, glm::vec3(0.2f));
+				m_Texture2D2->Bind();
 				Pupil::Renderer::Submit(m_Shader, m_VertexArray, model);
 			}
 		}
@@ -103,7 +107,9 @@ public:
 		model = glm::translate(model, glm::vec3(-1.0f, -0.5f, 0.0f));
 		model = glm::scale(model, glm::vec3(1.5f));
 
-		m_Texture2D->Bind(0);
+		m_Texture2D1->Bind();
+		Pupil::Renderer::Submit(m_Shader, m_VertexArray, model);
+		m_Texture2D2->Bind();
 		Pupil::Renderer::Submit(m_Shader, m_VertexArray, model);
 		Pupil::Renderer::EndScene();
 	}
@@ -125,7 +131,8 @@ private:
 	Pupil::Ref<Pupil::VertexBuffer>  m_VertexBuffer;
 	Pupil::Ref<Pupil::IndexBuffer>  m_IndexBuffer;
 
-	Pupil::Ref<Pupil::Texture2D> m_Texture2D;
+	Pupil::Ref<Pupil::Texture2D> m_Texture2D1;
+	Pupil::Ref<Pupil::Texture2D> m_Texture2D2;
 
 	Pupil::OrthographicCamera m_OrthoCamera;
 	glm::vec3 m_CameraPosition;
