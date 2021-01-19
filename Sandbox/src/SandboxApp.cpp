@@ -12,6 +12,7 @@ public:
 		:Layer("Example"), m_OrthoCamera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f) {
 
 		Pupil::Renderer::Init();
+		m_ShaderLibrary.Load("TextureShader", "assets/shaders/Texture");
 
 		float vertices[4 * 5] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -33,7 +34,7 @@ public:
 		m_IndexBuffer = Pupil::Ref<Pupil::IndexBuffer>(Pupil::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
-		m_Shader = Pupil::Shader::Create("assets/shaders/Texture.vert", "assets/shaders/Texture.frag");
+		m_Shader = m_ShaderLibrary.GetShader("TextureShader");
 		
 		m_Texture2D1 = Pupil::Texture2D::Create("assets/textures/container.jpg");
 		m_Texture2D2 = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
@@ -95,7 +96,7 @@ public:
 	}
 
 private:
-	unsigned int m_VertexArrays;
+	Pupil::ShaderLibrary m_ShaderLibrary;
 	Pupil::Ref<Pupil::Shader> m_Shader;
 	Pupil::Ref<Pupil::VertexArray>  m_VertexArray;
 	Pupil::Ref<Pupil::VertexBuffer>  m_VertexBuffer;

@@ -9,10 +9,11 @@ namespace Pupil {
 
 	class PP_API OpenGLShader : public Shader {
 	public:
-		void checkCompileError(uint32_t shader, std::string type);
-
-		OpenGLShader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath);
+		OpenGLShader(const std::string& filePath_WithOutDot);
 		virtual ~OpenGLShader();
+
+		void CheckCompileError(uint32_t shader, std::string type);
+		inline virtual const std::string& GetName() const override { return m_Name; }
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
 	
@@ -35,6 +36,7 @@ namespace Pupil {
 		
 	private:
 		uint32_t m_RendererID;
+		std::string m_Name;
 		mutable std::unordered_map<std::string, int> m_UniformLocation;
 	};
 }

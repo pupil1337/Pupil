@@ -8,26 +8,18 @@
 
 namespace Pupil {
 
-	void OpenGLShader::checkCompileError(uint32_t shader, std::string type) {
-		int success;
-		char info_log[1024];
-		if (type != "PROGRAM") {
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-			if (!success) {
-				glGetShaderInfoLog(shader, 1024, NULL, info_log);
-				PP_CORE_ASSERT("ERROR::SHADER::COMPILE (type : - {0} -)\n{1}\n", info_log);
-			}
-		}
-		else {
-			glGetProgramiv(shader, GL_LINK_STATUS, &success);
-			if (!success) {
-				glGetProgramInfoLog(shader, 1024, NULL, info_log);
-				PP_CORE_ASSERT("ERROR::SHADER::LINK (type : - {0} -)\n{1}\n", info_log);
-			}
-		}
-	}
 	// -------------------OpenGLShader-------------------------------
-	OpenGLShader::OpenGLShader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath) {
+	OpenGLShader::OpenGLShader(const std::string& filePath_WithOutDot) {
+		auto pos = filePath_WithOutDot.find_last_of("/\\");
+		if (pos == std::string::npos) m_Name = filePath_WithOutDot;
+		else m_Name = filePath_WithOutDot.substr(pos + 1);
+
+		std::string vertexPath = filePath_WithOutDot + ".vert";
+		std::string fragmentPath = filePath_WithOutDot + ".frag";
+		std::string geometryPath = filePath_WithOutDot + ".geom";
+		std::ifstream f(geometryPath.c_str());
+		if (!f.good()) geometryPath = "";
+	
 		std::string vertexCode;
 		std::string fragmentCode;
 		std::string geometryCode;
@@ -72,12 +64,12 @@ namespace Pupil {
 		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertexShader, 1, &vShaderCode, NULL);
 		glCompileShader(vertexShader);
-		checkCompileError(vertexShader, "VERTEX");
+		CheckCompileError(vertexShader, "VERTEX");
 
 		GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(fragmentShader, 1, &fShaderCode, NULL);
 		glCompileShader(fragmentShader);
-		checkCompileError(fragmentShader, "FRAGMENT");
+		CheckCompileError(fragmentShader, "FRAGMENT");
 
 		GLuint geometry;
 		if (geometryPath != "") {
@@ -85,7 +77,7 @@ namespace Pupil {
 			geometry = glCreateShader(GL_GEOMETRY_SHADER);
 			glShaderSource(geometry, 1, &gShaderCode, NULL);
 			glCompileShader(geometry);
-			checkCompileError(geometry, "GEOMETRY");
+			CheckCompileError(geometry, "GEOMETRY");
 		}
 		m_RendererID = glCreateProgram();
 		GLuint shader_program = m_RendererID;
@@ -93,11 +85,30 @@ namespace Pupil {
 		glAttachShader(shader_program, fragmentShader);
 		if (geometryPath != "") glAttachShader(shader_program, geometry);
 		glLinkProgram(shader_program);
-		checkCompileError(shader_program, "PROGRAM");
+		CheckCompileError(shader_program, "PROGRAM");
 
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 		if (geometryPath != "") glDeleteShader(geometry);
+	}
+
+	void OpenGLShader::CheckCompileError(uint32_t shader, std::string type) {
+		int success;
+		char info_log[1024];
+		if (type != "PROGRAM") {
+			glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+			if (!success) {
+				glGetShaderInfoLog(shader, 1024, NULL, info_log);
+				PP_CORE_ASSERT("ERROR::SHADER::COMPILE (type : - {0} -)\n{1}\n", info_log);
+			}
+		}
+		else {
+			glGetProgramiv(shader, GL_LINK_STATUS, &success);
+			if (!success) {
+				glGetProgramInfoLog(shader, 1024, NULL, info_log);
+				PP_CORE_ASSERT("ERROR::SHADER::LINK (type : - {0} -)\n{1}\n", info_log);
+			}
+		}
 	}
 
 	OpenGLShader::~OpenGLShader() {
