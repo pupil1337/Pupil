@@ -53,7 +53,7 @@ namespace Pupil {
 		// Set GLFW callback
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
+			glViewport(0, 0, width, height);
 			WindowResizedEvent event(width, height);
 			data.EventCallback(event);
 		});

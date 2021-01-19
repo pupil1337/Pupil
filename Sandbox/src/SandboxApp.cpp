@@ -46,7 +46,7 @@ public:
 	}
 
 	virtual void OnUpdate(Pupil::TimeStep ts) override {
-		//PP_TRACE("Fps:{0}", 1.0f / ts);
+		m_TimeStep = ts;
 		if (Pupil::Input::IsKeyPressed(PP_KEY_A)) m_CameraPosition.x -= m_CameraMoveSpeed * ts;
 		if (Pupil::Input::IsKeyPressed(PP_KEY_D)) m_CameraPosition.x += m_CameraMoveSpeed * ts;
 		if (Pupil::Input::IsKeyPressed(PP_KEY_S)) m_CameraPosition.y -= m_CameraMoveSpeed * ts;
@@ -63,14 +63,14 @@ public:
 		m_OrthoCamera.SetRotation(m_CameraRotation);
 
 		Pupil::Renderer::BeginScene(m_OrthoCamera);
-
-		for (int i = 0; i != 8; ++i) {
-			for (int j = 0; j != 8; ++j) {
+		
+		m_Texture2D2->Bind();
+		for (int i = 0; i != m_row; ++i) {
+			for (int j = 0; j != m_col; ++j) {
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(i*0.205f, j*0.205f, 0.0f));
 				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 				model = glm::scale(model, glm::vec3(0.2f));
-				m_Texture2D2->Bind();
 				Pupil::Renderer::Submit(m_Shader, m_VertexArray, model);
 			}
 		}
@@ -89,10 +89,31 @@ public:
 		ImGui::Begin("Settings");
 		//ImGui::ColorEdit3("Color", glm::value_ptr(m_Color));
 		ImGui::End();
+
+		// DragInt
+		ImGui::Begin("row & col");
+		ImGui::DragInt("Row: ", &m_row, 1, 1, 100);
+		ImGui::DragInt("Row: ", &m_col, 1, 1, 100);
+		ImGui::End();
+
+		// performance PlotLines
+		ImGui::Begin("Renderer Performance");
+		m_FrameTimeGraph[values_offset] = m_TimeStep.GetMilliSecond();
+		values_offset = (values_offset + 1) % 100;
+		ImGui::PlotLines("#FrameTime", m_FrameTimeGraph, 100, values_offset, "FrameTime (ms)", 0.0f, 200.0f, ImVec2(0, 100), 100);
+		ImGui::Text("FrameTime: %.2f (Fps: %d)", m_TimeStep.GetMilliSecond(), (int)(1.0f / m_TimeStep.GetSecond()));
+		ImGui::End();
 	}
 
 	virtual void OnEvent(Pupil::Event& event) override {
-
+		if (event.GetEventType() == Pupil::EventType::MouseScrolled) {
+			Pupil::MouseScrolledEvent& e = (Pupil::MouseScrolledEvent&)event;
+			float yOffset = e.GetYOffset();
+			float left = m_OrthoCamera.GetLeft();
+			left += yOffset;
+			if (left > -1.6f) left = -1.6f;
+			m_OrthoCamera.SetLeft(left);
+		}
 	}
 
 private:
@@ -110,6 +131,12 @@ private:
 	float m_CameraRotation = 0.0f;
 	float m_CameraMoveSpeed = 1.0f;
 	float m_CameraRotateSpeed = 90.0f;
+
+	int m_row = 1, m_col = 1;
+
+	Pupil::TimeStep m_TimeStep;
+	float m_FrameTimeGraph[100];
+	uint32_t values_offset = 0;
 };
 
 class Sandbox : public Pupil::Application {

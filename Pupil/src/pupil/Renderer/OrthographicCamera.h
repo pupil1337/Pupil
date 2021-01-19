@@ -22,6 +22,9 @@ namespace Pupil {
 		inline const glm::mat4& GetProjection() const { return m_Projection; }
 		inline const glm::mat4& GetProjectionView() const { return m_ProjectionView; }
 
+		void SetLeft(float left);
+		inline const float GetLeft() const { return m_Left; }
+
 	private:
 		void RecalculateProjectionViewModel();
 	private:
@@ -31,5 +34,7 @@ namespace Pupil {
 
 		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f};
 		float m_Rotation = 0.0f;
+
+		float m_Left;
 	};
 }
