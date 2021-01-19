@@ -9,7 +9,9 @@ namespace Pupil {
 
 	class PP_API OpenGLShader : public Shader {
 	public:
-		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+		void checkCompileError(uint32_t shader, std::string type);
+
+		OpenGLShader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath);
 		virtual ~OpenGLShader();
 		virtual void Bind() const override;
 		virtual void UnBind() const override;

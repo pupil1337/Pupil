@@ -33,6 +33,7 @@ namespace Pupil {
 				internalFormat = irradianceCorrection ? GL_SRGB_ALPHA : GL_RGBA;
 				format = GL_RGBA;
 			}
+			PP_CORE_ASSERT(internalFormat & format, "have not this format!");
 			glBindTexture(GL_TEXTURE_2D, m_RendererID);
 			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);

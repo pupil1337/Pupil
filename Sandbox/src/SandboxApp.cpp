@@ -33,37 +33,7 @@ public:
 		m_IndexBuffer = Pupil::Ref<Pupil::IndexBuffer>(Pupil::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
-		// --shader-----------------------------------------
-		std::string vertexSrc = R"(
-			#version 330 core
-			layout(location = 0) in vec3 aPos;
-			layout(location = 1) in vec2 aTexCoord;
-						
-			uniform mat4 ProjectonView;
-			uniform mat4 Model;
-			
-			out vec2 TexCoord;
-			
-			void main() {
-				TexCoord = aTexCoord;
-				gl_Position = ProjectonView * Model * vec4(aPos, 1.0f);
-			}
-		)";
-
-		std::string fragmentSrc = R"(
-			#version 330 core
-			out vec4 FragColor;
-			
-			in vec2 TexCoord;
-			
-			uniform sampler2D Texture1;
-			
-			void main() {
-				FragColor = texture(Texture1, TexCoord).rgba;
-			}
-		)";
-
-		m_Shader = Pupil::Shader::Create(vertexSrc, fragmentSrc);
+		m_Shader = Pupil::Shader::Create("assets/shaders/Texture.vert", "assets/shaders/Texture.frag");
 		
 		m_Texture2D1 = Pupil::Texture2D::Create("assets/textures/container.jpg");
 		m_Texture2D2 = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
