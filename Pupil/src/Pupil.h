@@ -28,6 +28,7 @@
 // -------------------------------
 
 #include "pupil/Renderer/OrthographicCamera.h"
+#include "pupil/OrthographicCameraController.h"
 
 // ------Entry Point--------------
 #include "pupil/EntryPoint.h"

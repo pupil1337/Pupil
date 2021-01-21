@@ -6,14 +6,13 @@
 namespace Pupil {
 
 	OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top)
-		:m_Projection(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), m_View(1.0f), m_Left(left) {
+		:m_Projection(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), m_View(1.0f) {
 		
 		m_ProjectionView = m_Projection * m_View;
 	}
 
-	void OrthographicCamera::SetLeft(float left) {
-		m_Left = left;
-		m_Projection = glm::ortho(left, -left, left * 0.9f / 1.6f, -left * 0.9f / 1.6f, -1.0f, 1.0f);
+	void OrthographicCamera::SetPorjection(float left, float right, float bottom, float top) {
+		m_Projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 		m_ProjectionView = m_Projection * m_View;
 	}
 
