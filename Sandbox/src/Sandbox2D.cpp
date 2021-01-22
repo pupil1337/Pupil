@@ -14,31 +14,8 @@ namespace Pupil {
 	}
 
 	void Sandbox2D::OnAttach() {
-		Pupil::Renderer::Init();
-
-		float vertices[4 * 3] = {
-			-0.5f, -0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f
-		};
-
-		m_VertexArray = Pupil::VertexArray::Create();
-
-		Pupil::Ref<Pupil::VertexBuffer> vertexBuffer = Pupil::VertexBuffer::Create(vertices, sizeof(vertices));
-		Pupil::BufferLayout layout = {
-			{ Pupil::ShaderDataType::Float3, "aPos"}
-		};
-		vertexBuffer->SetLayout(layout);
-		m_VertexArray->AddVertexBuffer(vertexBuffer);
-
-		uint32_t indices[6] = { 0, 1, 2, 1, 3, 2 };
-		Pupil::Ref<Pupil::IndexBuffer> indexBuffer = Pupil::Ref<Pupil::IndexBuffer>(Pupil::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		m_VertexArray->SetIndexBuffer(indexBuffer);
-
-		m_Shader = std::make_shared<Pupil::OpenGLShader>("assets/shaders/simple");
+		
 	}
-
 
 	void Sandbox2D::OnUpdate(Pupil::TimeStep ts) {
 		m_TimeStep = ts;
@@ -48,13 +25,9 @@ namespace Pupil {
 		Pupil::RenderCommand::SetClearColor(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));
 		Pupil::RenderCommand::Clear();
 
-		Pupil::Renderer::BeginScene(m_OrthoCameraController.GetCamera());
-
-		m_Shader->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(m_Shader)->SetVec4("Color", m_Color);
-
-		glm::mat4 model = glm::mat4(1.0f);
-		Pupil::Renderer::Submit(m_Shader, m_VertexArray, model);
+		Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
+		
+		Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_Color);
 		
 		Pupil::Renderer::EndScene();
 	}
@@ -63,7 +36,6 @@ namespace Pupil {
 		ImGui::Begin("Settings");
 		ImGui::ColorEdit4("Color", glm::value_ptr(m_Color));
 		ImGui::End();
-
 
 		// performance PlotLines
 		ImGui::Begin("Renderer Performance");

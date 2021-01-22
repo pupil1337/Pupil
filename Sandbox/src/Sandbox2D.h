@@ -26,7 +26,7 @@ namespace Pupil {
 		glm::vec4 m_Color;
 
 		Pupil::TimeStep m_TimeStep;
-		float m_FrameTimeGraph[100];
+		float m_FrameTimeGraph[100] = { 0.0f };
 		uint32_t values_offset = 0;
 	};
 }

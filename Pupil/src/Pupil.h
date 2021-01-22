@@ -19,6 +19,7 @@
 
 // ------Renderer------------------
 #include "pupil/Renderer/Renderer.h"
+#include "pupil/Renderer/Renderer2D.h"
 #include "pupil/Renderer/Shader.h"
 #include "pupil/Renderer/VertexArray.h"
 #include "pupil/Renderer/Buffer.h"

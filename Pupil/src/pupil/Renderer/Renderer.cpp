@@ -2,6 +2,7 @@
 #include "renderer.h"
 
 #include "platform/OpenGL/OpenGLShader.h"
+#include "Renderer2D.h"
 
 namespace Pupil {
 
@@ -9,6 +10,7 @@ namespace Pupil {
 
 	void Renderer::Init() {
 		RenderCommand::Init();
+		Renderer2D::Init();
 	}
 
 	void Renderer::BeginScene(const OrthographicCamera& camera) {

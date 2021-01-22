@@ -14,7 +14,6 @@ public:
 	ExampleLayer()
 		:Layer("Example"), m_OrthoCameraController(1280.0f / 720.0f, true) {
 
-		Pupil::Renderer::Init();
 		m_ShaderLibrary.Load("TextureShader", "assets/shaders/Texture");
 
 		float vertices[4 * 5] = {
