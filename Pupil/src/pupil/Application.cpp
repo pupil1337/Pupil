@@ -49,6 +49,7 @@ namespace Pupil {
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowClosedEvent>(PP_BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizedEvent>(PP_BIND_EVENT_FN(Application::OnWindowResize));
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it) {
 			(*it)->OnEvent(e);
@@ -65,10 +66,11 @@ namespace Pupil {
 			TimeStep timeStep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			for (Layer* layer : m_LayerStack) {
-				layer->OnUpdate(timeStep);
+			if (!m_MiniSize) {
+				for (Layer* layer : m_LayerStack) {
+					layer->OnUpdate(timeStep);
+				}
 			}
-
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack) {
 				layer->OnImGuiRender();
@@ -83,5 +85,16 @@ namespace Pupil {
 	bool Application::OnWindowClose(WindowClosedEvent& e) {
 		m_Running = false;
 		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizedEvent& e) {
+		if (e.GetWidth() == 0 || e.GetHeight() == 0) {
+			m_MiniSize = true;
+		}
+		else {
+			RenderCommand::SetViewport(0, 0, e.GetWidth(), e.GetHeight());
+			m_MiniSize = false;
+		}
+		return false;
 	}
 }

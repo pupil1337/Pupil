@@ -30,11 +30,13 @@ namespace Pupil {
 
 	private:
 		bool OnWindowClose(WindowClosedEvent& e);
+		bool OnWindowResize(WindowResizedEvent& e);
 
 		Scope<Window> m_Window;
+		LayerStack m_LayerStack;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
-		LayerStack m_LayerStack;
+		bool m_MiniSize = false;
 
 		float m_LastFrameTime = 0.0f;
 	private:

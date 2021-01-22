@@ -17,6 +17,7 @@ namespace Pupil {
 		if (Pupil::Input::IsKeyPressed(PP_KEY_S)) m_CameraPosition.y -= m_ZoomLevel * ts;
 		if (Pupil::Input::IsKeyPressed(PP_KEY_W)) m_CameraPosition.y += m_ZoomLevel * ts;
 		m_Camera.SetPosition(m_CameraPosition);
+		//PP_TRACE("{0}, {1}", m_CameraPosition.x, m_CameraPosition.y);
 
 		if (m_Rotation) {
 			if (Pupil::Input::IsKeyPressed(PP_KEY_Q)) m_CameraRotation -= 90.0f * ts;
@@ -35,13 +36,13 @@ namespace Pupil {
 		m_ZoomLevel -= e.GetYOffset() * 0.125f;
 		m_ZoomLevel = std::max(m_ZoomLevel, 0.125f);
 		m_Camera.SetPorjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
-		return false;
+		return true;
 	}
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizedEvent& e) {
 		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		m_Camera.SetPorjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
-		return false;
+		return true;
 	}
 
 }
