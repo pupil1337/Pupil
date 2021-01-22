@@ -1,12 +1,12 @@
 #include "pppch.h"
 #include "WindowsInput.h"
 
-#include "pupil/Application.h"
+#include "pupil/Core/Application.h"
 #include <GLFW/glfw3.h>
 
 namespace Pupil {
 	
-	Input* Input::s_Instance = new WindowsInput();
+	Scope<Input> Input::s_Instance = std::make_unique<WindowsInput>();
 
 	bool WindowsInput::IsKeyPressedImpl(int keycode) {
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());

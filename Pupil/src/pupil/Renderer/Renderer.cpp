@@ -5,7 +5,7 @@
 
 namespace Pupil {
 
-	Renderer::ScenceData* Renderer::m_ScenceData = new Renderer::ScenceData;
+	Scope<Renderer::ScenceData> Renderer::m_ScenceData = std::make_unique<Renderer::ScenceData>();
 
 	void Renderer::Init() {
 		RenderCommand::Init();

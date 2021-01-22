@@ -7,7 +7,7 @@
 #include "pupil/Events/Event.h"
 #include "pupil/Events/ApplicationEvent.h"
 
-#include "pupil/LayerStack.h"
+#include "pupil/Core/LayerStack.h"
 
 #include "pupil/ImGui/ImGuiLayer.h"
 

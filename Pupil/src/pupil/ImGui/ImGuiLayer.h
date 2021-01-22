@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pupil/Layer.h"
+#include "pupil/Core/Layer.h"
 #include "pupil/Events/MouseEvent.h"
 #include "pupil/Events/KeyEvent.h"
 #include "pupil/Events/ApplicationEvent.h"

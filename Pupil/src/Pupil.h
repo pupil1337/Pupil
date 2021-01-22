@@ -1,15 +1,15 @@
 #pragma once
 
 // for Application
-#include "pupil/Application.h"
+#include "pupil/Core/Application.h"
 
-#include "pupil/Log.h"
+#include "pupil/Core/Log.h"
 
-#include "pupil/Input.h"
-#include "pupil/KeyCodes.h"
-#include "pupil/MouseButtonCodes.h"
+#include "pupil/Core/Input.h"
+#include "pupil/Core/KeyCodes.h"
+#include "pupil/Core/MouseButtonCodes.h"
 
-#include "pupil/Layer.h"
+#include "pupil/Core/Layer.h"
 #include "pupil/ImGui/ImGuiLayer.h"
 
 // ------Core----------------------
@@ -28,8 +28,8 @@
 // -------------------------------
 
 #include "pupil/Renderer/OrthographicCamera.h"
-#include "pupil/OrthographicCameraController.h"
+#include "pupil/Renderer/OrthographicCameraController.h"
 
 // ------Entry Point--------------
-#include "pupil/EntryPoint.h"
+#include "pupil/Core/EntryPoint.h"
 // -------------------------------

@@ -1,5 +1,5 @@
 #pragma once
-#include "pupil/Core.h"
+#include "pupil/Core/Core.h"
 
 #include "pupil/Renderer/RendererAPI.h"
 
@@ -29,7 +29,7 @@ namespace Pupil {
 		}
 
 	private:
-		static RendererAPI* s_RendererAPI;
+		static Scope<RendererAPI> s_RendererAPI;
 	};
 
 }

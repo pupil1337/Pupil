@@ -1,6 +1,6 @@
 #pragma once
 
-#include"pupil/Window.h"
+#include "pupil/Core/Window.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -33,7 +33,7 @@ namespace Pupil {
 
 	private:
 		GLFWwindow* m_Window;
-		GraphicsContext* m_Context;
+		Scope<GraphicsContext> m_Context;
 
 		struct WindowData {
 			std::string Title;

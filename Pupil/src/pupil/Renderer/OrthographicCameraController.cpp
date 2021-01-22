@@ -1,8 +1,8 @@
 #include "pppch.h"
 #include "OrthographicCameraController.h"
 
-#include "pupil/Input.h"
-#include "pupil/KeyCodes.h"
+#include "pupil/Core/Input.h"
+#include "pupil/Core/KeyCodes.h"
 
 namespace Pupil {
 
@@ -12,10 +12,22 @@ namespace Pupil {
 	}
 
 	void OrthographicCameraController::OnUpdate(TimeStep ts) {
-		if (Pupil::Input::IsKeyPressed(PP_KEY_A)) m_CameraPosition.x -= m_ZoomLevel * ts;
-		if (Pupil::Input::IsKeyPressed(PP_KEY_D)) m_CameraPosition.x += m_ZoomLevel * ts;
-		if (Pupil::Input::IsKeyPressed(PP_KEY_S)) m_CameraPosition.y -= m_ZoomLevel * ts;
-		if (Pupil::Input::IsKeyPressed(PP_KEY_W)) m_CameraPosition.y += m_ZoomLevel * ts;
+		if (Pupil::Input::IsKeyPressed(PP_KEY_A)) {
+			m_CameraPosition.x -= cos(glm::radians(-m_CameraRotation)) * m_ZoomLevel * ts;
+			m_CameraPosition.y -= sin(glm::radians(-m_CameraRotation)) * m_ZoomLevel * ts;
+		}
+		if (Pupil::Input::IsKeyPressed(PP_KEY_D)) {
+			m_CameraPosition.x += cos(glm::radians(-m_CameraRotation)) * m_ZoomLevel * ts;
+			m_CameraPosition.y += sin(glm::radians(-m_CameraRotation)) * m_ZoomLevel * ts;
+		}
+		if (Pupil::Input::IsKeyPressed(PP_KEY_S)) {
+			m_CameraPosition.x += sin(glm::radians(-m_CameraRotation)) * m_ZoomLevel * ts;
+			m_CameraPosition.y -= cos(glm::radians(-m_CameraRotation)) * m_ZoomLevel * ts;
+		}
+		if (Pupil::Input::IsKeyPressed(PP_KEY_W)) {
+			m_CameraPosition.x -= sin(glm::radians(-m_CameraRotation)) * m_ZoomLevel * ts;
+			m_CameraPosition.y += cos(glm::radians(-m_CameraRotation)) * m_ZoomLevel * ts;
+		}
 		m_Camera.SetPosition(m_CameraPosition);
 		//PP_TRACE("{0}, {1}", m_CameraPosition.x, m_CameraPosition.y);
 

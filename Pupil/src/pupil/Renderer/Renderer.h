@@ -1,5 +1,5 @@
 #pragma once
-#include "pupil/Core.h"
+#include "pupil/Core/Core.h"
 
 #include "pupil/Renderer/RendererAPI.h"
 #include "pupil/Renderer/RenderCommand.h"
@@ -25,7 +25,7 @@ namespace Pupil {
 			glm::mat4 ProjectionView;
 		};
 
-		static ScenceData* m_ScenceData;
+		static Scope<ScenceData> m_ScenceData;
 	};
 
 }

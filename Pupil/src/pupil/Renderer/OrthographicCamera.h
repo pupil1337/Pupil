@@ -1,5 +1,5 @@
 #pragma once
-#include "pupil/Core.h"
+#include "pupil/Core/Core.h"
 
 #include <glm/glm.hpp>
 

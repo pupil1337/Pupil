@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pupil/Core.h"
+#include "pupil/Core/Core.h"
 #include "pupil/Events/Event.h"
 
 #include "pupil/Core/TimeStep.h"

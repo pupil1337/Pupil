@@ -1,9 +1,9 @@
 #pragma once
 
-#include"pppch.h"
+#include "pppch.h"
 
-#include"pupil/Core.h"
-#include"pupil/Events/Event.h"
+#include "pupil/Core/Core.h"
+#include "pupil/Events/Event.h"
 
 namespace Pupil {
 
@@ -36,7 +36,7 @@ namespace Pupil {
 
 		virtual void* GetNativeWindow() const = 0;
 
-		static Window* Create(const WindowProps& props = WindowProps());
+		static Scope<Window> Create(const WindowProps& props = WindowProps());
 
 	};
 

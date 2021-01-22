@@ -1,7 +1,7 @@
 #include "pppch.h"
 #include "OpenGLContext.h"
 
-#include "pupil/Application.h"
+#include "pupil/Core/Application.h"
 
 namespace Pupil {
 

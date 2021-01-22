@@ -1,5 +1,5 @@
 #pragma once
-#include "pupil/Core.h"
+#include "pupil/Core/Core.h"
 
 #include "pupil/Renderer/Shader.h"
 

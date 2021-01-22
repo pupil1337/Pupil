@@ -1,8 +1,8 @@
 #pragma once
 
-#include "pupil/Core.h"
+#include "pupil/Core/Core.h"
 
-#include "pupil/renderer/Buffer.h"
+#include "pupil/Renderer/Buffer.h"
 
 namespace Pupil {
 

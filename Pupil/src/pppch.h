@@ -10,7 +10,7 @@
 #include <sstream>
 #include <vector>
 
-#include "pupil/Log.h"
+#include "pupil/Core/Log.h"
 
 #ifdef PP_PLATFORM_WINDOWS
 	#include <Windows.h>

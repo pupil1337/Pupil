@@ -9,7 +9,7 @@
 class ExampleLayer :public Pupil::Layer {
 public:
 	ExampleLayer()
-		:Layer("Example"), m_OrthoCameraController(1280.0f / 720.0f) {
+		:Layer("Example"), m_OrthoCameraController(1280.0f / 720.0f, true) {
 
 		Pupil::Renderer::Init();
 		m_ShaderLibrary.Load("TextureShader", "assets/shaders/Texture");
@@ -77,6 +77,7 @@ public:
 		}
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-1.0f, -0.5f, 0.0f));
+		model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::scale(model, glm::vec3(1.5f));
 
 		m_Texture2D1->Bind();

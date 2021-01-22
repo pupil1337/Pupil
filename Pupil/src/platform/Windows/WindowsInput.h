@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pupil/Input.h"
+#include "pupil/Core/Input.h"
 
 namespace Pupil {
 	

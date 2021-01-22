@@ -1,7 +1,7 @@
 #include "pppch.h"
 #include "WindowsWindow.h"
 
-#include "pupil/Input.h"
+#include "pupil/Core/Input.h"
 #include "pupil/Events/ApplicationEvent.h"
 #include "pupil/Events/MouseEvent.h"
 #include "pupil/Events/KeyEvent.h"
@@ -16,8 +16,8 @@ namespace Pupil {
 		PP_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	Window* Window::Create(const WindowProps& props) {
-		return new WindowsWindow(props);
+	Scope<Window> Window::Create(const WindowProps& props) {
+		return std::make_unique<WindowsWindow>(props);
 	}
 
 	WindowsWindow::WindowsWindow(const WindowProps& props) {
@@ -25,7 +25,7 @@ namespace Pupil {
 	}
 
 	WindowsWindow::~WindowsWindow() {
-
+		Shutdown();
 	}
 
 	void WindowsWindow::Init(const WindowProps& props) {
@@ -44,7 +44,7 @@ namespace Pupil {
 
 		m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		
-		m_Context = new OpenGLContext(m_Window);
+		m_Context = std::make_unique<OpenGLContext>(m_Window);
 		m_Context->Init();
 		
 		glfwSetWindowUserPointer(m_Window, &m_Data);

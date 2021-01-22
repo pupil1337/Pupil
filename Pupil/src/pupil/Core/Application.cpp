@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "pupil/Input.h"
+#include "pupil/Core/Input.h"
 
 #include "pupil/Renderer/Renderer.h"
 
