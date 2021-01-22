@@ -31,5 +31,5 @@
 #include "pupil/Renderer/OrthographicCameraController.h"
 
 // ------Entry Point--------------
-#include "pupil/Core/EntryPoint.h"
+
 // -------------------------------

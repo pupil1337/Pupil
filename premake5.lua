@@ -70,7 +70,6 @@ project "Pupil"
 		systemversion "latest"
 
 		defines {
-			"PP_PLATFORM_WINDOWS",
 			"PP_BUILD_DLL",
 			"PP_DEBUG"
 		}
@@ -121,7 +120,6 @@ project "Sandbox"
 		systemversion "latest"
 
 		defines {
-			"PP_PLATFORM_WINDOWS"
 		}
 
 		filter "configurations:Debug"

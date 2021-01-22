@@ -1,10 +1,13 @@
 #include "pppch.h"
 #include "Pupil.h"
+#include "pupil/Core/EntryPoint.h"
 
 #include <imgui/imgui.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Sandbox2D.h"
 
 class ExampleLayer :public Pupil::Layer {
 public:
@@ -32,17 +35,17 @@ public:
 		}
 		m_VertexArray = Pupil::VertexArray::Create();
 
-		m_VertexBuffer = Pupil::VertexBuffer::Create(vertices, sizeof(vertices));
+		Pupil::Ref<Pupil::VertexBuffer> vertexBuffer = Pupil::VertexBuffer::Create(vertices, sizeof(vertices));
 		Pupil::BufferLayout layout = {
 			{ Pupil::ShaderDataType::Float3, "aPos"},
 			{ Pupil::ShaderDataType::Float2, "aTexCoord"}
 		};
-		m_VertexBuffer->SetLayout(layout);
-		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+		vertexBuffer->SetLayout(layout);
+		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
 		uint32_t indices[6] = { 0, 1, 2, 1, 3, 2 };
-		m_IndexBuffer = Pupil::Ref<Pupil::IndexBuffer>(Pupil::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
+		Pupil::Ref<Pupil::IndexBuffer> indexBuffer = Pupil::Ref<Pupil::IndexBuffer>(Pupil::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		m_VertexArray->SetIndexBuffer(indexBuffer);
 
 		m_Shader = m_ShaderLibrary.GetShader("TextureShader");
 		
@@ -115,8 +118,6 @@ private:
 	Pupil::ShaderLibrary m_ShaderLibrary;
 	Pupil::Ref<Pupil::Shader> m_Shader;
 	Pupil::Ref<Pupil::VertexArray>  m_VertexArray;
-	Pupil::Ref<Pupil::VertexBuffer>  m_VertexBuffer;
-	Pupil::Ref<Pupil::IndexBuffer>  m_IndexBuffer;
 
 	Pupil::Ref<Pupil::Texture2D> m_Texture2D1;
 	Pupil::Ref<Pupil::Texture2D> m_Texture2D2;
@@ -134,7 +135,8 @@ class Sandbox : public Pupil::Application {
 
 public:
 	Sandbox() {
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
+		PushLayer(new Pupil::Sandbox2D());
 	}
 
 	~Sandbox() {

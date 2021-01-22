@@ -9,7 +9,7 @@
 
 namespace Pupil {
 
-	class OrthographicCameraController {
+	class PP_API OrthographicCameraController {
 	public:
 		OrthographicCameraController(float aspectRatio, bool rotation = false);
 

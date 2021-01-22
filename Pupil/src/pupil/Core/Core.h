@@ -1,7 +1,37 @@
 #pragma once
 
+#ifdef _WIN32
+	#ifdef _WIN64
+		#define PP_PLATFORM_WINDOWS
+	#else
+		#error "x86 Builds are not supported!"
+	#endif
+#elif defined(__APPLE__) || defined(__MACH__)
+	#include <TargetConditionals.h>
+	#if TARGET_IPHONE_SIMULATOR == 1
+		#error "IOS simulator is not supported!"
+	#elif TARGET_OS_IPHONE == 1
+		#define PP_PLATFORM_IOS
+		#error "IOS is not supported!"
+	#elif TARGET_OS_MAC == 1
+		#define PP_PLATFORM_MACOS
+		#error "MacOS is not supported!"
+	#else
+		#error "Unknow Apple platform!"
+	#endif
+#elif defined(__ANDROID__)
+	#define PP_PLATFORM_ANDROID
+	#error "Android is not supported"
+#elif defined(__LINUX__)
+	#define PP_PLATFORM_LINUX
+	#error "Linux is not supported"
+#else
+	#error "Unknow platform!"
+#endif
+
+
 #ifdef PP_PLATFORM_WINDOWS
-	#if HZ_DYNAMIC_LINK
+	#if PP_DYNAMIC_LINK
 		#ifdef PP_BUILD_DLL
 			#define PP_API __declspec(dllexport)
 		#else
@@ -25,6 +55,12 @@
 	#define PP_ASSERT(x, ...)
 	#define PP_CORE_ASSERT(x, ...)
 #endif
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+/// Myself define ///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 
 #define BIT(x) (1 << x)
 

@@ -1,10 +1,9 @@
 #pragma once
 #include "pupil/Core/Core.h"
 
-#include <vector>
-#include <glm/glm.hpp>
-
 // http://devernay.free.fr/cours/opengl/materials.html
+
+#include <glm/glm.hpp>
 
 namespace Pupil {
 
@@ -16,7 +15,7 @@ namespace Pupil {
 		green_rubber, red_rubber, white_rubber, yellow_rubber // 24 ¸ö
 	};
 
-	struct Material {
+	static struct Material {
 		Material() {
 			mal[ 0].ambient = glm::vec3(0.0215f, 0.1745f, 0.0215f);       mal[ 0].diffuse = glm::vec3(0.07568f, 0.61424f, 0.07568f);    mal[ 0].specular = glm::vec3(0.633f, 0.727811f, 0.633f);             mal[ 0].shininess = 0.6f;
 			mal[ 1].ambient = glm::vec3(0.135f, 0.2225f, 0.1575f);        mal[ 1].diffuse = glm::vec3(0.54f, 0.89f, 0.63f);             mal[ 1].specular = glm::vec3(0.316228f, 0.316228f, 0.316228f);       mal[ 1].shininess = 0.1f;

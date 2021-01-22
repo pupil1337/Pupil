@@ -20,7 +20,7 @@ namespace Pupil {
 
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& model) {
 		shader->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetMat4("ProjectonView", m_ScenceData->ProjectionView);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetMat4("ProjectionView", m_ScenceData->ProjectionView);
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetMat4("Model", model);
 		RenderCommand::DrawIndexed(vertexArray);
 		shader->UnBind();
