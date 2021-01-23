@@ -25,8 +25,8 @@ namespace Pupil {
 	private:
 		struct Renderer2DStorage {
 			Ref<VertexArray> m_VertexArray;
-			Ref<Shader> m_SimpleShader;
 			Ref<Shader> m_TextureShader;
+			Ref<Texture2D> m_WhiteTexture;
 		};
 
 		static Scope<Renderer2DStorage> m_Data;

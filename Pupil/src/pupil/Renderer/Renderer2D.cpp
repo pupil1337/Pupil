@@ -33,16 +33,17 @@ namespace Pupil {
 		Pupil::Ref<Pupil::IndexBuffer> indexBuffer = Pupil::Ref<Pupil::IndexBuffer>(Pupil::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_Data->m_VertexArray->SetIndexBuffer(indexBuffer);
 
-		m_Data->m_SimpleShader = Shader::Create("assets/shaders/Simple");
 		m_Data->m_TextureShader = Shader::Create("assets/shaders/Texture");
 		m_Data->m_TextureShader->Bind();
 		m_Data->m_TextureShader->SetInt("Texture0", 0);
+
+		// white texture
+		uint32_t witeTextureData = 0xffffffff;
+		m_Data->m_WhiteTexture = Texture2D::Create(1, 1);
+		m_Data->m_WhiteTexture->SetData(&witeTextureData, sizeof(uint32_t));
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera) {
-		m_Data->m_SimpleShader->Bind();
-		m_Data->m_SimpleShader->SetMat4("ProjectionView", camera.GetProjectionView());
-		
 		m_Data->m_TextureShader->Bind();
 		m_Data->m_TextureShader->SetMat4("ProjectionView", camera.GetProjectionView());
 	}
@@ -56,11 +57,12 @@ namespace Pupil {
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
-		m_Data->m_SimpleShader->Bind();
-		m_Data->m_SimpleShader->SetVec4("Color", color);
+		m_Data->m_TextureShader->Bind();
+		m_Data->m_TextureShader->SetVec4("Color", color);
+		m_Data->m_WhiteTexture->Bind(0);
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		m_Data->m_SimpleShader->SetMat4("Model", model);
+		m_Data->m_TextureShader->SetMat4("Model", model);
 		RenderCommand::DrawIndexed(m_Data->m_VertexArray);
 	}
 
@@ -71,6 +73,7 @@ namespace Pupil {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture) {
 		m_Data->m_TextureShader->Bind();
+		m_Data->m_TextureShader->SetVec4("Color", glm::vec4(1.0f));
 		texture->Bind(0);
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });

@@ -49,8 +49,8 @@
 #endif
 
 #ifdef PP_ENABLE_ASSERTS
-	#define PP_ASSERT(x, ...) { if(!x) { PP_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-	#define PP_CORE_ASSERT(x, ...) { if(!x) { PP_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+	#define PP_ASSERT(x, ...) { if(!(x)) { PP_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+	#define PP_CORE_ASSERT(x, ...) { if(!(x)) { PP_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
 #else
 	#define PP_ASSERT(x, ...)
 	#define PP_CORE_ASSERT(x, ...)

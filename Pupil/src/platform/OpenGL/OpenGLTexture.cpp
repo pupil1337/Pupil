@@ -2,48 +2,69 @@
 #include "OpenGLTexture.h"
 
 #include <stb_image.h>
-#include <glad/glad.h>
 
 namespace Pupil {
 
-
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 		: m_Path(path) {
-		bool irradianceCorrection = false;
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 
+		// ---load Data---
+		bool irradianceCorrection = false;
 		int width, height, nrComponents;
 		stbi_set_flip_vertically_on_load(true);
 		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
+		PP_CORE_ASSERT(data, "Failed to load texture2D!");
 		m_Width = width;
 		m_Height = height;
-		PP_CORE_ASSERT(data, "Failed to load texture2D!");
-		{
-			GLenum internalFormat = 0;
-			GLenum format = 0;
-			if (nrComponents == 1) {
-				internalFormat = GL_RED;
-				format = GL_RED;
-			}
-			else if (nrComponents == 3) {
-				internalFormat = irradianceCorrection ? GL_SRGB : GL_RGB;
-				format = GL_RGB;
-			}
-			else if (nrComponents == 4) {
-				internalFormat = irradianceCorrection ? GL_SRGB_ALPHA : GL_RGBA;
-				format = GL_RGBA;
-			}
-			PP_CORE_ASSERT(internalFormat & format, "have not this format!");
-			glBindTexture(GL_TEXTURE_2D, m_RendererID);
-			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-			glGenerateMipmap(GL_TEXTURE_2D);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		if (nrComponents == 1) {
+			InternalFormat = GL_RED;
+			DataFormat = GL_RED;
 		}
+		else if (nrComponents == 3) {
+			InternalFormat = irradianceCorrection ? GL_SRGB : GL_RGB;
+			DataFormat = GL_RGB;
+		}
+		else if (nrComponents == 4) {
+			InternalFormat = irradianceCorrection ? GL_SRGB_ALPHA : GL_RGBA8;
+			DataFormat = GL_RGBA;
+		}
+		PP_CORE_ASSERT(InternalFormat & DataFormat, "have not this format!");
+		
+		// ---Create Texture---
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+		glTextureStorage2D(m_RendererID, 1, InternalFormat, m_Width, m_Height);
+		glGenerateTextureMipmap(m_RendererID);
+		
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, DataFormat, GL_UNSIGNED_BYTE, data);
+		
 		stbi_image_free(data);
+	}
+
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
+	: m_Width(width), m_Height(height) {
+
+		InternalFormat = GL_RGBA8;
+		DataFormat = GL_RGBA;
+
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+		glTextureStorage2D(m_RendererID, 1, InternalFormat, m_Width, m_Height);
+
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	}
+
+	void OpenGLTexture2D::SetData(void* data, uint32_t size) const {
+		uint32_t formatSize = DataFormat == GL_RGBA ? 4 : 3;
+		PP_CORE_ASSERT(size == formatSize * m_Width * m_Height, "data must be entire the texture!");
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D() {
