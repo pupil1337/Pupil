@@ -19,18 +19,18 @@ namespace Pupil {
 	
 
 	public:
-		void SetBool(const std::string& name, bool value) const;
-		void SetInt(const std::string& name, int value) const;
-		void SetFloat(const std::string& name, float value) const;
-		void SetVec2(const std::string& name, float x, float y) const;
-		void SetVec2(const std::string& name, const glm::vec2& vec2) const;
-		void SetVec3(const std::string& name, float x, float y, float z) const;
-		void SetVec3(const std::string& name, const glm::vec3& vec3) const;
-		void SetVec4(const std::string& name, float x, float y, float z, float w) const;
-		void SetVec4(const std::string& name, const glm::vec4& vec4) const;
-		void SetMat2(const std::string& name, const glm::mat2& mat2) const;
-		void SetMat3(const std::string& name, const glm::mat3& mat3) const;
-		void SetMat4(const std::string& name, const glm::mat4& mat4) const;
+		virtual void SetBool(const std::string& name, bool value) const override;
+		virtual void SetInt(const std::string& name, int value) const override;
+		virtual void SetFloat(const std::string& name, float value) const override;
+		virtual void SetVec2(const std::string& name, float x, float y) const override;
+		virtual void SetVec2(const std::string& name, const glm::vec2& vec2) const override;
+		virtual void SetVec3(const std::string& name, float x, float y, float z) const override;
+		virtual void SetVec3(const std::string& name, const glm::vec3& vec3) const override;
+		virtual void SetVec4(const std::string& name, float x, float y, float z, float w) const override;
+		virtual void SetVec4(const std::string& name, const glm::vec4& vec4) const override;
+		virtual void SetMat2(const std::string& name, const glm::mat2& mat2) const override;
+		virtual void SetMat3(const std::string& name, const glm::mat3& mat3) const override;
+		virtual void SetMat4(const std::string& name, const glm::mat4& mat4) const override;
 	private:
 		int GetUniformLocation(const std::string& name) const;
 		

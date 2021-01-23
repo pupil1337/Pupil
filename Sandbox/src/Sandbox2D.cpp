@@ -14,7 +14,7 @@ namespace Pupil {
 	}
 
 	void Sandbox2D::OnAttach() {
-		
+		m_Texture = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
 	}
 
 	void Sandbox2D::OnUpdate(Pupil::TimeStep ts) {
@@ -28,6 +28,8 @@ namespace Pupil {
 		Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
 		
 		Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_Color);
+		Pupil::Renderer2D::DrawQuad({-1.0f, 0.5f }, { 0.5f, 0.8f }, { 0.1f, 0.1f, 1.0f, 1.0f});
+		Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_Texture);
 		
 		Pupil::Renderer::EndScene();
 	}

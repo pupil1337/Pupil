@@ -52,7 +52,7 @@ public:
 		m_Texture2D2 = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
 
 		m_Shader->Bind();
-		std::dynamic_pointer_cast<Pupil::OpenGLShader>(m_Shader)->SetInt("Texture1", 0);
+		std::dynamic_pointer_cast<Pupil::OpenGLShader>(m_Shader)->SetInt("Texture0", 0);
 		m_Shader->UnBind();
 
 	}
