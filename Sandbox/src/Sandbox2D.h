@@ -26,12 +26,6 @@ namespace Pupil {
 		glm::vec4 m_Color;
 		Pupil::Ref<Texture2D> m_Texture;
 
-		struct ProfileResult {
-			const char* name;
-			float time;
-		};
-		std::vector<ProfileResult> m_ProfileResults;
-
 		Pupil::TimeStep m_TimeStep;
 		float m_FrameTimeGraph[100] = { 0.0f };
 		uint32_t values_offset = 0;

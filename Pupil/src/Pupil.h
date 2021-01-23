@@ -28,9 +28,11 @@
 #include "platform/OpenGL/OpenGLShader.h"
 // -------------------------------
 
+// ------Debug--------------------
+#include "pupil/Debuger/Instrumentoror.h"
+// -------------------------------
+
+// ------Camera-------------------
 #include "pupil/Renderer/OrthographicCamera.h"
 #include "pupil/Renderer/OrthographicCameraController.h"
-
-// ------Entry Point--------------
-
 // -------------------------------
