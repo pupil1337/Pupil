@@ -5,7 +5,8 @@ in vec2 TexCoord;
 
 uniform vec4 Color;
 uniform sampler2D Texture0;
+uniform float FilingFactor;
 
 void main() {
-	FragColor = texture(Texture0, TexCoord * 10.0f) * Color;
+	FragColor = texture(Texture0, TexCoord * FilingFactor) * Color;
 }

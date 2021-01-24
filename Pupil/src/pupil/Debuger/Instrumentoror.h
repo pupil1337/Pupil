@@ -124,7 +124,7 @@ namespace Pupil {
 	};
 }
 
-#define PP_PROFILE 1
+#define PP_PROFILE 0
 
 #if PP_PROFILE
 	#define PP_PROFILE_BEGIN_SESSION(name, filePath) Pupil::Instrumentor::Get().BeginSession(name, filePath)

@@ -74,17 +74,53 @@ namespace Pupil {
 	}
 
 	/// Draw Texture ///
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture) {
-		DrawQuad({ position.x, position.y, 0.0f }, size, texture);
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float filingFactor, const glm::vec4& tintColor) {
+		DrawQuad({ position.x, position.y, 0.0f }, size, texture, filingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture) {
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float filingFactor, const glm::vec4& tintColor) {
 		PP_PROFILE_FUNCTION();
 
 		m_Data->m_TextureShader->Bind();
-		m_Data->m_TextureShader->SetVec4("Color", glm::vec4(1.0f));
+		m_Data->m_TextureShader->SetVec4("Color", tintColor);
+		m_Data->m_TextureShader->SetFloat("FilingFactor", filingFactor);
 		texture->Bind(0);
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		m_Data->m_TextureShader->SetMat4("Model", model);
+		RenderCommand::DrawIndexed(m_Data->m_VertexArray);
+	}
+
+	void Renderer2D::DrawRotateQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color) {
+		DrawRotateQuad({ position.x, position.y, 0.0f }, size, rotation, color);
+	}
+
+	void Renderer2D::DrawRotateQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color) {
+		PP_PROFILE_FUNCTION();
+
+		m_Data->m_TextureShader->Bind();
+		m_Data->m_TextureShader->SetVec4("Color", color);
+		m_Data->m_WhiteTexture->Bind(0);
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		m_Data->m_TextureShader->SetMat4("Model", model);
+		RenderCommand::DrawIndexed(m_Data->m_VertexArray);
+	}
+
+	void Renderer2D::DrawRotateQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float filingFactor /*= 1*/, const glm::vec4& tintColor /*= glm::vec4(1.0f)*/) {
+		DrawRotateQuad({ position.x, position.y, 0.0f }, size, rotation, texture, filingFactor, tintColor);
+	}
+
+	void Renderer2D::DrawRotateQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float filingFactor /*= 1*/, const glm::vec4& tintColor /*= glm::vec4(1.0f)*/) {
+		PP_PROFILE_FUNCTION();
+
+		m_Data->m_TextureShader->Bind();
+		m_Data->m_TextureShader->SetVec4("Color", tintColor);
+		m_Data->m_TextureShader->SetFloat("FilingFactor", filingFactor);
+		texture->Bind(0);
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		m_Data->m_TextureShader->SetMat4("Model", model);
 		RenderCommand::DrawIndexed(m_Data->m_VertexArray);
