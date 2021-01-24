@@ -7,6 +7,8 @@
 namespace Pupil {
 
 	Ref<Texture2D> Texture2D::Create(const std::string& path) {
+		PP_PROFILE_FUNCTION();
+
 		switch (Renderer::GetAPI()) {
 			case RendererAPI::API::None:     PP_CORE_ASSERT(false, "RenderAPI:None is supported!"); return nullptr;
 			case RendererAPI::API::OpenGL:   return std::make_shared<OpenGLTexture2D>(path);
@@ -18,6 +20,8 @@ namespace Pupil {
 	}
 
 	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height) {
+		PP_PROFILE_FUNCTION();
+
 		switch (Renderer::GetAPI()) {
 		case RendererAPI::API::None:     PP_CORE_ASSERT(false, "RenderAPI:None is supported!"); return nullptr;
 		case RendererAPI::API::OpenGL:   return std::make_shared<OpenGLTexture2D>(width, height);

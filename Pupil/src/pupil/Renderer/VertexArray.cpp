@@ -8,6 +8,8 @@
 namespace Pupil {
 
 	Ref<VertexArray> VertexArray::Create() {
+		PP_PROFILE_FUNCTION();
+
 		switch (Renderer::GetAPI()) {
 			case RendererAPI::API::None:     PP_CORE_ASSERT(false, "RenderAPI:None is supported!"); return nullptr;
 			case RendererAPI::API::OpenGL:   return std::make_shared<OpenGLVertexArray>();

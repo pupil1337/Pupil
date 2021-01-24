@@ -7,12 +7,17 @@ namespace Pupil {
 
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 		: m_Path(path) {
+		PP_PROFILE_FUNCTION();
 
 		// ---load Data---
 		bool irradianceCorrection = false;
 		int width, height, nrComponents;
 		stbi_set_flip_vertically_on_load(true);
-		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
+		stbi_uc* data = nullptr;
+		{
+			PP_PROFILE_SCOPE("stbi_load Func");
+			data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
+		}
 		PP_CORE_ASSERT(data, "Failed to load texture2D!");
 		m_Width = width;
 		m_Height = height;
@@ -49,6 +54,8 @@ namespace Pupil {
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 	: m_Width(width), m_Height(height) {
 
+		PP_PROFILE_FUNCTION();
+
 		InternalFormat = GL_RGBA8;
 		DataFormat = GL_RGBA;
 
@@ -62,16 +69,22 @@ namespace Pupil {
 	}
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size) const {
+		PP_PROFILE_FUNCTION();
+
 		uint32_t formatSize = DataFormat == GL_RGBA ? 4 : 3;
 		PP_CORE_ASSERT(size == formatSize * m_Width * m_Height, "data must be entire the texture!");
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D() {
+		PP_PROFILE_FUNCTION();
+
 		glDeleteTextures(1, &m_RendererID);
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const {
+		PP_PROFILE_FUNCTION();
+
 		glBindTextureUnit(slot, m_RendererID);
 	}
 

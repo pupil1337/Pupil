@@ -19,9 +19,13 @@ namespace Pupil {
 	}
 
 	ImGuiLayer::~ImGuiLayer() {
+		PP_PROFILE_FUNCTION();
+
 	}
 
 	void ImGuiLayer::OnAttach() {
+		PP_PROFILE_FUNCTION();
+
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -54,6 +58,7 @@ namespace Pupil {
 	}
 
 	void ImGuiLayer::OnDetach() {
+		PP_PROFILE_FUNCTION();
 
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
@@ -62,6 +67,7 @@ namespace Pupil {
 	}
 
 	void ImGuiLayer::Begin() {
+		PP_PROFILE_FUNCTION();
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -70,6 +76,7 @@ namespace Pupil {
 	}
 
 	void ImGuiLayer::End() {
+		PP_PROFILE_FUNCTION();
 
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
@@ -90,6 +97,8 @@ namespace Pupil {
 	}
 
 	void ImGuiLayer::OnImGuiRender() {
+		PP_PROFILE_FUNCTION();
+
 		static bool show = true;
 		ImGui::ShowDemoWindow(&show);
 	}

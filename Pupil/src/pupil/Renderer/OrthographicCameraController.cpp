@@ -12,6 +12,8 @@ namespace Pupil {
 	}
 
 	void OrthographicCameraController::OnUpdate(TimeStep ts) {
+		PP_PROFILE_FUNCTION();
+
 		if (Pupil::Input::IsKeyPressed(PP_KEY_A)) {
 			m_CameraPosition.x -= cos(glm::radians(-m_CameraRotation)) * m_ZoomLevel * ts;
 			m_CameraPosition.y -= sin(glm::radians(-m_CameraRotation)) * m_ZoomLevel * ts;
@@ -39,12 +41,16 @@ namespace Pupil {
 	}
 
 	void OrthographicCameraController::OnEvent(Event& e) {
+		PP_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(PP_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizedEvent>(PP_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
 	}
 
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e) {
+		PP_PROFILE_FUNCTION();
+
 		m_ZoomLevel -= e.GetYOffset() * 0.125f;
 		m_ZoomLevel = std::max(m_ZoomLevel, 0.125f);
 		m_Camera.SetPorjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
@@ -52,6 +58,8 @@ namespace Pupil {
 	}
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizedEvent& e) {
+		PP_PROFILE_FUNCTION();
+
 		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		m_Camera.SetPorjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		return true;

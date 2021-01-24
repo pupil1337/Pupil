@@ -7,6 +7,8 @@
 namespace Pupil {
 
 	Ref<Shader> Shader::Create(const std::string& filePath_WithOutDot) {
+		PP_PROFILE_FUNCTION();
+
 		switch (Renderer::GetAPI()) {
 			case RendererAPI::API::None:     PP_CORE_ASSERT(false, "RenderAPI:None is supported!"); return nullptr;
 			case RendererAPI::API::OpenGL:   return std::make_shared<OpenGLShader>(filePath_WithOutDot);
@@ -26,22 +28,30 @@ namespace Pupil {
 	}
 
 	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader) {
+		PP_PROFILE_FUNCTION();
+
 		PP_CORE_ASSERT(!Exist(name), "Shader is already exist!");
 		m_Shaders[name] = shader;
 	}
 
 	void ShaderLibrary::Load(const std::string& name, const std::string& filePath_WithOutDot) {
+		PP_PROFILE_FUNCTION();
+
 		Ref<Shader> shader = Shader::Create(filePath_WithOutDot);
 		Add(name, shader);
 	}
 
 	void ShaderLibrary::Load(const std::string& filePath_WithOutDot) {
+		PP_PROFILE_FUNCTION();
+
 		Ref<Shader> shader = Shader::Create(filePath_WithOutDot);
 		const std::string& name = shader->GetName();
 		Add(name, shader);
 	}
 
 	Ref<Shader> ShaderLibrary::GetShader(const std::string& name) {
+		PP_PROFILE_FUNCTION();
+
 		PP_CORE_ASSERT(Exist(name), "Shader is not find");
 		return m_Shaders[name];
 	}

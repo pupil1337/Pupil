@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "pupil/Core/Log.h"
+#include "pupil/Debuger/Instrumentoror.h"
 
 #ifdef PP_PLATFORM_WINDOWS
 	#include <Windows.h>

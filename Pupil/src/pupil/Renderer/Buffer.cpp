@@ -9,6 +9,8 @@ namespace Pupil {
 
 	// *****VertexBuffer***** //
 	Ref<VertexBuffer> VertexBuffer::Create(float* vertices, uint32_t size) {
+		PP_PROFILE_FUNCTION();
+
 		switch (Renderer::GetAPI()) {
 			case RendererAPI::API::None:     PP_CORE_ASSERT(false, "RenderAPI:None is supported!"); return nullptr;
 			case RendererAPI::API::OpenGL:   return std::make_shared<OpenGLVertexBuffer>(vertices, size);
@@ -21,6 +23,8 @@ namespace Pupil {
 
 	// *****IndexBuffer***** //
 	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t count) {
+		PP_PROFILE_FUNCTION();
+
 		switch (Renderer::GetAPI()) {
 			case RendererAPI::API::None:     PP_CORE_ASSERT(false, "RenderAPI:None is supported!"); return nullptr;
 			case RendererAPI::API::OpenGL:   return std::make_shared <OpenGLIndexBuffer>(indices, count);

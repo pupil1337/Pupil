@@ -27,18 +27,26 @@ namespace Pupil {
 	///// VertexArray ///////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////
 	OpenGLVertexArray::OpenGLVertexArray() {
+		PP_PROFILE_FUNCTION();
+
 		glCreateVertexArrays(1, &m_RendererID);
 	}
 
 	void Pupil::OpenGLVertexArray::Bind() const {
+		PP_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_RendererID);
 	}
 
 	void Pupil::OpenGLVertexArray::UnBind() const {
+		PP_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}
 
 	void Pupil::OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) {
+		PP_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_RendererID);
 		vertexBuffer->Bind();
 
@@ -62,6 +70,8 @@ namespace Pupil {
 	}
 
 	void Pupil::OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& IndexBuffer) {
+		PP_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_RendererID);
 		IndexBuffer->Bind();
 

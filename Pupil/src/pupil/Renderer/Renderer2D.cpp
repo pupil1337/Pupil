@@ -11,6 +11,7 @@ namespace Pupil {
 	Scope<Renderer2D::Renderer2DStorage> Renderer2D::m_Data = std::make_unique<Renderer2D::Renderer2DStorage>();
 	
 	void Renderer2D::Init() {
+		PP_PROFILE_FUNCTION();
 
 		float vertices[4 * 5] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -44,11 +45,15 @@ namespace Pupil {
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera) {
+		PP_PROFILE_FUNCTION();
+
 		m_Data->m_TextureShader->Bind();
 		m_Data->m_TextureShader->SetMat4("ProjectionView", camera.GetProjectionView());
 	}
 
 	void Renderer2D::EndScene() {
+		PP_PROFILE_FUNCTION();
+
 	}
 
 	/// Draw Flat ///
@@ -57,6 +62,8 @@ namespace Pupil {
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
+		PP_PROFILE_FUNCTION();
+
 		m_Data->m_TextureShader->Bind();
 		m_Data->m_TextureShader->SetVec4("Color", color);
 		m_Data->m_WhiteTexture->Bind(0);
@@ -72,6 +79,8 @@ namespace Pupil {
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture) {
+		PP_PROFILE_FUNCTION();
+
 		m_Data->m_TextureShader->Bind();
 		m_Data->m_TextureShader->SetVec4("Color", glm::vec4(1.0f));
 		texture->Bind(0);

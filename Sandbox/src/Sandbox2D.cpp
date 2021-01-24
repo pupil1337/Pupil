@@ -14,14 +14,17 @@ namespace Pupil {
 	}
 
 	void Sandbox2D::OnAttach() {
+		PP_PROFILE_FUNCTION();
+
 		m_Texture = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
 	}
 
 	void Sandbox2D::OnUpdate(Pupil::TimeStep ts) {
-		m_TimeStep = ts;
 		PP_PROFILE_FUNCTION();
+		
+		m_TimeStep = ts;
 		{
-			PP_PROFILE_SCOPE("OrthoCameraController::OnUpdate");
+			PP_PROFILE_SCOPE("OrthoCameraController OnUpdate");
 			m_OrthoCameraController.OnUpdate(ts);
 		}
 		{
@@ -30,7 +33,7 @@ namespace Pupil {
 			Pupil::RenderCommand::Clear();
 		}
 		{
-			PP_PROFILE_SCOPE("Renderer::Rraw");
+			PP_PROFILE_SCOPE("Renderer::Draw");
 			Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
 			Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_Color);
 			Pupil::Renderer2D::DrawQuad({ -1.0f, 0.5f }, { 0.5f, 0.8f }, { 0.1f, 0.1f, 1.0f, 1.0f });
@@ -40,6 +43,8 @@ namespace Pupil {
 	}
 
 	void Sandbox2D::OnImGuiRender() {
+		PP_PROFILE_FUNCTION();
+
 		ImGui::Begin("Settings");
 		ImGui::ColorEdit4("Color", glm::value_ptr(m_Color));
 
@@ -55,10 +60,13 @@ namespace Pupil {
 	}
 
 	void Sandbox2D::OnEvent(Pupil::Event& event) {
+		PP_PROFILE_FUNCTION();
+
 		m_OrthoCameraController.OnEvent(event);
 	}
 	
 	void Sandbox2D::OnDetach() {
+		PP_PROFILE_FUNCTION();
 
 	}
 

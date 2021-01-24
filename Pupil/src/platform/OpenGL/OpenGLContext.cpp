@@ -11,10 +11,13 @@ namespace Pupil {
 	}
 
 	void OpenGLContext::Init() {
-		glfwMakeContextCurrent(m_WindowHandle);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		PP_CORE_ASSERT(status, "Failed to initialized Glad!");
-
+		PP_PROFILE_FUNCTION();
+		{
+			PP_PROFILE_SCOPE("glfw MakeContext and gladLoad");
+			glfwMakeContextCurrent(m_WindowHandle);
+			int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+			PP_CORE_ASSERT(status, "Failed to initialized Glad!");
+		}
 		PP_CORE_INFO("OpenGL Info:");
 		PP_CORE_INFO("  Vendor:   {0}", glGetString(GL_VENDOR));
 		PP_CORE_INFO("  Renderer: {0}", glGetString(GL_RENDERER));
@@ -30,6 +33,8 @@ namespace Pupil {
 	}
 
 	void OpenGLContext::SwapBuffers() {
+		PP_PROFILE_FUNCTION();
+
 		glfwSwapBuffers(m_WindowHandle);
 	}
 
