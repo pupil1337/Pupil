@@ -25,20 +25,25 @@ namespace Pupil {
 		m_TimeStep = ts;
 		{
 			PP_PROFILE_SCOPE("OrthoCameraController OnUpdate");
+
 			m_OrthoCameraController.OnUpdate(ts);
 		}
 		{
 			PP_PROFILE_SCOPE("Renderer::Prep");
+
 			Pupil::RenderCommand::SetClearColor(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));
 			Pupil::RenderCommand::Clear();
 		}
 		{
 			PP_PROFILE_SCOPE("Renderer::Draw");
+
 			Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
-			Pupil::Renderer2D::DrawRotateQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, 45.0f, m_Color);
+			//Pupil::Renderer2D::DrawRotateQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, 45.0f, m_Color);
 			Pupil::Renderer2D::DrawQuad({ -1.0f, 0.5f }, { 0.5f, 0.8f }, { 0.1f, 0.1f, 1.0f, 1.0f });
-			Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_Texture, 6.0f);
-			Pupil::Renderer::EndScene();
+			Pupil::Renderer2D::DrawQuad({  1.0f, 0.5f }, { 0.5f, 0.5f }, { 0.8f, 0.1f, 0.1f, 1.0f });
+			Pupil::Renderer2D::DrawQuad({  1.0f, -0.5f }, { 0.5f, 0.5f }, { 0.1f, 0.8f, 0.1f, 1.0f });
+			//Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_Texture, 6.0f);
+			Pupil::Renderer2D::EndScene();
 		}
 	}
 

@@ -30,10 +30,9 @@ namespace Pupil {
 		PP_PROFILE_FUNCTION();
 
 		shader->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetMat4("ProjectionView", m_ScenceData->ProjectionView);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetMat4("Model", model);
+		shader->SetMat4("ProjectionView", m_ScenceData->ProjectionView);
+		shader->SetMat4("Model", model);
 		RenderCommand::DrawIndexed(vertexArray);
-		shader->UnBind();
 	}
 
 }
