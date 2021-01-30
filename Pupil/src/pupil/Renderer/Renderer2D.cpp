@@ -24,6 +24,7 @@ namespace Pupil {
 			MaxIndexs = MaxQuads * 6,
 			MaxTextures = 32
 		};
+		glm::vec4 VertexPosition[4];
 
 		Ref<VertexArray> VertexArray;
 		Ref<VertexBuffer> VertexBuffer;
@@ -74,14 +75,21 @@ namespace Pupil {
 		Pupil::Ref<Pupil::IndexBuffer> quadIBO = Pupil::IndexBuffer::Create(indices, s_Data.MaxIndexs);
 		s_Data.VertexArray->SetIndexBuffer(quadIBO);
 		delete[] indices;
-		// ------------------------------------------------------------------
 
+		// Texture Shader
 		int samplers[s_Data.MaxTextures];
 		for (int i = 0; i != s_Data.MaxTextures; ++i) samplers[i] = i;
 
 		s_Data.TextureShader = Shader::Create("assets/shaders/Texture");
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetIntArray("Textures", samplers, s_Data.MaxTextures);
+
+		// --------------------------------------------------------------------------------------------------
+		// Vertex Position
+		s_Data.VertexPosition[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data.VertexPosition[1] = { -0.5f,  0.5f, 0.0f, 1.0f };
+		s_Data.VertexPosition[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		s_Data.VertexPosition[3] = {  0.5f, -0.5f, 0.0f, 1.0f };
 
 		// white texture
 		uint32_t witeTextureData = 0xffffffff;
@@ -126,31 +134,34 @@ namespace Pupil {
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
 		PP_PROFILE_FUNCTION();
 
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
+						* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
 		const int texIndex = 0; // whiteTexture
 		const float tilingFactor = 1.0f;
 
-		s_Data.VertexBufferptr->Pos = { position.x, position.y, position.z };
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
 		s_Data.VertexBufferptr->Color = color;
 		s_Data.VertexBufferptr->TexCoord = { 0.0f, 0.0f };
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
-		s_Data.VertexBufferptr->Pos = { position.x, position.y + size.y, position.z };
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
 		s_Data.VertexBufferptr->Color = color;
 		s_Data.VertexBufferptr->TexCoord = { 0.0f, 1.0f };
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
-		s_Data.VertexBufferptr->Pos = { position.x + size.x, position.y + size.y, position.z };
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
 		s_Data.VertexBufferptr->Color = color;
 		s_Data.VertexBufferptr->TexCoord = { 1.0f, 1.0f };
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
-		s_Data.VertexBufferptr->Pos = { position.x + size.x, position.y, position.z };
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
 		s_Data.VertexBufferptr->Color = color;
 		s_Data.VertexBufferptr->TexCoord = { 1.0f, 0.0f };
 		s_Data.VertexBufferptr->TexIndex = texIndex;
@@ -158,14 +169,6 @@ namespace Pupil {
 		s_Data.VertexBufferptr++;
 
 		s_Data.IndicesCount += 6;
-
-		/*s_Data.m_TextureShader->Bind();
-		s_Data.m_TextureShader->SetVec4("Color", color);
-		s_Data.m_WhiteTexture->Bind(0);
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_Data.m_TextureShader->SetMat4("Model", model);
-		RenderCommand::DrawIndexed(s_Data.m_VertexArray);*/
 	}
 
 	/// Draw Texture ///
@@ -176,41 +179,44 @@ namespace Pupil {
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor) {
 		PP_PROFILE_FUNCTION();
 
-		int texIndex = 0;
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
+						* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		float texIndex = 0.0f;
 		for (int i = 0; i != s_Data.TextureIndex; ++i) {
 			if (s_Data.TextureSlots[i] == texture) {
-				texIndex = i;
+				texIndex = (float)i;
 				break;
 			}
 		}
-		if (texIndex == 0) {
+		if (texIndex == 0.0f) {
 			s_Data.TextureSlots[s_Data.TextureIndex] = texture;
-			texIndex = s_Data.TextureIndex;
+			texIndex = (float)s_Data.TextureIndex;
 			++s_Data.TextureIndex;
 		}
 
-		s_Data.VertexBufferptr->Pos = { position.x, position.y, position.z };
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
 		s_Data.VertexBufferptr->Color = tintColor;
 		s_Data.VertexBufferptr->TexCoord = { 0.0f, 0.0f };
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
-		s_Data.VertexBufferptr->Pos = { position.x, position.y + size.y, position.z };
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
 		s_Data.VertexBufferptr->Color = tintColor;
 		s_Data.VertexBufferptr->TexCoord = { 0.0f, 1.0f };
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
-		s_Data.VertexBufferptr->Pos = { position.x + size.x, position.y + size.y, position.z };
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
 		s_Data.VertexBufferptr->Color = tintColor;
 		s_Data.VertexBufferptr->TexCoord = { 1.0f, 1.0f };
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
-		s_Data.VertexBufferptr->Pos = { position.x + size.x, position.y, position.z };
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
 		s_Data.VertexBufferptr->Color = tintColor;
 		s_Data.VertexBufferptr->TexCoord = { 1.0f, 0.0f };
 		s_Data.VertexBufferptr->TexIndex = texIndex;
@@ -218,15 +224,6 @@ namespace Pupil {
 		s_Data.VertexBufferptr++;
 
 		s_Data.IndicesCount += 6;
-
-		/*s_Data.TextureShader->Bind();
-		s_Data.TextureShader->SetVec4("Color", tintColor);
-		s_Data.TextureShader->SetFloat("FilingFactor", filingFactor);
-		texture->Bind(0);
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_Data.TextureShader->SetMat4("Model", model);
-		RenderCommand::DrawIndexed(s_Data.VertexArray);*/
 	}
 
 	/// Draw Rotate ///
@@ -237,32 +234,98 @@ namespace Pupil {
 	void Renderer2D::DrawRotateQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color) {
 		PP_PROFILE_FUNCTION();
 
-		/*s_Data.TextureShader->Bind();
-		s_Data.TextureShader->SetVec4("Color", color);
-		s_Data.WhiteTexture->Bind(0);
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_Data.TextureShader->SetMat4("Model", model);
-		RenderCommand::DrawIndexed(s_Data.VertexArray);*/
+						* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
+						* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		const int texIndex = 0; // whiteTexture
+		const float tilingFactor = 1.0f;
+
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
+		s_Data.VertexBufferptr->Color = color;
+		s_Data.VertexBufferptr->TexCoord = { 0.0f, 0.0f };
+		s_Data.VertexBufferptr->TexIndex = texIndex;
+		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+		s_Data.VertexBufferptr++;
+
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
+		s_Data.VertexBufferptr->Color = color;
+		s_Data.VertexBufferptr->TexCoord = { 0.0f, 1.0f };
+		s_Data.VertexBufferptr->TexIndex = texIndex;
+		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+		s_Data.VertexBufferptr++;
+
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
+		s_Data.VertexBufferptr->Color = color;
+		s_Data.VertexBufferptr->TexCoord = { 1.0f, 1.0f };
+		s_Data.VertexBufferptr->TexIndex = texIndex;
+		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+		s_Data.VertexBufferptr++;
+
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
+		s_Data.VertexBufferptr->Color = color;
+		s_Data.VertexBufferptr->TexCoord = { 1.0f, 0.0f };
+		s_Data.VertexBufferptr->TexIndex = texIndex;
+		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+		s_Data.VertexBufferptr++;
+
+		s_Data.IndicesCount += 6;
 	}
 
-	void Renderer2D::DrawRotateQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float filingFactor /*= 1*/, const glm::vec4& tintColor /*= glm::vec4(1.0f)*/) {
-		DrawRotateQuad({ position.x, position.y, 0.0f }, size, rotation, texture, filingFactor, tintColor);
+	void Renderer2D::DrawRotateQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor /*= 1*/, const glm::vec4& tintColor /*= glm::vec4(1.0f)*/) {
+		DrawRotateQuad({ position.x, position.y, 0.0f }, size, rotation, texture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawRotateQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float filingFactor /*= 1*/, const glm::vec4& tintColor /*= glm::vec4(1.0f)*/) {
+	void Renderer2D::DrawRotateQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor /*= 1*/, const glm::vec4& tintColor /*= glm::vec4(1.0f)*/) {
 		PP_PROFILE_FUNCTION();
 
-		/*s_Data.TextureShader->Bind();
-		s_Data.TextureShader->SetVec4("Color", tintColor);
-		s_Data.TextureShader->SetFloat("FilingFactor", filingFactor);
-		texture->Bind(0);
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_Data.TextureShader->SetMat4("Model", model);
-		RenderCommand::DrawIndexed(s_Data.VertexArray);*/
+						* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
+						* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		float texIndex = 0.0f;
+		for (int i = 0; i != s_Data.TextureIndex; ++i) {
+			if (s_Data.TextureSlots[i] == texture) {
+				texIndex = (float)i;
+				break;
+			}
+		}
+		if (texIndex == 0.0f) {
+			s_Data.TextureSlots[s_Data.TextureIndex] = texture;
+			texIndex = (float)s_Data.TextureIndex;
+			++s_Data.TextureIndex;
+		}
+
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
+		s_Data.VertexBufferptr->Color = tintColor;
+		s_Data.VertexBufferptr->TexCoord = { 0.0f, 0.0f };
+		s_Data.VertexBufferptr->TexIndex = texIndex;
+		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+		s_Data.VertexBufferptr++;
+
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
+		s_Data.VertexBufferptr->Color = tintColor;
+		s_Data.VertexBufferptr->TexCoord = { 0.0f, 1.0f };
+		s_Data.VertexBufferptr->TexIndex = texIndex;
+		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+		s_Data.VertexBufferptr++;
+
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
+		s_Data.VertexBufferptr->Color = tintColor;
+		s_Data.VertexBufferptr->TexCoord = { 1.0f, 1.0f };
+		s_Data.VertexBufferptr->TexIndex = texIndex;
+		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+		s_Data.VertexBufferptr++;
+
+		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
+		s_Data.VertexBufferptr->Color = tintColor;
+		s_Data.VertexBufferptr->TexCoord = { 1.0f, 0.0f };
+		s_Data.VertexBufferptr->TexIndex = texIndex;
+		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+		s_Data.VertexBufferptr++;
+
+		s_Data.IndicesCount += 6;
+
 	}
 
 }
