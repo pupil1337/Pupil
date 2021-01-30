@@ -1,14 +1,14 @@
 #version 330 core
 out vec4 FragColor;
 
-//in vec2 TexCoord;
 in vec4 Color;
+in vec2 TexCoord;
+in float TexIndex;
+in float TilingFactor;
 
-//uniform vec4 Color;
-//uniform sampler2D Texture0;
-//uniform float FilingFactor;
+uniform sampler2D Textures[32];
 
 void main() {
-	//FragColor = texture(Texture0, TexCoord * FilingFactor) * Color;
-	FragColor = Color;
+
+	FragColor = texture(Textures[int(TexIndex)], TexCoord * TilingFactor) * Color;
 }

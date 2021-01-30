@@ -157,6 +157,12 @@ namespace Pupil {
 		glUniform1i(GetUniformLocation(name), value);
 	}
 
+	void OpenGLShader::SetIntArray(const std::string& name, int* value, uint32_t count) const {
+		PP_PROFILE_FUNCTION();
+
+		glUniform1iv(GetUniformLocation(name), count, value);
+	}
+
 	void OpenGLShader::SetFloat(const std::string& name, float value) const {
 		PP_PROFILE_FUNCTION();
 

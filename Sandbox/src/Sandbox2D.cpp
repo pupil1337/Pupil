@@ -16,7 +16,8 @@ namespace Pupil {
 	void Sandbox2D::OnAttach() {
 		PP_PROFILE_FUNCTION();
 
-		m_Texture = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
+		m_Texture1 = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
+		m_Texture2 = Pupil::Texture2D::Create("assets/textures/container2.png");
 	}
 
 	void Sandbox2D::OnUpdate(Pupil::TimeStep ts) {
@@ -42,7 +43,8 @@ namespace Pupil {
 			Pupil::Renderer2D::DrawQuad({ -1.0f, 0.5f }, { 0.5f, 0.8f }, { 0.1f, 0.1f, 1.0f, 1.0f });
 			Pupil::Renderer2D::DrawQuad({  1.0f, 0.5f }, { 0.5f, 0.5f }, { 0.8f, 0.1f, 0.1f, 1.0f });
 			Pupil::Renderer2D::DrawQuad({  1.0f, -0.5f }, { 0.5f, 0.5f }, { 0.1f, 0.8f, 0.1f, 1.0f });
-			//Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_Texture, 6.0f);
+			Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_Texture1, 6.0f);
+			Pupil::Renderer2D::DrawQuad({ -10.0f, -10.0f, -0.1f }, { 10.0f, 10.0f }, m_Texture2, 6.0f);
 			Pupil::Renderer2D::EndScene();
 		}
 	}

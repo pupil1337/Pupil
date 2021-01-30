@@ -14,17 +14,17 @@ namespace Pupil {
 
 	static uint32_t ShaderDataTypeSize(ShaderDataType type) {
 		switch (type) {
-			case Pupil::ShaderDataType::Bool:   return 1;
-			case Pupil::ShaderDataType::Int:    return 4 * 1;
-			case Pupil::ShaderDataType::Int2:   return 4 * 2;
-			case Pupil::ShaderDataType::Int3:   return 4 * 3;
-			case Pupil::ShaderDataType::Int4:   return 4 * 4;
-			case Pupil::ShaderDataType::Float:  return 4 * 1;
+			case Pupil::ShaderDataType::Bool  : return 1;
+			case Pupil::ShaderDataType::Int   : return 4 * 1;
+			case Pupil::ShaderDataType::Int2  : return 4 * 2;
+			case Pupil::ShaderDataType::Int3  : return 4 * 3;
+			case Pupil::ShaderDataType::Int4  : return 4 * 4;
+			case Pupil::ShaderDataType::Float : return 4 * 1;
 			case Pupil::ShaderDataType::Float2: return 4 * 2;
 			case Pupil::ShaderDataType::Float3: return 4 * 3;
 			case Pupil::ShaderDataType::Float4: return 4 * 4;
-			case Pupil::ShaderDataType::Mat3:   return 4 * (3 * 3);
-			case Pupil::ShaderDataType::Mat4:   return 4 * (4 * 4);
+			case Pupil::ShaderDataType::Mat3  : return 4 * (3 * 3);
+			case Pupil::ShaderDataType::Mat4  : return 4 * (4 * 4);
 		}
 
 		PP_CORE_ASSERT(false, "Unknow ShaderDataTypeSize!");
@@ -46,17 +46,17 @@ namespace Pupil {
 		
 		uint32_t GetComponetCount(ShaderDataType type) const {
 			switch (type) {
-				case Pupil::ShaderDataType::Bool:   return 1;
-				case Pupil::ShaderDataType::Int:    return 1;
-				case Pupil::ShaderDataType::Int2:   return 2;
-				case Pupil::ShaderDataType::Int3:   return 3;
-				case Pupil::ShaderDataType::Int4:   return 4;
-				case Pupil::ShaderDataType::Float:  return 1;
+				case Pupil::ShaderDataType::Bool  : return 1;
+				case Pupil::ShaderDataType::Int   : return 1;
+				case Pupil::ShaderDataType::Int2  : return 2;
+				case Pupil::ShaderDataType::Int3  : return 3;
+				case Pupil::ShaderDataType::Int4  : return 4;
+				case Pupil::ShaderDataType::Float : return 1;
 				case Pupil::ShaderDataType::Float2: return 2;
 				case Pupil::ShaderDataType::Float3: return 3;
 				case Pupil::ShaderDataType::Float4: return 4;
-				case Pupil::ShaderDataType::Mat3:   return 3 * 3;
-				case Pupil::ShaderDataType::Mat4:   return 4 * 4;
+				case Pupil::ShaderDataType::Mat3  : return 3 * 3;
+				case Pupil::ShaderDataType::Mat4  : return 4 * 4;
 			}
 
 			PP_CORE_ASSERT(false, "Return GetComponetCount failed!");

@@ -24,7 +24,8 @@ namespace Pupil {
 		Pupil::OrthographicCameraController m_OrthoCameraController;
 
 		glm::vec4 m_Color;
-		Pupil::Ref<Texture2D> m_Texture;
+		Pupil::Ref<Texture2D> m_Texture1;
+		Pupil::Ref<Texture2D> m_Texture2;
 
 		Pupil::TimeStep m_TimeStep;
 		float m_FrameTimeGraph[100] = { 0.0f };
