@@ -19,7 +19,7 @@ namespace Pupil {
 
 	struct Renderer2DStorage {
 		enum Max {
-			MaxQuads = 10000,
+			MaxQuads = 2,
 			MaxVertexs = MaxQuads * 4,
 			MaxIndexs = MaxQuads * 6,
 			MaxTextures = 32
@@ -37,6 +37,9 @@ namespace Pupil {
 
 		uint32_t TextureIndex = 1; // index = 0 is whiteTexture 
 		Ref<Texture2D> TextureSlots[MaxTextures];
+
+		// Stats
+		Renderer2D::Statistics Stats;
 	};
 
 	static Renderer2DStorage s_Data;
@@ -124,6 +127,17 @@ namespace Pupil {
 		for (uint32_t i = 0; i != s_Data.TextureIndex; ++i) s_Data.TextureSlots[i]->Bind(i);
 
 		RenderCommand::DrawIndexed(s_Data.VertexArray, s_Data.IndicesCount);
+
+		s_Data.Stats.DrawCalls++;
+	}
+
+	void Renderer2D::FlushAndReset() {
+		EndScene();
+
+		s_Data.IndicesCount = 0;
+		s_Data.VertexBufferptr = s_Data.VertexBufferBase;
+
+		s_Data.TextureIndex = 1;
 	}
 
 	/// Draw Flat ///
@@ -134,6 +148,11 @@ namespace Pupil {
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
 		PP_PROFILE_FUNCTION();
 
+		if (s_Data.IndicesCount >= s_Data.MaxIndexs) {
+			PP_CORE_INFO("IndicesCount > MaxIndexs, Reset Batch");
+			FlushAndReset();
+		}
+
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
 						* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
@@ -169,6 +188,8 @@ namespace Pupil {
 		s_Data.VertexBufferptr++;
 
 		s_Data.IndicesCount += 6;
+
+		s_Data.Stats.QuadCounts++;
 	}
 
 	/// Draw Texture ///
@@ -179,6 +200,11 @@ namespace Pupil {
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor) {
 		PP_PROFILE_FUNCTION();
 
+		if (s_Data.IndicesCount >= s_Data.MaxIndexs) {
+			PP_CORE_INFO("IndicesCount > MaxIndexs, Reset Batch");
+			FlushAndReset();
+		}
+
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
 						* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
@@ -224,6 +250,8 @@ namespace Pupil {
 		s_Data.VertexBufferptr++;
 
 		s_Data.IndicesCount += 6;
+
+		s_Data.Stats.QuadCounts++;
 	}
 
 	/// Draw Rotate ///
@@ -233,6 +261,11 @@ namespace Pupil {
 
 	void Renderer2D::DrawRotateQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color) {
 		PP_PROFILE_FUNCTION();
+		
+		if (s_Data.IndicesCount >= s_Data.MaxIndexs) {
+			PP_CORE_INFO("IndicesCount > MaxIndexs, Reset Batch");
+			FlushAndReset();
+		}
 
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
 						* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
@@ -270,6 +303,8 @@ namespace Pupil {
 		s_Data.VertexBufferptr++;
 
 		s_Data.IndicesCount += 6;
+
+		s_Data.Stats.QuadCounts++;
 	}
 
 	void Renderer2D::DrawRotateQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor /*= 1*/, const glm::vec4& tintColor /*= glm::vec4(1.0f)*/) {
@@ -278,6 +313,11 @@ namespace Pupil {
 
 	void Renderer2D::DrawRotateQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor /*= 1*/, const glm::vec4& tintColor /*= glm::vec4(1.0f)*/) {
 		PP_PROFILE_FUNCTION();
+
+		if (s_Data.IndicesCount >= s_Data.MaxIndexs) {
+			PP_CORE_INFO("IndicesCount > MaxIndexs, Reset Batch");
+			FlushAndReset();
+		}
 
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
 						* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
@@ -326,6 +366,15 @@ namespace Pupil {
 
 		s_Data.IndicesCount += 6;
 
+		s_Data.Stats.QuadCounts++;
+	}
+
+	void Renderer2D::ResetStats() {
+		memset(&s_Data.Stats, 0, sizeof(s_Data.Stats));
+	}
+
+	Renderer2D::Statistics Renderer2D::GetStats() {
+		return s_Data.Stats;
 	}
 
 }

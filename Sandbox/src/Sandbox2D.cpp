@@ -29,6 +29,11 @@ namespace Pupil {
 
 			m_OrthoCameraController.OnUpdate(ts);
 		}
+
+		{
+			Pupil::Renderer2D::ResetStats();
+		}
+
 		{
 			PP_PROFILE_SCOPE("Renderer::Prep");
 
@@ -38,13 +43,16 @@ namespace Pupil {
 		{
 			PP_PROFILE_SCOPE("Renderer::Draw");
 
+			static float rotation = 0.0f;
+			rotation += ts * 90.0f;
+
 			Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
 			Pupil::Renderer2D::DrawRotateQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, 45.0f, m_Color);
 			Pupil::Renderer2D::DrawQuad({ -1.0f, 0.5f }, { 0.5f, 0.8f }, { 0.1f, 0.1f, 1.0f, 1.0f });
-			Pupil::Renderer2D::DrawQuad({  1.0f, 0.5f }, { 0.5f, 0.5f }, { 0.8f, 0.1f, 0.1f, 1.0f });
 			Pupil::Renderer2D::DrawQuad({  1.0f, -0.5f }, { 0.5f, 0.5f }, { 0.1f, 0.8f, 0.1f, 1.0f });
 			Pupil::Renderer2D::DrawQuad({ 4.6f, 4.6f, -0.1f }, { 10.0f, 10.0f }, m_Texture1, 6.0f);
 			Pupil::Renderer2D::DrawRotateQuad({ -4.6f, -4.6f, -0.1f }, { 10.0f, 10.0f }, 45.0f, m_Texture2, 6.0f);
+			Pupil::Renderer2D::DrawRotateQuad({  1.0f, 0.5f }, { 0.5f, 0.5f }, rotation, m_Texture1);
 			Pupil::Renderer2D::EndScene();
 		}
 	}
@@ -53,6 +61,14 @@ namespace Pupil {
 		PP_PROFILE_FUNCTION();
 
 		ImGui::Begin("Settings");
+
+		auto stats = Pupil::Renderer2D::GetStats();
+		ImGui::Text("Renderer2D Stats:");
+		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+		ImGui::Text("Quads:      %d", stats.QuadCounts);
+		ImGui::Text("Vertices:   %d", stats.GetTotalVertexCount());
+		ImGui::Text("Indices:    %d", stats.GetTotalIndexCount());
+
 		ImGui::ColorEdit4("Color", glm::value_ptr(m_Color));
 
 		ImGui::End();

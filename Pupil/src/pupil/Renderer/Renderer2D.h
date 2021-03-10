@@ -28,5 +28,20 @@ namespace Pupil {
 		static void DrawRotateQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color);
 		static void DrawRotateQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor = 1, const glm::vec4& tintColor = glm::vec4(1.0f));
 		static void DrawRotateQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor = 1, const glm::vec4& tintColor = glm::vec4(1.0f));
+
+		// Stats
+		struct Statistics {
+			uint32_t DrawCalls = 0;
+			uint32_t QuadCounts = 0;
+
+			uint32_t GetTotalVertexCount() { return QuadCounts * 4; }
+			uint32_t GetTotalIndexCount() { return QuadCounts * 6; }
+		};
+
+		static void ResetStats();
+		static Statistics GetStats();
+
+	private:
+		static void FlushAndReset();
 	};
 }
