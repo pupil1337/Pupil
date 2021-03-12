@@ -66,6 +66,8 @@ namespace Pupil {
 			PP_PROFILE_SCOPE("Set glfwCallback Func");
 			glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+				data.Width = width;
+				data.Height = height;
 
 				WindowResizedEvent event(width, height);
 				data.EventCallback(event);

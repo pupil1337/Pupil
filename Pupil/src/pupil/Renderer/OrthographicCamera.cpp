@@ -12,7 +12,7 @@ namespace Pupil {
 		m_ProjectionView = m_Projection * m_View;
 	}
 
-	void OrthographicCamera::SetPorjection(float left, float right, float bottom, float top) {
+	void OrthographicCamera::SetProjection(float left, float right, float bottom, float top) {
 		PP_PROFILE_FUNCTION();
 
 		m_Projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);

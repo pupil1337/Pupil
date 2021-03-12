@@ -18,6 +18,17 @@ namespace Pupil {
 
 		m_Texture1 = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
 		m_Texture2 = Pupil::Texture2D::Create("assets/textures/container2.png");
+		m_Texture3 = Pupil::Texture2D::Create("assets/textures/checkerboard.png");
+
+		// Init here
+		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
+		m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
+		m_Particle.SizeBegin = 0.5f, m_Particle.SizeVariation = 0.3f, m_Particle.SizeEnd = 0.0f;
+		m_Particle.LifeTime = 1.0f;
+		m_Particle.Velocity = { 0.0f, 0.0f };
+		m_Particle.VelocityVariation = { 3.0f, 1.0f };
+		m_Particle.Position = { 0.0f, 0.0f };
+
 	}
 
 	void Sandbox2D::OnUpdate(Pupil::TimeStep ts) {
@@ -37,7 +48,7 @@ namespace Pupil {
 		{
 			PP_PROFILE_SCOPE("Renderer::Prep");
 
-			Pupil::RenderCommand::SetClearColor(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));
+			Pupil::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 			Pupil::RenderCommand::Clear();
 		}
 		{
@@ -47,13 +58,41 @@ namespace Pupil {
 			rotation += ts * 90.0f;
 
 			Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
+			Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.2f }, { 20.0f, 20.0f }, m_Texture3, 20.0f);
+			Pupil::Renderer2D::EndScene();
+
+			Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
+			for (float y = -5.0f; y < 5.0f; y += 0.5f) {
+				for (float x = -5.0f; x < 5.0f; x += 0.5f) {
+					glm::vec4 color = { (x + 5.0f) / 10.0f, 0.6f, (y + 5.0f) / 10.0f, 0.7f };
+					Pupil::Renderer2D::DrawQuad({ x, y, -0.15f }, { 0.45f, 0.45f }, color);
+				}
+			}
 			Pupil::Renderer2D::DrawRotateQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, 45.0f, m_Color);
 			Pupil::Renderer2D::DrawQuad({ -1.0f, 0.5f }, { 0.5f, 0.8f }, { 0.1f, 0.1f, 1.0f, 1.0f });
-			Pupil::Renderer2D::DrawQuad({  1.0f, -0.5f }, { 0.5f, 0.5f }, { 0.1f, 0.8f, 0.1f, 1.0f });
-			Pupil::Renderer2D::DrawQuad({ 4.6f, 4.6f, -0.1f }, { 10.0f, 10.0f }, m_Texture1, 6.0f);
-			Pupil::Renderer2D::DrawRotateQuad({ -4.6f, -4.6f, -0.1f }, { 10.0f, 10.0f }, 45.0f, m_Texture2, 6.0f);
-			Pupil::Renderer2D::DrawRotateQuad({  1.0f, 0.5f }, { 0.5f, 0.5f }, rotation, m_Texture1);
+			Pupil::Renderer2D::DrawQuad({ 1.0f, -0.5f }, { 0.5f, 0.5f }, { 0.1f, 0.8f, 0.1f, 1.0f });
+			Pupil::Renderer2D::DrawRotateQuad({ 1.0f, 0.5f }, { 0.5f, 0.5f }, rotation, m_Texture1);
 			Pupil::Renderer2D::EndScene();
+
+		}
+
+		{
+			PP_PROFILE_SCOPE("ParticleSystem");
+			if (Pupil::Input::IsMousePressed(PP_MOUSE_BUTTON_LEFT)) {
+				auto [x, y] = Input::GetMousePosition();
+				auto width = Pupil::Application::Get().GetWindow().GetWidth();
+				auto height = Pupil::Application::Get().GetWindow().GetHeight();
+
+				auto bounds = m_OrthoCameraController.GetBounds();
+				auto pos = m_OrthoCameraController.GetCamera().GetPosition();
+				m_Particle.Position.x = (pos.x - bounds.GetWidth() * 0.5) + (x / width) * bounds.GetWidth();
+				m_Particle.Position.y = (pos.y + bounds.GetHeight() * 0.5) - (y / height) * bounds.GetHeight();
+				for (int i = 0; i < 10; i++)
+					m_ParticleSystem.Emit(m_Particle);
+			}
+
+			m_ParticleSystem.OnUpdate(ts);
+			m_ParticleSystem.OnRender(m_OrthoCameraController.GetCamera());
 		}
 	}
 

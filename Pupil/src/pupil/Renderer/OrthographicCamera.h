@@ -9,7 +9,7 @@ namespace Pupil {
 	public:
 		OrthographicCamera(float left, float right, float bottom, float top);
 
-		void SetPorjection(float left, float right, float bottom, float top);
+		void SetProjection(float left, float right, float bottom, float top);
 
 		// position
 		inline void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateProjectionViewModel(); }

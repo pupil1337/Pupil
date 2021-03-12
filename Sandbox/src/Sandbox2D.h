@@ -4,6 +4,8 @@
 
 #include "pupil/Core/Layer.h"
 
+#include "ParticleSystem.h"
+
 namespace Pupil {
 
 	class PP_API Sandbox2D : public Pupil::Layer {
@@ -26,9 +28,14 @@ namespace Pupil {
 		glm::vec4 m_Color;
 		Pupil::Ref<Texture2D> m_Texture1;
 		Pupil::Ref<Texture2D> m_Texture2;
+		Pupil::Ref<Texture2D> m_Texture3;
 
 		Pupil::TimeStep m_TimeStep;
 		float m_FrameTimeGraph[100] = { 0.0f };
 		uint32_t values_offset = 0;
+
+		// Particle
+		ParticleSystem m_ParticleSystem;
+		ParticleProps m_Particle;
 	};
 }

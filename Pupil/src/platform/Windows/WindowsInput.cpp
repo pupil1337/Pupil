@@ -25,7 +25,7 @@ namespace Pupil {
 	}
 
 	std::pair<float, float> WindowsInput::GetMousePositionImpl() {
-		PP_PROFILE_FUNCTION();
+		PP_PROFILE_FUNCTION();    
 
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		double xpos, ypos;

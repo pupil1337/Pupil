@@ -19,7 +19,7 @@ namespace Pupil {
 
 	struct Renderer2DStorage {
 		enum Max {
-			MaxQuads = 2,
+			MaxQuads = 10000,
 			MaxVertexs = MaxQuads * 4,
 			MaxIndexs = MaxQuads * 6,
 			MaxTextures = 32
