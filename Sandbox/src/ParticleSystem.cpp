@@ -57,7 +57,8 @@ namespace Pupil {
 			// color.a = color.a * life;
 
 			float size = glm::lerp(particle.SizeEnd, particle.SizeBegin, life);
-			Pupil::Renderer2D::DrawRotateQuad(particle.Position, { size, size }, particle.Rotation, color);
+			glm::vec3 position = { particle.Position.x, particle.Position.y, -0.1f };
+			Pupil::Renderer2D::DrawRotateQuad(position, { size, size }, particle.Rotation, color);
 		}
 		Pupil::Renderer2D::EndScene();
 	}

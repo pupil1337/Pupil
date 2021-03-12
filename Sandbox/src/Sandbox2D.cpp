@@ -19,6 +19,7 @@ namespace Pupil {
 		m_Texture1 = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
 		m_Texture2 = Pupil::Texture2D::Create("assets/textures/container2.png");
 		m_Texture3 = Pupil::Texture2D::Create("assets/textures/checkerboard.png");
+		m_SpriteSheet = Pupil::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
 
 		// Init here
 		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
@@ -51,6 +52,7 @@ namespace Pupil {
 			Pupil::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 			Pupil::RenderCommand::Clear();
 		}
+#if 0
 		{
 			PP_PROFILE_SCOPE("Renderer::Draw");
 
@@ -75,6 +77,7 @@ namespace Pupil {
 			Pupil::Renderer2D::EndScene();
 
 		}
+#endif
 
 		{
 			PP_PROFILE_SCOPE("ParticleSystem");
@@ -87,12 +90,19 @@ namespace Pupil {
 				auto pos = m_OrthoCameraController.GetCamera().GetPosition();
 				m_Particle.Position.x = (pos.x - bounds.GetWidth() * 0.5) + (x / width) * bounds.GetWidth();
 				m_Particle.Position.y = (pos.y + bounds.GetHeight() * 0.5) - (y / height) * bounds.GetHeight();
-				for (int i = 0; i < 10; i++)
+				for (int i = 0; i < 8; i++)
 					m_ParticleSystem.Emit(m_Particle);
 			}
 
 			m_ParticleSystem.OnUpdate(ts);
 			m_ParticleSystem.OnRender(m_OrthoCameraController.GetCamera());
+		}
+
+		{
+			PP_PROFILE_SCOPE("SpriteSheet");
+			Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
+			Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_SpriteSheet);
+			Pupil::Renderer2D::EndScene();
 		}
 	}
 

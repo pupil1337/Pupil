@@ -153,6 +153,8 @@ namespace Pupil {
 			FlushAndReset();
 		}
 
+		constexpr glm::vec2 texCoords[] = { { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } , { 1.0f, 0.0f } };
+
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
 						* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
@@ -161,28 +163,28 @@ namespace Pupil {
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
 		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = { 0.0f, 0.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[0];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
 		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = { 0.0f, 1.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[1];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
 		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = { 1.0f, 1.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[2];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
 		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = { 1.0f, 0.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[3];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
@@ -205,6 +207,17 @@ namespace Pupil {
 			FlushAndReset();
 		}
 
+		constexpr float x = 7, y = 6;
+		constexpr float sheetWidth = 2560.0f, sheetHeight = 1664.0f;
+		constexpr float spriteWidth = 128.0f, spriteHeight = 128.0f;
+
+		constexpr glm::vec2 texCoords[] = {
+			{ x * spriteWidth / sheetWidth, y * spriteHeight / sheetHeight },
+			{ x * spriteWidth / sheetWidth, (y + 1) * spriteHeight / sheetHeight },
+			{ (x + 1) * spriteWidth / sheetWidth, (y + 1) * spriteHeight / sheetHeight },
+			{ (x + 1) * spriteWidth / sheetWidth, y * spriteHeight / sheetHeight }
+		};
+
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
 						* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
@@ -223,28 +236,28 @@ namespace Pupil {
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
 		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = { 0.0f, 0.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[0];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
 		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = { 0.0f, 1.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[1];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
 		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = { 1.0f, 1.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[2];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
 		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = { 1.0f, 0.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[3];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
@@ -267,6 +280,8 @@ namespace Pupil {
 			FlushAndReset();
 		}
 
+		constexpr glm::vec2 texCoords[] = { { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } , { 1.0f, 0.0f } };
+
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
 						* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
 						* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
@@ -276,28 +291,28 @@ namespace Pupil {
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
 		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = { 0.0f, 0.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[0];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
 		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = { 0.0f, 1.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[1];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
 		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = { 1.0f, 1.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[2];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
 		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = { 1.0f, 0.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[3];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
@@ -319,6 +334,8 @@ namespace Pupil {
 			FlushAndReset();
 		}
 
+		constexpr glm::vec2 texCoords[] = { { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } , { 1.0f, 0.0f } };
+
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
 						* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
 						* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
@@ -338,28 +355,28 @@ namespace Pupil {
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
 		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = { 0.0f, 0.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[0];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
 		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = { 0.0f, 1.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[1];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
 		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = { 1.0f, 1.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[2];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;
 
 		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
 		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = { 1.0f, 0.0f };
+		s_Data.VertexBufferptr->TexCoord = texCoords[3];
 		s_Data.VertexBufferptr->TexIndex = texIndex;
 		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
 		s_Data.VertexBufferptr++;

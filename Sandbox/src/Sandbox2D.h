@@ -29,13 +29,14 @@ namespace Pupil {
 		Pupil::Ref<Texture2D> m_Texture1;
 		Pupil::Ref<Texture2D> m_Texture2;
 		Pupil::Ref<Texture2D> m_Texture3;
+		Pupil::Ref<Texture2D> m_SpriteSheet;
 
 		Pupil::TimeStep m_TimeStep;
 		float m_FrameTimeGraph[100] = { 0.0f };
 		uint32_t values_offset = 0;
 
 		// Particle
-		ParticleSystem m_ParticleSystem;
 		ParticleProps m_Particle;
+		ParticleSystem m_ParticleSystem;
 	};
 }
