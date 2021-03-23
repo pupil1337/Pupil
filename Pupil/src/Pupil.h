@@ -24,6 +24,7 @@
 #include "pupil/Renderer/VertexArray.h"
 #include "pupil/Renderer/Buffer.h"
 #include "pupil/Renderer/Texture.h"
+#include "pupil/Renderer/SubTexture2D.h"
 
 #include "platform/OpenGL/OpenGLShader.h"
 // -------------------------------

@@ -19,7 +19,11 @@ namespace Pupil {
 		m_Texture1 = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
 		m_Texture2 = Pupil::Texture2D::Create("assets/textures/container2.png");
 		m_Texture3 = Pupil::Texture2D::Create("assets/textures/checkerboard.png");
+
 		m_SpriteSheet = Pupil::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
+		m_StairsTexture = Pupil::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 6 }, { 128, 128 }, { 1, 1 });
+		m_BushesTexture = Pupil::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2, 3 }, { 128, 128 }, { 1, 1 });
+		m_TreeTexture   = Pupil::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 0, 1 }, { 128, 128 }, { 1, 2 });
 
 		// Init here
 		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
@@ -101,7 +105,9 @@ namespace Pupil {
 		{
 			PP_PROFILE_SCOPE("SpriteSheet");
 			Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
-			Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_SpriteSheet);
+			Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_BushesTexture);
+			Pupil::Renderer2D::DrawQuad({ 1.0f, 0.0f }, { 1.0f, 1.0f }, m_StairsTexture);
+			Pupil::Renderer2D::DrawQuad({ 2.0f, 0.0f }, { 1.0f, 2.0f }, m_TreeTexture);
 			Pupil::Renderer2D::EndScene();
 		}
 	}

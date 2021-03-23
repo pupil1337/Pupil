@@ -30,6 +30,7 @@ namespace Pupil {
 		Pupil::Ref<Texture2D> m_Texture2;
 		Pupil::Ref<Texture2D> m_Texture3;
 		Pupil::Ref<Texture2D> m_SpriteSheet;
+		Pupil::Ref<SubTexture2D> m_StairsTexture, m_BushesTexture, m_TreeTexture;
 
 		Pupil::TimeStep m_TimeStep;
 		float m_FrameTimeGraph[100] = { 0.0f };
