@@ -99,7 +99,7 @@ namespace Pupil {
 	void ImGuiLayer::OnImGuiRender() {
 		PP_PROFILE_FUNCTION();
 
-		static bool show = true;
+		static bool show = false;
 		ImGui::ShowDemoWindow(&show);
 	}
 

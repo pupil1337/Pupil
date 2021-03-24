@@ -19,6 +19,7 @@ namespace Pupil {
 		virtual ~Application();
 
 		void Run();
+		void Close() { m_Running = false; }
 
 		void OnEvent(Event& e);
 
