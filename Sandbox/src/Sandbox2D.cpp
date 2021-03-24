@@ -6,6 +6,20 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+const uint32_t m_MapWidth = 24;
+const uint32_t m_MapHeight = 10;
+const char* m_MapTiles =
+"WWWWWWWWWWWWWWWWWWWWWWWW"
+"WWWWWWWWWDDDDDWWWWWWWWWW"
+"WWWWWWWDDDDDDDDDWWWWWWWW"
+"WWWWWWDDDDDDDDDDDDWWWTWW"
+"WWWWWDDDDDDDDDDDDDDWWWWW"
+"WWWWDDDDDDDDDDDDDDWWWWWW"
+"WWWWWDDDDDDDDDDDDDDWWWWW"
+"WW6WWWDDDDDDDDDDDDWWWWWW"
+"WWWWWWDDDDDDDDDDDWWWWWWW"
+"WWWWWWWWDDDDDDDWWWWWWWWW";
+
 namespace Pupil {
 
 	Sandbox2D::Sandbox2D()
@@ -21,9 +35,12 @@ namespace Pupil {
 		m_Texture3 = Pupil::Texture2D::Create("assets/textures/checkerboard.png");
 
 		m_SpriteSheet = Pupil::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
-		m_StairsTexture = Pupil::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 6 }, { 128, 128 }, { 1, 1 });
-		m_BushesTexture = Pupil::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2, 3 }, { 128, 128 }, { 1, 1 });
+		m_SoilTexture = Pupil::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 6, 11 }, { 128, 128 }, { 1, 1 });
+		m_WaterTexture = Pupil::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 11, 11 }, { 128, 128 }, { 1, 1 });
 		m_TreeTexture   = Pupil::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 0, 1 }, { 128, 128 }, { 1, 2 });
+		m_SpriteMap['W'] = m_SoilTexture;
+		m_SpriteMap['D'] = m_WaterTexture;
+		m_SpriteMap['T'] = m_TreeTexture;
 
 		// Init here
 		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
@@ -105,9 +122,17 @@ namespace Pupil {
 		{
 			PP_PROFILE_SCOPE("SpriteSheet");
 			Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
-			Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_BushesTexture);
-			Pupil::Renderer2D::DrawQuad({ 1.0f, 0.0f }, { 1.0f, 1.0f }, m_StairsTexture);
-			Pupil::Renderer2D::DrawQuad({ 2.0f, 0.0f }, { 1.0f, 2.0f }, m_TreeTexture);
+			for (int y = 0; y != m_MapHeight; ++y) {
+				for (int x = 0; x != m_MapWidth; ++x) {
+					char tileType = m_MapTiles[y * m_MapWidth + x];
+					Pupil::Ref<Pupil::SubTexture2D> texture;
+					if (m_SpriteMap.find(tileType) != m_SpriteMap.end()) {
+						texture = m_SpriteMap[tileType];
+						Pupil::Renderer2D::DrawQuad({ x, m_MapHeight - y }, { 1, 1 }, texture);
+					}
+					else Pupil::Renderer2D::DrawQuad({ x, m_MapHeight - y }, { 1, 1 }, m_Texture3);
+				}
+			}
 			Pupil::Renderer2D::EndScene();
 		}
 	}
