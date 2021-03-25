@@ -19,14 +19,14 @@ namespace Pupil {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application() {
+	Application::Application(const std::string& name) {
 		PP_PROFILE_FUNCTION();
 
 		PP_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		{
 			PP_PROFILE_SCOPE("Create Window");
-			m_Window = Scope<Window>(Window::Create());
+			m_Window = Scope<Window>(Window::Create(WindowProps(name)));
 		}
 		m_Window->SetEventCallback(PP_BIND_EVENT_FN(Application::OnEvent));
 

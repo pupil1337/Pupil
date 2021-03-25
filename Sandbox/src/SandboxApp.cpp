@@ -8,7 +8,7 @@
 class Sandbox : public Pupil::Application {
 
 public:
-	Sandbox() {
+	Sandbox(): Application("Sandbox APP") {
 		//PushLayer(new Pupil::ExampleLayer());
 		PushLayer(new Pupil::Sandbox2D());
 	}

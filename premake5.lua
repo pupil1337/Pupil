@@ -136,3 +136,52 @@ project "Sandbox"
 			defines "PP_Dist"
 			runtime "Release"
 			optimize "on"
+			
+
+project "Pupil-Editor"
+	location "Pupil-Editor"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect"C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files {
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs {
+		"Pupil/vendor/spdlog/include",
+		"Pupil/src",
+		"Pupil/vendor",
+		"%{IncludeDir.glm}"
+	}
+
+	links {
+		"Pupil",
+	}
+
+	filter "system:windows"
+		cppdialect "C++17"
+		systemversion "latest"
+
+		defines {
+		}
+
+		filter "configurations:Debug"
+			defines "PP_DEBUG"
+			runtime "Debug"
+			symbols "on"
+
+		filter "configurations:Release"
+			defines "PP_Release"
+			runtime "Release"
+			optimize "on"
+
+		filter "configurations:Dist"
+			defines "PP_Dist"
+			runtime "Release"
+			optimize "on"

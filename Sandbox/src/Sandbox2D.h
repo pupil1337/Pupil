@@ -21,7 +21,6 @@ namespace Pupil {
 
 	private:
 		Pupil::Ref<Pupil::Shader> m_Shader;
-		Pupil::Ref<Pupil::Framebuffer> m_Framebuffer;
 		Pupil::Ref<Pupil::VertexArray>  m_VertexArray;
 
 		Pupil::OrthographicCameraController m_OrthoCameraController;

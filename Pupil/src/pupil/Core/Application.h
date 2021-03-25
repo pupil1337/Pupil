@@ -15,7 +15,7 @@ namespace Pupil {
 
 	class PP_API Application {
 	public:
-		Application();
+		Application(const std::string& name);
 		virtual ~Application();
 
 		void Run();

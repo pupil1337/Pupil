@@ -9,8 +9,8 @@ namespace Pupil {
 
 	struct WindowProps {
 		std::string Title;
-		unsigned int Width;
-		unsigned int Height;
+		uint32_t Width;
+		uint32_t Height;
 
 		WindowProps(const std::string& title = "Pupil Engine",
 					unsigned int width = 1280,
@@ -26,8 +26,8 @@ namespace Pupil {
 
 		virtual void OnUpdate() = 0;
 
-		virtual unsigned int GetWidth() const = 0;
-		virtual unsigned int GetHeight() const = 0;
+		virtual uint32_t GetWidth() const = 0;
+		virtual uint32_t GetHeight() const = 0;
 
 		// windows attributes
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
