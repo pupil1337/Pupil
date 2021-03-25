@@ -42,6 +42,11 @@ namespace Pupil {
 		m_SpriteMap['D'] = m_WaterTexture;
 		m_SpriteMap['T'] = m_TreeTexture;
 
+		Pupil::FramebufferSpecification fbspec;
+		fbspec.Width = 1280;
+		fbspec.Height = 720;
+		m_Framebuffer = Pupil::Framebuffer::Create(fbspec);
+
 		// Init here
 		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
 		m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
@@ -65,6 +70,7 @@ namespace Pupil {
 
 		{
 			Pupil::Renderer2D::ResetStats();
+			m_Framebuffer->Bind();
 		}
 
 		{
@@ -137,11 +143,12 @@ namespace Pupil {
 			Pupil::Renderer2D::EndScene();
 		}
 #endif
+		m_Framebuffer->UnBind();
 	}
 
 	void Sandbox2D::OnImGuiRender() {
 		PP_PROFILE_FUNCTION();
-		static bool dockingEnable = false;
+		static bool dockingEnable = true;
 		if (dockingEnable) {
 			/// dockspace  ///
 			static bool opt_fullscreen = true;
@@ -214,8 +221,8 @@ namespace Pupil {
 			// color edit
 			ImGui::ColorEdit4("Color", glm::value_ptr(m_Color));
 			// show texture
-			uint32_t textureID = m_Texture3->GetRendererID();
-			ImGui::Image((void*)textureID, ImVec2{ 256.0f, 256.0f });
+			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+			ImGui::Image((void*)textureID, ImVec2{ 1280.0f, 720.0f });
 
 			ImGui::End();
 
