@@ -23,6 +23,7 @@ namespace Pupil {
 		Ref<Shader> m_Shader;
 		Ref<Framebuffer> m_Framebuffer;
 		Ref<VertexArray>  m_VertexArray;
+		glm::vec2 m_ViewportSize;
 
 		OrthographicCameraController m_OrthoCameraController;
 

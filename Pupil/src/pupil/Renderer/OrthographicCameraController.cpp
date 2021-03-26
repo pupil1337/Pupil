@@ -67,4 +67,12 @@ namespace Pupil {
 		return true;
 	}
 
+	void OrthographicCameraController::SetAspectRatio(float width, float height) {
+		PP_PROFILE_FUNCTION();
+
+		m_AspectRatio = width / height;
+		m_Bounds = { -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
+		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
+	}
+
 }

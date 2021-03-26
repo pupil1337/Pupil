@@ -27,6 +27,7 @@ namespace Pupil {
 		inline const OrthographicCamera& GetCamera() { return m_Camera; }
 
 		const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
+		void SetAspectRatio(float width, float height);
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizedEvent& e);
