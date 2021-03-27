@@ -99,8 +99,13 @@ namespace Pupil {
 	void ImGuiLayer::OnImGuiRender() {
 		PP_PROFILE_FUNCTION();
 
-		static bool show = false;
-		ImGui::ShowDemoWindow(&show);
 	}
 
+	void ImGuiLayer::OnEvent(Event& event) {
+		if (m_BlockEvent) {
+			ImGuiIO& io = ImGui::GetIO();
+			event.m_Handled |= io.WantCaptureKeyboard & event.IsInCategory(EventCategoryKeyboard);
+			event.m_Handled |= io.WantCaptureMouse & event.IsInCategory(EventCategoryMouse);
+		}
+	}
 }

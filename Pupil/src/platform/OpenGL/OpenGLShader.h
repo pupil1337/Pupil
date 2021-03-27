@@ -10,7 +10,7 @@ namespace Pupil {
 	class PP_API OpenGLShader : public Shader {
 	public:
 		OpenGLShader(const std::string& filePath_WithOutDot);
-		virtual ~OpenGLShader();
+		virtual ~OpenGLShader() override;
 
 		void CheckCompileError(uint32_t shader, std::string type);
 		inline virtual const std::string& GetName() const override { return m_Name; }

@@ -1,14 +1,13 @@
 #include "pppch.h"
-#include "WindowsInput.h"
 
 #include "pupil/Core/Application.h"
 #include <GLFW/glfw3.h>
 
-namespace Pupil {
-	
-	Scope<Input> Input::s_Instance = std::make_unique<WindowsInput>();
+#include "pupil/Core/Input.h"
 
-	bool WindowsInput::IsKeyPressedImpl(int keycode) {
+namespace Pupil {
+
+	bool Input::IsKeyPressed(int keycode) {
 		PP_PROFILE_FUNCTION();
 
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
@@ -16,7 +15,7 @@ namespace Pupil {
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool WindowsInput::IsMouseButtonPressedImpl(int button) {
+	bool Input::IsMousePressed(int button) {
 		PP_PROFILE_FUNCTION();
 
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
@@ -24,7 +23,7 @@ namespace Pupil {
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> WindowsInput::GetMousePositionImpl() {
+	std::pair<float, float> Input::GetMousePosition() {
 		PP_PROFILE_FUNCTION();    
 
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
@@ -33,17 +32,17 @@ namespace Pupil {
 		return { (float)xpos, (float)ypos };
 	}
 
-	float WindowsInput::GetMouseXImpl() {
+	float Input::GetMouseX() {
 		PP_PROFILE_FUNCTION();
 
-		auto [x, y] = GetMousePositionImpl();
+		auto [x, y] = GetMousePosition();
 		return x;
 	}
 
-	float WindowsInput::GetMouseYImpl() {
+	float Input::GetMouseY() {
 		PP_PROFILE_FUNCTION();
 
-		auto [x, y] = GetMousePositionImpl();
+		auto [x, y] = GetMousePosition();
 		return y;
 	}
 

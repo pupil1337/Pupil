@@ -7,8 +7,4 @@ namespace Pupil {
 		: m_DebugName(debugName) {
 	}
 
-	Layer::~Layer() {
-
-	}
-
 }

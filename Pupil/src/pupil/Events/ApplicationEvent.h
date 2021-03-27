@@ -10,6 +10,8 @@ namespace Pupil {
 		WindowResizedEvent(unsigned int width, unsigned int height)
 			: m_Width(width), m_Height(height) { }
 
+		virtual ~WindowResizedEvent() = default;
+
 		inline unsigned int GetWidth() const { return m_Width; }
 		inline unsigned int GetHeight() const { return m_Height; }
 
@@ -29,6 +31,7 @@ namespace Pupil {
 	class PP_API WindowClosedEvent : public Event {
 	public:
 		WindowClosedEvent() { }
+		virtual ~WindowClosedEvent() = default;
 
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 		EVENT_CLASS_TYPE(WindowClose)
@@ -38,6 +41,7 @@ namespace Pupil {
 	class PP_API AppTickEvnet : public Event {
 	public:
 		AppTickEvnet() { }
+		virtual ~AppTickEvnet() = default;
 
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 		EVENT_CLASS_TYPE(AppTick)
@@ -47,6 +51,7 @@ namespace Pupil {
 	class PP_API AppUpdateEvent : public Event {
 	public:
 		AppUpdateEvent() { }
+		virtual ~AppUpdateEvent() = default;
 
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 		EVENT_CLASS_TYPE(AppUpdate)
@@ -56,6 +61,7 @@ namespace Pupil {
 	class PP_API AppRenderEvent : public Event {
 	public:
 		AppRenderEvent() { }
+		virtual ~AppRenderEvent() = default;
 
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 		EVENT_CLASS_TYPE(AppRender)

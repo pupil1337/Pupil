@@ -64,8 +64,10 @@ namespace Pupil {
 		m_TimeStep = ts;
 		{
 			PP_PROFILE_SCOPE("OrthoCameraController OnUpdate");
-
-			m_OrthoCameraController.OnUpdate(ts);
+			
+			if (m_ViewportFocused) {
+				m_OrthoCameraController.OnUpdate(ts);
+			}
 		}
 
 		{
@@ -222,8 +224,10 @@ namespace Pupil {
 
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 			ImGui::Begin("Viewport");
+			m_ViewportFocused = ImGui::IsWindowFocused();
+			m_ViewportHovered = ImGui::IsWindowHovered();
+			Application::Get().GetImGuiLayer().BlockEvent(!m_ViewportFocused || !m_ViewportHovered);
 			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-			//PP_CORE_INFO("viewportSize: width:{0} height:{1}", viewportPanelSize.x, viewportPanelSize.y);
 			if (m_ViewportSize != *(glm::vec2*)&viewportPanelSize) {
 				m_ViewportSize = *(glm::vec2*)&viewportPanelSize;
 				m_Framebuffer->Resize(m_ViewportSize.x, m_ViewportSize.y);

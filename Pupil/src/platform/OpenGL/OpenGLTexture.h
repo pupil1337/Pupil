@@ -11,7 +11,7 @@ namespace Pupil {
 	public:
 		OpenGLTexture2D(const std::string& path);
 		OpenGLTexture2D(uint32_t width, uint32_t height);
-		virtual ~OpenGLTexture2D();
+		virtual ~OpenGLTexture2D() override;
 
 		inline virtual uint32_t GetWidth() const override { return m_Width; }
 		inline virtual uint32_t GetHeight() const override { return m_Height; }

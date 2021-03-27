@@ -8,6 +8,7 @@ namespace Pupil {
 	class PP_API KeyEvent : public Event {
 	public:
 		inline int GetKeyCode() const { return m_KeyCode; }
+		virtual ~KeyEvent() = default;
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 
@@ -21,6 +22,7 @@ namespace Pupil {
 	public:
 		KeyPressedEvent(int keycode, int repeatCount)
 			:KeyEvent(keycode), m_RepeatCount(repeatCount) { }
+		virtual ~KeyPressedEvent() = default;
 
 		inline int GetRepeatCount() const { return m_RepeatCount; }
 
@@ -41,6 +43,7 @@ namespace Pupil {
 	public:
 		KeyReleasedEvent(int keycode)
 			:KeyEvent(keycode) { }
+		virtual ~KeyReleasedEvent() = default;
 
 		std::string ToString() const override {
 			std::stringstream ss;
@@ -56,6 +59,7 @@ namespace Pupil {
 	public:
 		KeyTypedEvent(int keycode)
 			:KeyEvent(keycode) { }
+		virtual ~KeyTypedEvent() = default;
 
 		std::string ToString() const override {
 			std::stringstream ss;

@@ -9,7 +9,7 @@ namespace Pupil {
 	class PP_API OpenGLVertexArray : public VertexArray {
 	public:
 		OpenGLVertexArray();
-		virtual ~OpenGLVertexArray() {}
+		virtual ~OpenGLVertexArray() = default;
 
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
