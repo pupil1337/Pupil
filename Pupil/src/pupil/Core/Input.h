@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "Pupil/Core/Core.h"
 
 namespace Pupil {
 

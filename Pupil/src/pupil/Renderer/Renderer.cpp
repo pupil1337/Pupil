@@ -2,7 +2,7 @@
 #include "renderer.h"
 
 #include "platform/OpenGL/OpenGLShader.h"
-#include "Renderer2D.h"
+#include "pupil/Renderer/Renderer2D.h"
 
 namespace Pupil {
 

@@ -1,13 +1,13 @@
 #pragma once
 #include "pupil/Core/Core.h"
 
-#include "RendererAPI.h"
-#include "Shader.h"
-#include "VertexArray.h"
-#include "OrthographicCamera.h"
+#include "pupil/Renderer/RendererAPI.h"
+#include "pupil/Renderer/Shader.h"
+#include "pupil/Renderer/VertexArray.h"
+#include "pupil/Renderer/OrthographicCamera.h"
 
-#include "Texture.h"
-#include "SubTexture2D.h"
+#include "pupil/Renderer/Texture.h"
+#include "pupil/Renderer/SubTexture2D.h"
 
 namespace Pupil {
 

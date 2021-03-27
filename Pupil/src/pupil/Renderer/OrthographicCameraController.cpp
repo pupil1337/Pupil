@@ -60,7 +60,7 @@ namespace Pupil {
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizedEvent& e) {
 		PP_PROFILE_FUNCTION();
-
+		if (m_Edit) return true;
 		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		m_Bounds = { -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
 		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);

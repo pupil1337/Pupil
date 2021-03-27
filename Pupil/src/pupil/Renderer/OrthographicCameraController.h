@@ -28,6 +28,8 @@ namespace Pupil {
 
 		const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
 		void SetAspectRatio(float width, float height);
+		// ToDo -- Pupil-Edit ->when change WindowSize, cant callback(OnWindowResize) to change Camera
+		bool m_Edit = false;
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizedEvent& e);
@@ -38,6 +40,7 @@ namespace Pupil {
 		bool m_Rotation;
 		OrthographicCameraBounds m_Bounds;
 		OrthographicCamera m_Camera;
+		
 
 		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
 		float m_CameraRotation = 0.0f;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core.h"
+#include "pupil/Core/Core.h"
 
-#include "Window.h"
+#include "pupil/Core/Window.h"
 
 #include "pupil/Events/Event.h"
 #include "pupil/Events/ApplicationEvent.h"
@@ -36,7 +36,7 @@ namespace Pupil {
 
 		Scope<Window> m_Window;
 		LayerStack m_LayerStack;
-		ImGuiLayer* m_ImGuiLayer;
+		ImGuiLayer* m_ImGuiLayer;// delete in layerStack.cpp (Fn ~LayerStack)
 		bool m_Running = true;
 		bool m_MiniSize = false;
 

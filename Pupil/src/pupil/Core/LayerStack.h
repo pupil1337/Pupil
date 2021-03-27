@@ -1,7 +1,7 @@
 #pragma once
 
-#include"Core.h"
-#include"Layer.h"
+#include "pupil/Core/Core.h"
+#include "Layer.h"
 
 namespace Pupil {
 

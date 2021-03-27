@@ -4,7 +4,7 @@
 #include "glm/glm.hpp"
 
 #include <memory>
-#include "VertexArray.h"
+#include "pupil/Renderer/VertexArray.h"
 
 namespace Pupil {
 

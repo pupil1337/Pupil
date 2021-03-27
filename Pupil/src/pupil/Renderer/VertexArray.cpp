@@ -1,7 +1,7 @@
 #include "pppch.h"
 #include "VertexArray.h"
 
-#include "Renderer.h"
+#include "pupil/Renderer/Renderer.h"
 
 #include "platform/OpenGL/OpenGLVertexArray.h"
 

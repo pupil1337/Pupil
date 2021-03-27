@@ -2,7 +2,7 @@
 #include "Renderer2D.h"
 
 #include "platform/OpenGL/OpenGLShader.h"
-#include "RenderCommand.h"
+#include "pupil/Renderer/RenderCommand.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 

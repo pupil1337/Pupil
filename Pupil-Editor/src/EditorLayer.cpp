@@ -6,6 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#define Editor 1
+
 const uint32_t m_MapWidth = 24;
 const uint32_t m_MapHeight = 10;
 const char* m_MapTiles =
@@ -24,7 +26,7 @@ namespace Pupil {
 
 	EditorLayer::EditorLayer()
 	: Layer("EditorLayer"), m_OrthoCameraController(1280.0f / 720.0f, true), m_Color({ 0.8f, 0.2f, 0.8f, 1.0f }) {
-
+		m_OrthoCameraController.m_Edit = true;
 	}
 
 	void EditorLayer::OnAttach() {
@@ -228,6 +230,8 @@ namespace Pupil {
 			m_ViewportHovered = ImGui::IsWindowHovered();
 			Application::Get().GetImGuiLayer().BlockEvent(!m_ViewportFocused || !m_ViewportHovered);
 			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+			//PP_CORE_INFO("viewportPlanelSize [{0}, {1}]", viewportPanelSize.x, viewportPanelSize.y);
+			//PP_CORE_INFO("Camera.bounds [{0},{1},{2},{3}]", m_OrthoCameraController.GetBounds().Left, m_OrthoCameraController.GetBounds().Right, m_OrthoCameraController.GetBounds().Bottom, m_OrthoCameraController.GetBounds().Top);
 			if (m_ViewportSize != *(glm::vec2*)&viewportPanelSize) {
 				m_ViewportSize = *(glm::vec2*)&viewportPanelSize;
 				m_Framebuffer->Resize(m_ViewportSize.x, m_ViewportSize.y);

@@ -13,7 +13,7 @@ namespace Pupil {
 	public:
 		WindowsWindow(const WindowProps& props);
 
-		virtual ~WindowsWindow();
+		virtual ~WindowsWindow() override;
 
 		virtual void OnUpdate() override;
 

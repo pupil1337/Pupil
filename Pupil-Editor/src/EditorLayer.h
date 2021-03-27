@@ -24,7 +24,7 @@ namespace Pupil {
 		Ref<Framebuffer> m_Framebuffer;
 		Ref<VertexArray>  m_VertexArray;
 		glm::vec2 m_ViewportSize;
-		bool m_ViewportFocused, m_ViewportHovered;
+		bool m_ViewportFocused = false, m_ViewportHovered = false;
 
 		OrthographicCameraController m_OrthoCameraController;
 
