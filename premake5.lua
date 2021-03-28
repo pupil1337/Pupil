@@ -17,6 +17,7 @@ IncludeDir["Glad"] = "Pupil/vendor/Glad/include"
 IncludeDir["ImGui"] = "Pupil/vendor/imgui"
 IncludeDir["glm"] = "Pupil/vendor/glm"
 IncludeDir["stb_image"] = "Pupil/vendor/stb_image"
+IncludeDir["Entt"] = "Pupil/vendor/Entt/include"
 
 include "Pupil/vendor/GLFW"
 include "Pupil/vendor/Glad"
@@ -56,7 +57,8 @@ project "Pupil"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.Entt}"
 	}
 
 	links {
@@ -108,7 +110,8 @@ project "Sandbox"
 		"Pupil/vendor/spdlog/include",
 		"Pupil/src",
 		"Pupil/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.Entt}"
 	}
 
 	links {
@@ -157,7 +160,8 @@ project "Pupil-Editor"
 		"Pupil/vendor/spdlog/include",
 		"Pupil/src",
 		"Pupil/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.Entt}"
 	}
 
 	links {
