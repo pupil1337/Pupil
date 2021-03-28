@@ -32,22 +32,27 @@ namespace Pupil {
 	void EditorLayer::OnAttach() {
 		PP_PROFILE_FUNCTION();
 
-		m_Texture1 = Pupil::Texture2D::Create("assets/textures/awesomeface.png");
-		m_Texture2 = Pupil::Texture2D::Create("assets/textures/container2.png");
-		m_Texture3 = Pupil::Texture2D::Create("assets/textures/checkerboard.png");
+		m_Texture1 = Texture2D::Create("assets/textures/awesomeface.png");
+		m_Texture2 = Texture2D::Create("assets/textures/container2.png");
+		m_Texture3 = Texture2D::Create("assets/textures/checkerboard.png");
 
-		m_SpriteSheet = Pupil::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
-		m_SoilTexture = Pupil::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 6, 11 }, { 128, 128 }, { 1, 1 });
-		m_WaterTexture = Pupil::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 11, 11 }, { 128, 128 }, { 1, 1 });
-		m_TreeTexture   = Pupil::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 0, 1 }, { 128, 128 }, { 1, 2 });
+		m_SpriteSheet = Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
+		m_SoilTexture = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 6, 11 }, { 128, 128 }, { 1, 1 });
+		m_WaterTexture = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 11, 11 }, { 128, 128 }, { 1, 1 });
+		m_TreeTexture   = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 0, 1 }, { 128, 128 }, { 1, 2 });
 		m_SpriteMap['W'] = m_SoilTexture;
 		m_SpriteMap['D'] = m_WaterTexture;
 		m_SpriteMap['T'] = m_TreeTexture;
 
-		Pupil::FramebufferSpecification fbspec;
+		FramebufferSpecification fbspec;
 		fbspec.Width = 1280;
 		fbspec.Height = 720;
-		m_Framebuffer = Pupil::Framebuffer::Create(fbspec);
+		m_Framebuffer = Framebuffer::Create(fbspec);
+
+		m_Scene = std::make_shared<Scene>();
+		m_SquareEntity = m_Scene->CreateEnitty();
+		m_Scene->GetReg().emplace<TransformComponent>(m_SquareEntity, glm::mat4(1.0f));
+		m_Scene->GetReg().emplace<ColorComponent>(m_SquareEntity, glm::vec4(1.0f));
 
 		// Init here
 		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
@@ -60,7 +65,7 @@ namespace Pupil {
 
 	}
 
-	void EditorLayer::OnUpdate(Pupil::TimeStep ts) {
+	void EditorLayer::OnUpdate(TimeStep ts) {
 		PP_PROFILE_FUNCTION();
 		
 		m_TimeStep = ts;
@@ -73,49 +78,23 @@ namespace Pupil {
 		}
 
 		{
-			Pupil::Renderer2D::ResetStats();
+			Renderer2D::ResetStats();
 			m_Framebuffer->Bind();
 		}
 
 		{
 			PP_PROFILE_SCOPE("Renderer::Prep");
 
-			Pupil::RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-			Pupil::RenderCommand::Clear();
+			RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+			RenderCommand::Clear();
 		}
-#if 1
-		{
-			PP_PROFILE_SCOPE("Renderer::Draw");
-
-			static float rotation = 0.0f;
-			rotation += ts * 90.0f;
-
-			Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
-			Pupil::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.2f }, { 20.0f, 20.0f }, m_Texture3, 20.0f);
-			Pupil::Renderer2D::EndScene();
-
-			Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
-			for (float y = -5.0f; y < 5.0f; y += 0.5f) {
-				for (float x = -5.0f; x < 5.0f; x += 0.5f) {
-					glm::vec4 color = { (x + 5.0f) / 10.0f, 0.6f, (y + 5.0f) / 10.0f, 0.7f };
-					Pupil::Renderer2D::DrawQuad({ x, y, -0.15f }, { 0.45f, 0.45f }, color);
-				}
-			}
-			Pupil::Renderer2D::DrawRotateQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, 45.0f, m_Color);
-			Pupil::Renderer2D::DrawQuad({ -1.0f, 0.5f }, { 0.5f, 0.8f }, { 0.1f, 0.1f, 1.0f, 1.0f });
-			Pupil::Renderer2D::DrawQuad({ 1.0f, -0.5f }, { 0.5f, 0.5f }, { 0.1f, 0.8f, 0.1f, 1.0f });
-			Pupil::Renderer2D::DrawRotateQuad({ 1.0f, 0.5f }, { 0.5f, 0.5f }, rotation, m_Texture1);
-			Pupil::Renderer2D::EndScene();
-
-		}
-#endif
 
 		{
 			PP_PROFILE_SCOPE("ParticleSystem");
-			if (Pupil::Input::IsMousePressed(PP_MOUSE_BUTTON_LEFT)) {
+			if (Input::IsMousePressed(PP_MOUSE_BUTTON_LEFT)) {
 				auto [x, y] = Input::GetMousePosition();
-				auto width = Pupil::Application::Get().GetWindow().GetWidth();
-				auto height = Pupil::Application::Get().GetWindow().GetHeight();
+				auto width = Application::Get().GetWindow().GetWidth();
+				auto height = Application::Get().GetWindow().GetHeight();
 
 				auto bounds = m_OrthoCameraController.GetBounds();
 				auto pos = m_OrthoCameraController.GetCamera().GetPosition();
@@ -129,24 +108,10 @@ namespace Pupil {
 			m_ParticleSystem.OnRender(m_OrthoCameraController.GetCamera());
 		}
 
-#if 0
-		{
-			PP_PROFILE_SCOPE("SpriteSheet");
-			Pupil::Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
-			for (int y = 0; y != m_MapHeight; ++y) {
-				for (int x = 0; x != m_MapWidth; ++x) {
-					char tileType = m_MapTiles[y * m_MapWidth + x];
-					Pupil::Ref<Pupil::SubTexture2D> texture;
-					if (m_SpriteMap.find(tileType) != m_SpriteMap.end()) {
-						texture = m_SpriteMap[tileType];
-						Pupil::Renderer2D::DrawQuad({ x, m_MapHeight - y }, { 1, 1 }, texture);
-					}
-					else Pupil::Renderer2D::DrawQuad({ x, m_MapHeight - y }, { 1, 1 }, m_Texture3);
-				}
-			}
-			Pupil::Renderer2D::EndScene();
-		}
-#endif
+		Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
+		m_Scene->OnUpdate();
+		Renderer2D::EndScene();
+
 		m_Framebuffer->UnBind();
 	}
 
@@ -199,7 +164,7 @@ namespace Pupil {
 		if (ImGui::BeginMenuBar()) {
 			if (ImGui::BeginMenu("File")) {
 
-				if (ImGui::MenuItem("Exit")) Pupil::Application::Get().Close();
+				if (ImGui::MenuItem("Exit")) Application::Get().Close();
 				ImGui::EndMenu();
 			}
 
@@ -221,7 +186,8 @@ namespace Pupil {
 			ImGui::PlotLines("#FrameTime", m_FrameTimeGraph, 100, values_offset, "FrameTime (ms)", 0.0f, 200.0f, ImVec2(0, 100), 100);
 			ImGui::Text("FrameTime: %.2f (Fps: %d)", m_TimeStep.GetMilliSecond(), (int)(1.0f / m_TimeStep.GetSecond()));
 			// color edit
-			ImGui::ColorEdit4("Color", glm::value_ptr(m_Color));
+			ColorComponent& colorComp = m_Scene->GetReg().get<ColorComponent>(m_SquareEntity);
+			ImGui::ColorEdit4("Color", glm::value_ptr(colorComp.Color));
 			ImGui::End();
 
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
@@ -246,7 +212,7 @@ namespace Pupil {
 		ImGui::End();
 	}
 
-	void EditorLayer::OnEvent(Pupil::Event& event) {
+	void EditorLayer::OnEvent(Event& event) {
 		PP_PROFILE_FUNCTION();
 
 		m_OrthoCameraController.OnEvent(event);

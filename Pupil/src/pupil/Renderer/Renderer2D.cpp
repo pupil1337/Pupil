@@ -161,33 +161,15 @@ namespace Pupil {
 		const int texIndex = 0; // whiteTexture
 		const float tilingFactor = 1.0f;
 
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
-		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = texCoords[0];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
-		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = texCoords[1];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
-		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = texCoords[2];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
-		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = texCoords[3];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
+		constexpr uint32_t quadVertexCount = 4;
+		for (uint32_t i = 0; i != quadVertexCount; ++i) {
+			s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[i];
+			s_Data.VertexBufferptr->Color = color;
+			s_Data.VertexBufferptr->TexCoord = texCoords[i];
+			s_Data.VertexBufferptr->TexIndex = texIndex;
+			s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+			s_Data.VertexBufferptr++;
+		}
 
 		s_Data.IndicesCount += 6;
 
@@ -225,33 +207,15 @@ namespace Pupil {
 			++s_Data.TextureIndex;
 		}
 
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[0];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[1];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[2];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[3];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
+		constexpr uint32_t quadVertexCount = 4;
+		for (uint32_t i = 0; i != quadVertexCount; ++i) {
+			s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[i];
+			s_Data.VertexBufferptr->Color = tintColor;
+			s_Data.VertexBufferptr->TexCoord = texCoords[i];
+			s_Data.VertexBufferptr->TexIndex = texIndex;
+			s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+			s_Data.VertexBufferptr++;
+		}
 
 		s_Data.IndicesCount += 6;
 
@@ -290,33 +254,44 @@ namespace Pupil {
 			++s_Data.TextureIndex;
 		}
 
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[0];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
+		constexpr uint32_t quadVertexCount = 4;
+		for (uint32_t i = 0; i != quadVertexCount; ++i) {
+			s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[i];
+			s_Data.VertexBufferptr->Color = tintColor;
+			s_Data.VertexBufferptr->TexCoord = texCoords[i];
+			s_Data.VertexBufferptr->TexIndex = texIndex;
+			s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+			s_Data.VertexBufferptr++;
+		}
 
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[1];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
+		s_Data.IndicesCount += 6;
 
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[2];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
+		s_Data.Stats.QuadCounts++;
+	}
 
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[3];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
+	/// Draw Flat ///
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color) {
+		if (s_Data.IndicesCount >= s_Data.MaxIndexs) {
+			PP_CORE_INFO("IndicesCount > MaxIndexs, Reset Batch");
+			FlushAndReset();
+		}
+
+		constexpr glm::vec2 texCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f } , { 0.0f, 1.0f } };
+
+		glm::mat4 model = transform;
+
+		const int texIndex = 0; // whiteTexture
+		const float tilingFactor = 1.0f;
+
+		constexpr uint32_t quadVertexCount = 4;
+		for (uint32_t i = 0; i != quadVertexCount; ++i) {
+			s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[i];
+			s_Data.VertexBufferptr->Color = color;
+			s_Data.VertexBufferptr->TexCoord = texCoords[i];
+			s_Data.VertexBufferptr->TexIndex = texIndex;
+			s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+			s_Data.VertexBufferptr++;
+		}
 
 		s_Data.IndicesCount += 6;
 
@@ -345,33 +320,15 @@ namespace Pupil {
 		const int texIndex = 0; // whiteTexture
 		const float tilingFactor = 1.0f;
 
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
-		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = texCoords[0];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
-		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = texCoords[1];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
-		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = texCoords[2];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
-		s_Data.VertexBufferptr->Color = color;
-		s_Data.VertexBufferptr->TexCoord = texCoords[3];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
+		constexpr uint32_t quadVertexCount = 4;
+		for (uint32_t i = 0; i != quadVertexCount; ++i) {
+			s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[i];
+			s_Data.VertexBufferptr->Color = color;
+			s_Data.VertexBufferptr->TexCoord = texCoords[i];
+			s_Data.VertexBufferptr->TexIndex = texIndex;
+			s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+			s_Data.VertexBufferptr++;
+		}
 
 		s_Data.IndicesCount += 6;
 
@@ -410,33 +367,15 @@ namespace Pupil {
 			++s_Data.TextureIndex;
 		}
 
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[0];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[1];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[2];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[3];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
+		constexpr uint32_t quadVertexCount = 4;
+		for (uint32_t i = 0; i != quadVertexCount; ++i) {
+			s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[i];
+			s_Data.VertexBufferptr->Color = tintColor;
+			s_Data.VertexBufferptr->TexCoord = texCoords[i];
+			s_Data.VertexBufferptr->TexIndex = texIndex;
+			s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+			s_Data.VertexBufferptr++;
+		}
 
 		s_Data.IndicesCount += 6;
 
@@ -476,33 +415,15 @@ namespace Pupil {
 			++s_Data.TextureIndex;
 		}
 
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[0];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[0];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[1];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[1];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[2];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[2];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
-
-		s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[3];
-		s_Data.VertexBufferptr->Color = tintColor;
-		s_Data.VertexBufferptr->TexCoord = texCoords[3];
-		s_Data.VertexBufferptr->TexIndex = texIndex;
-		s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-		s_Data.VertexBufferptr++;
+		constexpr uint32_t quadVertexCount = 4;
+		for (uint32_t i = 0; i != quadVertexCount; ++i) {
+			s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[i];
+			s_Data.VertexBufferptr->Color = tintColor;
+			s_Data.VertexBufferptr->TexCoord = texCoords[i];
+			s_Data.VertexBufferptr->TexIndex = texIndex;
+			s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+			s_Data.VertexBufferptr++;
+		}
 
 		s_Data.IndicesCount += 6;
 

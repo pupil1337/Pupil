@@ -137,10 +137,15 @@ namespace EnTT_Wiki{
 				const auto& c_comp0 = c_registry.get<Comp_0>(entity);
 				auto& r_comp0 = registry.get<Comp_0>(entity);
 				// const 和 非const 引用
-				const auto [c_comp0, c_comp1] = c_registry.get<Comp_0, Comp_1>(entity);
+				const auto [C_comp0, C_comp1] = c_registry.get<Comp_0, Comp_1>(entity);
 				auto [comp0, comp1] = registry.get<Comp_0, Comp_1>(entity);
 
 				// get成员函数模板可以直接访问存储在注册表底层数据结构中的实体的组件。
 				// 还有一个名为try_get的替代成员函数，它返回一个指向实体拥有的组件的指针(如果有的话)，否则返回一个空指针。
+
+
+		// 
+
+		// registry.group<Comp_0>()
 	}
 }

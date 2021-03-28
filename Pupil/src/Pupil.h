@@ -34,3 +34,7 @@
 #include "pupil/Renderer/OrthographicCamera.h"
 #include "pupil/Renderer/OrthographicCameraController.h"
 // -------------------------------
+
+// ------ECS----------------------
+#include "pupil/Scene/Scene.h"
+#include "pupil/Scene/Component.h"

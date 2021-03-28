@@ -26,6 +26,9 @@ namespace Pupil {
 		glm::vec2 m_ViewportSize;
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 
+		Ref<Scene> m_Scene;
+		entt::entity m_SquareEntity;
+
 		OrthographicCameraController m_OrthoCameraController;
 
 		glm::vec4 m_Color;
