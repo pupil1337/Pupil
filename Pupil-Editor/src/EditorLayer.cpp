@@ -50,9 +50,10 @@ namespace Pupil {
 		m_Framebuffer = Framebuffer::Create(fbspec);
 
 		m_Scene = std::make_shared<Scene>();
-		m_SquareEntity = m_Scene->CreateEnitty();
-		m_Scene->GetReg().emplace<TransformComponent>(m_SquareEntity, glm::mat4(1.0f));
-		m_Scene->GetReg().emplace<ColorComponent>(m_SquareEntity, glm::vec4(1.0f));
+
+		m_SquareEntity = m_Scene->CreateEnitty("SquareEntity");
+		m_SquareEntity.AddComponent<TransformComponent>(glm::mat4(1.0f));
+		m_SquareEntity.AddComponent<ColorComponent>(glm::vec4(1.0f));
 
 		// Init here
 		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
@@ -186,7 +187,7 @@ namespace Pupil {
 			ImGui::PlotLines("#FrameTime", m_FrameTimeGraph, 100, values_offset, "FrameTime (ms)", 0.0f, 200.0f, ImVec2(0, 100), 100);
 			ImGui::Text("FrameTime: %.2f (Fps: %d)", m_TimeStep.GetMilliSecond(), (int)(1.0f / m_TimeStep.GetSecond()));
 			// color edit
-			ColorComponent& colorComp = m_Scene->GetReg().get<ColorComponent>(m_SquareEntity);
+			ColorComponent& colorComp = m_SquareEntity.GetComponent<ColorComponent>();
 			ImGui::ColorEdit4("Color", glm::value_ptr(colorComp.Color));
 			ImGui::End();
 

@@ -15,8 +15,12 @@ namespace Pupil {
 
 	}
 
-	entt::entity Scene::CreateEnitty() {
-		return m_Registry.create();
+	Entity Scene::CreateEnitty(const std::string& name) {
+		TagComponent tag(name);
+		entt::entity entity = m_Registry.create();
+		m_Registry.emplace<TagComponent>(entity, tag);
+
+		return { entity, &this->m_Registry };
 	}
 
 	void Scene::OnUpdate() {

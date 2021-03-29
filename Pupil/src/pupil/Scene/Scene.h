@@ -3,6 +3,7 @@
 
 #include <entt.hpp>
 #include "pupil/Scene/Component.h"
+#include "pupil/Scene/Entity.h"
 
 namespace Pupil {
 
@@ -11,10 +12,7 @@ namespace Pupil {
 		Scene();
 		~Scene();
 
-		entt::entity CreateEnitty();
-
-		// Temp
-		inline entt::registry& GetReg() { return m_Registry; }
+		Entity CreateEnitty(const std::string& name = "Entity");
 
 		void OnUpdate();
 

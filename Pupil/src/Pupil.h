@@ -38,3 +38,4 @@
 // ------ECS----------------------
 #include "pupil/Scene/Scene.h"
 #include "pupil/Scene/Component.h"
+#include "pupil/Scene/Entity.h"

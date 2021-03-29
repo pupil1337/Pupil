@@ -5,11 +5,21 @@
 
 namespace Pupil {
 
+	struct TagComponent {
+		TagComponent() = default;
+		TagComponent(const std::string& name) : Name(name) { }
+
+		TagComponent(const TagComponent& Tag) = default;
+
+		/// data ///
+		std::string Name;
+	};
+
 	struct TransformComponent {
 		TransformComponent() = default;
 		TransformComponent(const glm::mat4& transform) : Transform(transform) { }
 
-		TransformComponent(const TransformComponent& transform) = default;
+		TransformComponent(const TransformComponent& Transform) = default;
 
 		TransformComponent& operator=(TransformComponent & rhs) {
 			Transform = rhs.Transform;
@@ -28,7 +38,7 @@ namespace Pupil {
 		ColorComponent() = default;
 		ColorComponent(const glm::vec4& color): Color(color) { }
 
-		ColorComponent(const ColorComponent& color) = default;
+		ColorComponent(const ColorComponent& Color) = default;
 
 		ColorComponent& operator=(ColorComponent& rhs) {
 			Color = rhs.Color;

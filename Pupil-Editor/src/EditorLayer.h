@@ -27,7 +27,7 @@ namespace Pupil {
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 
 		Ref<Scene> m_Scene;
-		entt::entity m_SquareEntity;
+		Entity m_SquareEntity;
 
 		OrthographicCameraController m_OrthoCameraController;
 
