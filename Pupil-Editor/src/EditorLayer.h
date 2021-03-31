@@ -28,6 +28,8 @@ namespace Pupil {
 
 		Ref<Scene> m_Scene;
 		Entity m_SquareEntity;
+		Entity m_Camera, m_ClipCamera;
+		bool m_PrimaryCamera = true;
 
 		OrthographicCameraController m_OrthoCameraController;
 

@@ -6,73 +6,55 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#define Editor 1
-
-const uint32_t m_MapWidth = 24;
-const uint32_t m_MapHeight = 10;
-const char* m_MapTiles =
-"WWWWWWWWWWWWWWWWWWWWWWWW"
-"WWWWWWWWWDDDDDWWWWWWWWWW"
-"WWWWWWWDDDDDDDDDWWWWWWWW"
-"WWWWWWDDDDDDDDDDDDWWWTWW"
-"WWWWWDDDDDDDDDDDDDDWWWWW"
-"WWWWDDDDDDDDDDDDDDWWWWWW"
-"WWWWWDDDDDDDDDDDDDDWWWWW"
-"WW6WWWDDDDDDDDDDDDWWWWWW"
-"WWWWWWDDDDDDDDDDDWWWWWWW"
-"WWWWWWWWDDDDDDDWWWWWWWWW";
-
 namespace Pupil {
 
 	EditorLayer::EditorLayer()
-	: Layer("EditorLayer"), m_OrthoCameraController(1280.0f / 720.0f, true), m_Color({ 0.8f, 0.2f, 0.8f, 1.0f }) {
+		: Layer("EditorLayer"), m_OrthoCameraController(1280.0f / 720.0f, true), m_Color({ 0.8f, 0.2f, 0.8f, 1.0f }) {
 		m_OrthoCameraController.m_Edit = true;
 	}
 
 	void EditorLayer::OnAttach() {
 		PP_PROFILE_FUNCTION();
 
-		m_Texture1 = Texture2D::Create("assets/textures/awesomeface.png");
-		m_Texture2 = Texture2D::Create("assets/textures/container2.png");
-		m_Texture3 = Texture2D::Create("assets/textures/checkerboard.png");
+		m_Framebuffer = Framebuffer::Create({ 1280, 720 });
 
-		m_SpriteSheet = Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
-		m_SoilTexture = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 6, 11 }, { 128, 128 }, { 1, 1 });
-		m_WaterTexture = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 11, 11 }, { 128, 128 }, { 1, 1 });
-		m_TreeTexture   = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 0, 1 }, { 128, 128 }, { 1, 2 });
-		m_SpriteMap['W'] = m_SoilTexture;
-		m_SpriteMap['D'] = m_WaterTexture;
-		m_SpriteMap['T'] = m_TreeTexture;
-
-		FramebufferSpecification fbspec;
-		fbspec.Width = 1280;
-		fbspec.Height = 720;
-		m_Framebuffer = Framebuffer::Create(fbspec);
-
+		// Scene
 		m_Scene = std::make_shared<Scene>();
 
-		m_SquareEntity = m_Scene->CreateEnitty("SquareEntity");
+		// Square Entity
+		m_SquareEntity = m_Scene->CreateEntity("SquareEntity");
+		PP_CORE_ASSERT(m_SquareEntity, "m_SquareEntity i empty!");
 		m_SquareEntity.AddComponent<TransformComponent>(glm::mat4(1.0f));
 		m_SquareEntity.AddComponent<ColorComponent>(glm::vec4(1.0f));
 
-		// Init here
-		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
-		m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
-		m_Particle.SizeBegin = 0.5f, m_Particle.SizeVariation = 0.3f, m_Particle.SizeEnd = 0.0f;
-		m_Particle.LifeTime = 1.0f;
-		m_Particle.Velocity = { 0.0f, 0.0f };
-		m_Particle.VelocityVariation = { 3.0f, 1.0f };
-		m_Particle.Position = { 0.0f, 0.0f };
+		// Camera Entity
+		m_Camera = m_Scene->CreateEntity("OrthoCamera");
+		m_Camera.AddComponent<CameraComponent>();
+		m_Camera.AddComponent<TransformComponent>(glm::mat4(1.0f));
 
+		// Clip-space Camera
+		m_ClipCamera = m_Scene->CreateEntity("Clip-space Camera");
+		m_ClipCamera.AddComponent<CameraComponent>().Primary = false;
+		m_ClipCamera.AddComponent<TransformComponent>(glm::mat4(1.0f));
+
+		// ToDo
+		/*glm::mat4 model = glm::translate(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f });
+		PP_CORE_INFO("{0} {1} {2} {3}", model[0][0], model[0][1], model[0][2], model[0][3]);
+		PP_CORE_INFO("{0} {1} {2} {3}", model[1][0], model[1][1], model[1][2], model[1][3]);
+		PP_CORE_INFO("{0} {1} {2} {3}", model[2][0], model[2][1], model[2][2], model[2][3]);
+		PP_CORE_INFO("{0} {1} {2} {3}", model[3][0], model[3][1], model[3][2], model[3][3]);
+		glm::vec4 pos = { 1.0f, 1.0f, 0.0f, 1.0f };
+		pos = model * pos;
+		PP_CORE_WARN("{0} {1} {2} {3}", pos.x, pos.y, pos.z, pos.w);*/
 	}
 
 	void EditorLayer::OnUpdate(TimeStep ts) {
 		PP_PROFILE_FUNCTION();
-		
+
 		m_TimeStep = ts;
 		{
 			PP_PROFILE_SCOPE("OrthoCameraController OnUpdate");
-			
+
 			if (m_ViewportFocused) {
 				m_OrthoCameraController.OnUpdate(ts);
 			}
@@ -90,28 +72,7 @@ namespace Pupil {
 			RenderCommand::Clear();
 		}
 
-		{
-			PP_PROFILE_SCOPE("ParticleSystem");
-			if (Input::IsMousePressed(PP_MOUSE_BUTTON_LEFT)) {
-				auto [x, y] = Input::GetMousePosition();
-				auto width = Application::Get().GetWindow().GetWidth();
-				auto height = Application::Get().GetWindow().GetHeight();
-
-				auto bounds = m_OrthoCameraController.GetBounds();
-				auto pos = m_OrthoCameraController.GetCamera().GetPosition();
-				m_Particle.Position.x = (pos.x - bounds.GetWidth() * 0.5) + (x / width) * bounds.GetWidth();
-				m_Particle.Position.y = (pos.y + bounds.GetHeight() * 0.5) - (y / height) * bounds.GetHeight();
-				for (int i = 0; i < 8; i++)
-					m_ParticleSystem.Emit(m_Particle);
-			}
-
-			m_ParticleSystem.OnUpdate(ts);
-			m_ParticleSystem.OnRender(m_OrthoCameraController.GetCamera());
-		}
-
-		Renderer2D::BeginScene(m_OrthoCameraController.GetCamera());
 		m_Scene->OnUpdate();
-		Renderer2D::EndScene();
 
 		m_Framebuffer->UnBind();
 	}
@@ -147,7 +108,7 @@ namespace Pupil {
 		// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
 		// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-		
+
 		ImGui::Begin("DockSpace Demo", (bool*)true, window_flags);
 		ImGui::PopStyleVar();
 
@@ -172,43 +133,63 @@ namespace Pupil {
 			ImGui::EndMenuBar();
 		}
 
-			ImGui::Begin("Settings");
-			// render stats
-			auto stats = Pupil::Renderer2D::GetStats();
-			ImGui::Text("Renderer2D Stats:");
-			ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-			ImGui::Text("Quads:      %d", stats.QuadCounts);
-			ImGui::Text("Vertices:   %d", stats.GetTotalVertexCount());
-			ImGui::Text("Indices:    %d", stats.GetTotalIndexCount());
-			// performance plotLines
-			ImGui::Text("Performance:");
-			m_FrameTimeGraph[values_offset] = m_TimeStep.GetMilliSecond();
-			values_offset = (values_offset + 1) % 100;
-			ImGui::PlotLines("#FrameTime", m_FrameTimeGraph, 100, values_offset, "FrameTime (ms)", 0.0f, 200.0f, ImVec2(0, 100), 100);
-			ImGui::Text("FrameTime: %.2f (Fps: %d)", m_TimeStep.GetMilliSecond(), (int)(1.0f / m_TimeStep.GetSecond()));
-			// color edit
-			ColorComponent& colorComp = m_SquareEntity.GetComponent<ColorComponent>();
-			ImGui::ColorEdit4("Color", glm::value_ptr(colorComp.Color));
-			ImGui::End();
+		ImGui::Begin("Settings");
+		// render stats
+		auto stats = Pupil::Renderer2D::GetStats();
+		ImGui::Text("Renderer2D Stats:");
+		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+		ImGui::Text("Quads:      %d", stats.QuadCounts);
+		ImGui::Text("Vertices:   %d", stats.GetTotalVertexCount());
+		ImGui::Text("Indices:    %d", stats.GetTotalIndexCount());
+		// performance plotLines
+		ImGui::Text("Performance:");
+		m_FrameTimeGraph[values_offset] = m_TimeStep.GetMilliSecond();
+		values_offset = (values_offset + 1) % 100;
+		ImGui::PlotLines("#FrameTime", m_FrameTimeGraph, 100, values_offset, "FrameTime (ms)", 0.0f, 200.0f, ImVec2(0, 100), 100);
+		ImGui::Text("FrameTime: %.2f (Fps: %d)", m_TimeStep.GetMilliSecond(), (int)(1.0f / m_TimeStep.GetSecond()));
+		// color edit
+		ColorComponent& colorComp = m_SquareEntity.GetComponent<ColorComponent>();
+		ImGui::ColorEdit4("Color", glm::value_ptr(colorComp.Color));
+		
+		// camera pos
+		ImGui::DragFloat3("Camera Pos", glm::value_ptr(m_Camera.GetComponent<TransformComponent>().Transform[3]));
+		
+		// check box
+		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera)) {
+			m_Camera.GetComponent<CameraComponent>().Primary     = m_PrimaryCamera;
+			m_ClipCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
+		}
 
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
-			ImGui::Begin("Viewport");
-			m_ViewportFocused = ImGui::IsWindowFocused();
-			m_ViewportHovered = ImGui::IsWindowHovered();
-			Application::Get().GetImGuiLayer().BlockEvent(!m_ViewportFocused || !m_ViewportHovered);
-			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-			//PP_CORE_INFO("viewportPlanelSize [{0}, {1}]", viewportPanelSize.x, viewportPanelSize.y);
-			//PP_CORE_INFO("Camera.bounds [{0},{1},{2},{3}]", m_OrthoCameraController.GetBounds().Left, m_OrthoCameraController.GetBounds().Right, m_OrthoCameraController.GetBounds().Bottom, m_OrthoCameraController.GetBounds().Top);
-			if (m_ViewportSize != *(glm::vec2*)&viewportPanelSize) {
-				m_ViewportSize = *(glm::vec2*)&viewportPanelSize;
-				m_Framebuffer->Resize(m_ViewportSize.x, m_ViewportSize.y);
-				m_OrthoCameraController.SetAspectRatio(m_ViewportSize.x, m_ViewportSize.y);
+		{
+			auto& camera = m_ClipCamera.GetComponent<CameraComponent>().Camera;
+			float orthoSize = camera.GetOrthoGraphicSize();
+			if (ImGui::DragFloat("ClipCamera OrthoSize", &orthoSize)) {
+				camera.SetOrthoGraphicSize(orthoSize);
 			}
-			// show texture
-			uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-			ImGui::Image((void*)textureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
-			ImGui::End();
-			ImGui::PopStyleVar();
+		}
+
+		ImGui::End();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
+		ImGui::Begin("Viewport");
+		m_ViewportFocused = ImGui::IsWindowFocused();
+		m_ViewportHovered = ImGui::IsWindowHovered();
+		//PP_CORE_INFO("{0} {1}", Application::Get().GetWindow().GetWidth(), Application::Get().GetWindow().GetHeight());
+		Application::Get().GetImGuiLayer().BlockEvent(!m_ViewportFocused || !m_ViewportHovered);
+		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+		//PP_CORE_INFO("viewportPlanelSize [{0}, {1}]", viewportPanelSize.x, viewportPanelSize.y);
+		//PP_CORE_INFO("Camera.bounds [{0},{1},{2},{3}]", m_OrthoCameraController.GetBounds().Left, m_OrthoCameraController.GetBounds().Right, m_OrthoCameraController.GetBounds().Bottom, m_OrthoCameraController.GetBounds().Top);
+		if (m_ViewportSize != *(glm::vec2*)&viewportPanelSize) {
+			m_ViewportSize = *(glm::vec2*)&viewportPanelSize;
+			m_Framebuffer->Resize(m_ViewportSize.x, m_ViewportSize.y);
+			m_OrthoCameraController.SetAspectRatio(m_ViewportSize.x, m_ViewportSize.y);
+			m_Scene->OnViewportResize(m_ViewportSize.x, m_ViewportSize.y);
+		}
+		// show texture
+		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		ImGui::Image((void*)textureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
+		ImGui::End();
+		ImGui::PopStyleVar();
 
 		ImGui::End();
 	}
@@ -218,7 +199,7 @@ namespace Pupil {
 
 		m_OrthoCameraController.OnEvent(event);
 	}
-	
+
 	void EditorLayer::OnDetach() {
 		PP_PROFILE_FUNCTION();
 

@@ -9,13 +9,16 @@
 #include "pupil/Renderer/Texture.h"
 #include "pupil/Renderer/SubTexture2D.h"
 
+#include  "pupil/Renderer/Camera.h"
+
 namespace Pupil {
 
 	class PP_API Renderer2D {
 	public:
 		static void Init();
 
-		static void BeginScene(const OrthographicCamera& camera);
+		static void BeginScene(const OrthographicCamera& camera);// ToDo remove
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void EndScene();
 
 		static void Flush();

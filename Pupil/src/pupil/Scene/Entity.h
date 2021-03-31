@@ -35,9 +35,11 @@ namespace Pupil {
 			// registry->remove_if_exists<T>(entity);
 		}
 
+		operator bool() const { return entity != entt::null; }
+
 	private:
-		entt::entity entity;
-		entt::registry* registry;
+		entt::entity entity{ entt::null };
+		entt::registry* registry = nullptr;
 	};
 
 }

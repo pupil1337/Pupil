@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include "pupil/Renderer/Renderer2D.h"
+#include "pupil/Renderer/Camera.h"
 
 namespace Pupil {
 
@@ -15,7 +16,7 @@ namespace Pupil {
 
 	}
 
-	Entity Scene::CreateEnitty(const std::string& name) {
+	Entity Scene::CreateEntity(const std::string& name) {
 		TagComponent tag(name);
 		entt::entity entity = m_Registry.create();
 		m_Registry.emplace<TagComponent>(entity, tag);
@@ -24,10 +25,38 @@ namespace Pupil {
 	}
 
 	void Scene::OnUpdate() {
-		auto group = m_Registry.group<TransformComponent>(entt::get<ColorComponent>);
-		for (auto entity : group) {
-			auto& [transformComp, colorComp] = group.get<TransformComponent, ColorComponent>(entity);
-			Renderer2D::DrawQuad(transformComp.Transform, colorComp.Color);
+
+		// GetCamera
+		Camera* camera = nullptr;
+		glm::mat4 transform = glm::mat4(1.0f);
+		auto group1 = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
+		for (auto entity : group1) {
+			auto& [cameraComp, transComp] = group1.get<CameraComponent, TransformComponent>(entity);
+			if (cameraComp.Primary) {
+				camera = &cameraComp.Camera;
+				transform = transComp.Transform;
+				break;
+			}
+		}
+
+		if (camera) {
+			Renderer2D::BeginScene(*camera, transform);
+			auto group2 = m_Registry.group<TransformComponent>(entt::get<ColorComponent>);
+			for (auto entity : group2) {
+				auto& [transformComp, colorComp] = group2.get<TransformComponent, ColorComponent>(entity);
+				Renderer2D::DrawQuad(transformComp.Transform, colorComp.Color);
+			}
+			Renderer2D::EndScene();
+		}
+	}
+
+	void Scene::OnViewportResize(uint32_t width, uint32_t height) {
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto entity : view) {
+			auto& sceneCameraComp = view.get<CameraComponent>(entity);
+			if (sceneCameraComp.FixAspectRatio) {
+				sceneCameraComp.Camera.SetViewportSize(width, height);
+			}
 		}
 	}
 

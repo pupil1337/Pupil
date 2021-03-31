@@ -2,6 +2,7 @@
 #include "pupil/Core/Core.h"
 
 #include <glm/glm.hpp>
+#include "pupil/Scene/SceneCamera.h"
 
 namespace Pupil {
 
@@ -47,6 +48,16 @@ namespace Pupil {
 
 		/// data ///
 		glm::vec4 Color{1.0f};
+	};
+
+	struct CameraComponent {
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent& rhs) = default;
+
+		/// data ///
+		SceneCamera Camera;
+		bool Primary = true;
+		bool FixAspectRatio = true;
 	};
 
 }

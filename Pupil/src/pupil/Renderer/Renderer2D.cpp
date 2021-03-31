@@ -112,6 +112,20 @@ namespace Pupil {
 		s_Data.TextureIndex = 1;
 	}
 
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform) {
+		PP_PROFILE_FUNCTION();
+
+		glm::mat4 projectionViewModel = camera.GetProjection() * glm::mat4(1.0f) * glm::inverse(transform);
+
+		s_Data.TextureShader->Bind();
+		s_Data.TextureShader->SetMat4("ProjectionView", projectionViewModel);
+
+		s_Data.IndicesCount = 0;
+		s_Data.VertexBufferptr = s_Data.VertexBufferBase;
+
+		s_Data.TextureIndex = 1;
+	}
+
 	void Renderer2D::EndScene() {
 		PP_PROFILE_FUNCTION();
 

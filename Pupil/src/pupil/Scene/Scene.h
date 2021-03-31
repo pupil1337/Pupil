@@ -12,9 +12,11 @@ namespace Pupil {
 		Scene();
 		~Scene();
 
-		Entity CreateEnitty(const std::string& name = "Entity");
+		Entity CreateEntity(const std::string& name = "Entity");
 
 		void OnUpdate();
+
+		void OnViewportResize(uint32_t width, uint32_t height);
 
 	private:
 		entt::registry m_Registry;
