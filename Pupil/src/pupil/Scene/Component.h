@@ -3,6 +3,8 @@
 
 #include <glm/glm.hpp>
 #include "pupil/Scene/SceneCamera.h"
+#include "pupil/Scene/ScriptEntity.h"
+#include "pupil/Core/TimeStep.h"
 
 namespace Pupil {
 
@@ -58,6 +60,30 @@ namespace Pupil {
 		SceneCamera Camera;
 		bool Primary = true;
 		bool FixAspectRatio = true;
+	};
+
+	struct NativeScriptComponent {
+		
+		/// data ///
+		ScriptEntity* Instance = nullptr;
+
+		std::function<void()> CreateNativeScriptComp;
+		std::function<void()> DestroyNativeScriptComp;
+
+		std::function<void()> OnCreateFunction;
+		std::function<void()> OnDestroyFunction;
+		std::function<void(TimeStep)> OnUpdateFunction;
+
+		template<typename T>
+		void Bind() {
+			CreateNativeScriptComp = [&]() -> void { Instance = new T(); };
+			DestroyNativeScriptComp = [&]() -> void { delete (T*)Instance; Instance = nullptr; };
+			
+			OnCreateFunction = [&]() { ((T*)Instance)->OnCreate(); };
+			OnDestroyFunction = [&]() { ((T*)Instance)->OnDestroy(); };
+			OnUpdateFunction = [&](TimeStep ts) { ((T*)Instance)->OnUpdate(ts); };
+
+		}
 	};
 
 }

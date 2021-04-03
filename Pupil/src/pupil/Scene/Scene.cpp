@@ -24,7 +24,17 @@ namespace Pupil {
 		return { entity, &this->m_Registry };
 	}
 
-	void Scene::OnUpdate() {
+	void Scene::OnUpdate(TimeStep ts) {
+
+		// Script
+		m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nativeScriptComp) {
+			if (!nativeScriptComp.Instance) {
+				nativeScriptComp.CreateNativeScriptComp();
+				nativeScriptComp.Instance = new ScriptEntity{ entity, &this->m_Registry };
+				nativeScriptComp.OnCreateFunction();
+			}
+			nativeScriptComp.OnUpdateFunction(ts);
+		});
 
 		// GetCamera
 		Camera* camera = nullptr;

@@ -39,7 +39,8 @@ namespace Pupil {
 
 	private:
 		entt::entity entity{ entt::null };
-		entt::registry* registry = nullptr;
+		entt::registry* registry = nullptr;// todo
+
 	};
 
 }

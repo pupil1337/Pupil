@@ -2,8 +2,6 @@
 #include "pupil/Core/Core.h"
 #include "Pupil.h"
 
-#include "pupil/Core/Layer.h"
-
 #include "ParticleSystem.h"
 
 namespace Pupil {

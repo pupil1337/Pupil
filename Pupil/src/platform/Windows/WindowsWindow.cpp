@@ -59,7 +59,7 @@ namespace Pupil {
 		m_Context->Init();
 		
 		glfwSetWindowUserPointer(m_Window, &m_Data);
-		SetVSync(false);
+		SetVSync(true);
 		
 		// Set GLFW callback
 		{

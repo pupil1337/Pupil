@@ -32,10 +32,37 @@ namespace Pupil {
 		m_Camera.AddComponent<CameraComponent>();
 		m_Camera.AddComponent<TransformComponent>(glm::mat4(1.0f));
 
+		// NativeScript...  todo C# Script
+		class ScriptCamera : public ScriptEntity {
+		public:
+			void OnCreate() {
+
+			}
+
+			void OnDestroy() {
+				
+			}
+
+			void OnUpdate(TimeStep ts) {
+				auto& transform = GetComponent<TransformComponent>().Transform;
+				float speed = 5.0f;
+				if (Input::IsKeyPressed(PP_KEY_A)) transform[3][0] -= speed * ts;
+				if (Input::IsKeyPressed(PP_KEY_D)) transform[3][0] += speed * ts;
+				if (Input::IsKeyPressed(PP_KEY_S)) transform[3][1] -= speed * ts;
+				if (Input::IsKeyPressed(PP_KEY_W)) transform[3][1] += speed * ts;
+			}
+
+		private:
+
+		};
+
+		m_Camera.AddComponent<NativeScriptComponent>().Bind<ScriptCamera>();
+
 		// Clip-space Camera
 		m_ClipCamera = m_Scene->CreateEntity("Clip-space Camera");
 		m_ClipCamera.AddComponent<CameraComponent>().Primary = false;
 		m_ClipCamera.AddComponent<TransformComponent>(glm::mat4(1.0f));
+
 
 		// ToDo
 		/*glm::mat4 model = glm::translate(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f });
@@ -72,7 +99,7 @@ namespace Pupil {
 			RenderCommand::Clear();
 		}
 
-		m_Scene->OnUpdate();
+		m_Scene->OnUpdate(ts);
 
 		m_Framebuffer->UnBind();
 	}
@@ -169,7 +196,6 @@ namespace Pupil {
 		}
 
 		ImGui::End();
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImGui::Begin("Viewport");
 		m_ViewportFocused = ImGui::IsWindowFocused();
