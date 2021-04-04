@@ -1,7 +1,9 @@
 #pragma once
 #include "pupil/Core/Core.h"
+#include "pupil/Core/TimeStep.h"
 
 #include <entt.hpp>
+#include "pupil/Scene/Scene.h"
 
 namespace Pupil {
 
@@ -10,20 +12,21 @@ namespace Pupil {
 		ScriptEntity() = default;
 		ScriptEntity(const ScriptEntity& scriptEntity) = default;
 		ScriptEntity(entt::entity entity, entt::registry* registry): entity(entity), registry(registry) { }
+		virtual ~ScriptEntity() = default;
 
 		template<typename T>
 		T& GetComponent() {
 			return registry->get<T>(entity);
 		}
 
-		template<typename T, typename... Args>
-		T& AddComponent(Args&&... args) {
-			return registry->emplace<T>(entity, std::forward<Args>(args)...);
-		}
+		virtual void OnCreate() { }
+		virtual void OnDestroy() { }
+		virtual void OnUpdate(TimeStep ts) { }
 
 	private:
-		entt::entity entity;
+		entt::entity entity{ entt::null };
 		entt::registry* registry = nullptr;
+
 	};
 
 }

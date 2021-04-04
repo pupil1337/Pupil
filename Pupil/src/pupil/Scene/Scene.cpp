@@ -27,13 +27,11 @@ namespace Pupil {
 	void Scene::OnUpdate(TimeStep ts) {
 
 		// Script
-		m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nativeScriptComp) {
-			if (!nativeScriptComp.Instance) {
-				nativeScriptComp.CreateNativeScriptComp();
-				nativeScriptComp.Instance = new ScriptEntity{ entity, &this->m_Registry };
-				nativeScriptComp.OnCreateFunction();
+		m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc) {
+			if (!nsc.Instance) {
+				nsc.Instance = nsc.CreateNativeScriptComp(entity, &this->m_Registry);
 			}
-			nativeScriptComp.OnUpdateFunction(ts);
+			nsc.Instance->OnUpdate(ts);
 		});
 
 		// GetCamera
@@ -41,7 +39,7 @@ namespace Pupil {
 		glm::mat4 transform = glm::mat4(1.0f);
 		auto group1 = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
 		for (auto entity : group1) {
-			auto& [cameraComp, transComp] = group1.get<CameraComponent, TransformComponent>(entity);
+			auto [cameraComp, transComp] = group1.get<CameraComponent, TransformComponent>(entity);
 			if (cameraComp.Primary) {
 				camera = &cameraComp.Camera;
 				transform = transComp.Transform;
@@ -53,7 +51,7 @@ namespace Pupil {
 			Renderer2D::BeginScene(*camera, transform);
 			auto group2 = m_Registry.group<TransformComponent>(entt::get<ColorComponent>);
 			for (auto entity : group2) {
-				auto& [transformComp, colorComp] = group2.get<TransformComponent, ColorComponent>(entity);
+				auto [transformComp, colorComp] = group2.get<TransformComponent, ColorComponent>(entity);
 				Renderer2D::DrawQuad(transformComp.Transform, colorComp.Color);
 			}
 			Renderer2D::EndScene();

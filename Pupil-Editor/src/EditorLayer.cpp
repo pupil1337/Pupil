@@ -35,15 +35,16 @@ namespace Pupil {
 		// NativeScript...  todo C# Script
 		class ScriptCamera : public ScriptEntity {
 		public:
-			void OnCreate() {
-
+			ScriptCamera(entt::entity entity, entt::registry* registry): ScriptEntity(entity, registry) { }
+			virtual void OnCreate() override {
+				PP_CORE_TRACE("ScriptCamera Create");
 			}
 
-			void OnDestroy() {
+			virtual void OnDestroy() override {
 				
 			}
 
-			void OnUpdate(TimeStep ts) {
+			virtual void OnUpdate(TimeStep ts) override {
 				auto& transform = GetComponent<TransformComponent>().Transform;
 				float speed = 5.0f;
 				if (Input::IsKeyPressed(PP_KEY_A)) transform[3][0] -= speed * ts;
@@ -51,9 +52,6 @@ namespace Pupil {
 				if (Input::IsKeyPressed(PP_KEY_S)) transform[3][1] -= speed * ts;
 				if (Input::IsKeyPressed(PP_KEY_W)) transform[3][1] += speed * ts;
 			}
-
-		private:
-
 		};
 
 		m_Camera.AddComponent<NativeScriptComponent>().Bind<ScriptCamera>();

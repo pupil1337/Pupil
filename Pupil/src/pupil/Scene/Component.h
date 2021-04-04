@@ -67,22 +67,14 @@ namespace Pupil {
 		/// data ///
 		ScriptEntity* Instance = nullptr;
 
-		std::function<void()> CreateNativeScriptComp;
-		std::function<void()> DestroyNativeScriptComp;
-
-		std::function<void()> OnCreateFunction;
-		std::function<void()> OnDestroyFunction;
-		std::function<void(TimeStep)> OnUpdateFunction;
+		ScriptEntity* (*CreateNativeScriptComp)(entt::entity entity, entt::registry* registry);
+		void (*DestroyNativeScriptComp)(NativeScriptComponent* nsc);
 
 		template<typename T>
 		void Bind() {
-			CreateNativeScriptComp = [&]() -> void { Instance = new T(); };
-			DestroyNativeScriptComp = [&]() -> void { delete (T*)Instance; Instance = nullptr; };
-			
-			OnCreateFunction = [&]() { ((T*)Instance)->OnCreate(); };
-			OnDestroyFunction = [&]() { ((T*)Instance)->OnDestroy(); };
-			OnUpdateFunction = [&](TimeStep ts) { ((T*)Instance)->OnUpdate(ts); };
-
+			CreateNativeScriptComp = [](entt::entity entity, entt::registry* registry) { return static_cast<ScriptEntity*>(new T(entity, registry)); };
+			DestroyNativeScriptComp = [](NativeScriptComponent* nsc) { delete nsc->Instance; nsc->Instance = nullptr; };
+			// todo // ↑内存泄漏(创建后直到程序结束才析构，所以先不管。此说法是否真确？
 		}
 	};
 
