@@ -29,7 +29,9 @@ namespace Pupil {
 		// Script
 		m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc) {
 			if (!nsc.Instance) {
-				nsc.Instance = nsc.CreateNativeScriptComp(entity, &this->m_Registry);
+				nsc.Instance = nsc.CreateNativeScriptComp();
+				nsc.Instance->entity = entity;
+				nsc.Instance->registry = &m_Registry;
 			}
 			nsc.Instance->OnUpdate(ts);
 		});

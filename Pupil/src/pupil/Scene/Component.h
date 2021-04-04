@@ -67,12 +67,12 @@ namespace Pupil {
 		/// data ///
 		ScriptEntity* Instance = nullptr;
 
-		ScriptEntity* (*CreateNativeScriptComp)(entt::entity entity, entt::registry* registry);
+		ScriptEntity* (*CreateNativeScriptComp)();
 		void (*DestroyNativeScriptComp)(NativeScriptComponent* nsc);
 
 		template<typename T>
 		void Bind() {
-			CreateNativeScriptComp = [](entt::entity entity, entt::registry* registry) { return static_cast<ScriptEntity*>(new T(entity, registry)); };
+			CreateNativeScriptComp = []() { return static_cast<ScriptEntity*>(new T()); };
 			DestroyNativeScriptComp = [](NativeScriptComponent* nsc) { delete nsc->Instance; nsc->Instance = nullptr; };
 			// todo // ↑内存泄漏(创建后直到程序结束才析构，所以先不管。此说法是否真确？
 		}

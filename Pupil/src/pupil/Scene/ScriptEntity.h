@@ -9,6 +9,8 @@ namespace Pupil {
 
 	class ScriptEntity {
 	public:
+		friend class Scene;
+
 		ScriptEntity() = default;
 		ScriptEntity(const ScriptEntity& scriptEntity) = default;
 		ScriptEntity(entt::entity entity, entt::registry* registry): entity(entity), registry(registry) { }

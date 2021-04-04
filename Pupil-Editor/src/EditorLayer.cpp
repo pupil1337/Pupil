@@ -35,7 +35,6 @@ namespace Pupil {
 		// NativeScript...  todo C# Script
 		class ScriptCamera : public ScriptEntity {
 		public:
-			ScriptCamera(entt::entity entity, entt::registry* registry): ScriptEntity(entity, registry) { }
 			virtual void OnCreate() override {
 				PP_CORE_TRACE("ScriptCamera Create");
 			}
