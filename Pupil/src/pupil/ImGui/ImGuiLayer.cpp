@@ -98,7 +98,7 @@ namespace Pupil {
 
 	void ImGuiLayer::OnImGuiRender() {
 		PP_PROFILE_FUNCTION();
-
+		ImGui::ShowDemoWindow();
 	}
 
 	void ImGuiLayer::OnEvent(Event& event) {

@@ -20,6 +20,7 @@ namespace Pupil {
 
 		// Scene
 		m_Scene = std::make_shared<Scene>();
+		m_ScenePanel.SetScenePanel(m_Scene);
 
 		// Square Entity
 		m_SquareEntity = m_Scene->CreateEntity("SquareEntity");
@@ -59,7 +60,7 @@ namespace Pupil {
 		m_ClipCamera = m_Scene->CreateEntity("Clip-space Camera");
 		m_ClipCamera.AddComponent<CameraComponent>().Primary = false;
 		m_ClipCamera.AddComponent<TransformComponent>(glm::mat4(1.0f));
-
+		m_ClipCamera.AddComponent<NativeScriptComponent>().Bind<ScriptCamera>();
 
 		// ToDo
 		/*glm::mat4 model = glm::translate(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f });
@@ -156,6 +157,9 @@ namespace Pupil {
 
 			ImGui::EndMenuBar();
 		}
+
+		// ScenePanel
+		m_ScenePanel.OnImGuiRender();
 
 		ImGui::Begin("Settings");
 		// render stats

@@ -29,6 +29,8 @@ namespace Pupil {
 		Entity m_Camera, m_ClipCamera;
 		bool m_PrimaryCamera = true;
 
+		ScenePanel m_ScenePanel;
+
 		OrthographicCameraController m_OrthoCameraController;
 
 		glm::vec4 m_Color;

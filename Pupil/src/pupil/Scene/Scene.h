@@ -9,6 +9,8 @@ namespace Pupil {
 
 	class Scene {
 	public:
+		friend class ScenePanel;
+
 		Scene();
 		~Scene();
 
