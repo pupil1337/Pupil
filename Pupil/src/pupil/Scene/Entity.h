@@ -12,12 +12,12 @@ namespace Pupil {
 		Entity(const Entity& other) = default;
 
 		template<typename T>
-		bool HasComponent() {
+		bool HasComponent() const {
 			return registry->has<T>(entity);
 		}
 		
 		template<typename T>
-		T& GetComponent() {
+		T& GetComponent() const {
 			PP_CORE_ASSERT(HasComponent<T>(), "Entity does not has this component!");
 			return registry->get<T>(entity);
 		}
@@ -36,6 +36,9 @@ namespace Pupil {
 		}
 
 		operator bool() const { return entity != entt::null; }
+		operator uint32_t() const { return (uint32_t)entity; }
+		bool operator==(const Entity& rhs) { return this->entity == rhs.entity && this->registry == rhs.registry; }
+		bool operator!=(const Entity& rhs) { return !(*this == rhs); }
 
 	private:
 		entt::entity entity{ entt::null };

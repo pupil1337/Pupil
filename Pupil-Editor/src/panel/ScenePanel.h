@@ -14,11 +14,12 @@ namespace Pupil {
 
 		void OnImGuiRender();
 
-		void DrawEntityNode(entt::entity entity);
+		void DrawEntityNode(const Entity& entity);
+		void DrawComponent();
 
 	private:
 		Ref<Scene> m_Context;
-		entt::entity m_EntitySelected;
+		Entity m_EntitySelected;
 	};
 
 }
