@@ -29,7 +29,7 @@ namespace Pupil {
 		m_SquareEntity.AddComponent<ColorComponent>(glm::vec4(1.0f));
 
 		// Camera Entity
-		m_Camera = m_Scene->CreateEntity("OrthoCamera");
+		m_Camera = m_Scene->CreateEntity("SceneCamera");
 		m_Camera.AddComponent<CameraComponent>();
 		m_Camera.AddComponent<TransformComponent>(glm::mat4(1.0f));
 
@@ -190,9 +190,9 @@ namespace Pupil {
 
 		{
 			auto& camera = m_ClipCamera.GetComponent<CameraComponent>().Camera;
-			float orthoSize = camera.GetOrthoGraphicSize();
+			float orthoSize = camera.GetOrthographicSize();
 			if (ImGui::DragFloat("ClipCamera OrthoSize", &orthoSize)) {
-				camera.SetOrthoGraphicSize(orthoSize);
+				camera.SetOrthographicSize(orthoSize);
 			}
 		}
 
