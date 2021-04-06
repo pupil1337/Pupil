@@ -22,14 +22,17 @@ namespace Pupil {
 		m_Scene = std::make_shared<Scene>();
 		m_ScenePanel.SetScenePanel(m_Scene);
 
-		// Square Entity
-		m_SquareEntity = m_Scene->CreateEntity("SquareEntity");
-		PP_CORE_ASSERT(m_SquareEntity, "m_SquareEntity i empty!");
-		m_SquareEntity.AddComponent<TransformComponent>(glm::mat4(1.0f));
-		m_SquareEntity.AddComponent<ColorComponent>(glm::vec4(1.0f));
+		// Red Entity
+		m_RedEntity = m_Scene->CreateEntity("RedEntity");
+		m_RedEntity.AddComponent<TransformComponent>(glm::mat4(1.0f));
+		m_RedEntity.AddComponent<ColorComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		// Green Entity
+		m_GreenEntity = m_Scene->CreateEntity("GreenEntity");
+		m_GreenEntity.AddComponent<TransformComponent>(glm::mat4(1.0f));
+		m_GreenEntity.AddComponent<ColorComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 
 		// Camera Entity
-		m_Camera = m_Scene->CreateEntity("SceneCamera");
+		m_Camera = m_Scene->CreateEntity("Camera");
 		m_Camera.AddComponent<CameraComponent>();
 		m_Camera.AddComponent<TransformComponent>(glm::mat4(1.0f));
 
@@ -175,37 +178,15 @@ namespace Pupil {
 		values_offset = (values_offset + 1) % 100;
 		ImGui::PlotLines("#FrameTime", m_FrameTimeGraph, 100, values_offset, "FrameTime (ms)", 0.0f, 200.0f, ImVec2(0, 100), 100);
 		ImGui::Text("FrameTime: %.2f (Fps: %d)", m_TimeStep.GetMilliSecond(), (int)(1.0f / m_TimeStep.GetSecond()));
-		// color edit
-		ColorComponent& colorComp = m_SquareEntity.GetComponent<ColorComponent>();
-		ImGui::ColorEdit4("Color", glm::value_ptr(colorComp.Color));
-		
-		// camera pos
-		ImGui::DragFloat3("Camera Pos", glm::value_ptr(m_Camera.GetComponent<TransformComponent>().Transform[3]));
-		
-		// check box
-		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera)) {
-			m_Camera.GetComponent<CameraComponent>().Primary     = m_PrimaryCamera;
-			m_ClipCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
-		}
-
-		{
-			auto& camera = m_ClipCamera.GetComponent<CameraComponent>().Camera;
-			float orthoSize = camera.GetOrthographicSize();
-			if (ImGui::DragFloat("ClipCamera OrthoSize", &orthoSize)) {
-				camera.SetOrthographicSize(orthoSize);
-			}
-		}
 
 		ImGui::End();
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImGui::Begin("Viewport");
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
-		//PP_CORE_INFO("{0} {1}", Application::Get().GetWindow().GetWidth(), Application::Get().GetWindow().GetHeight());
 		Application::Get().GetImGuiLayer().BlockEvent(!m_ViewportFocused || !m_ViewportHovered);
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		//PP_CORE_INFO("viewportPlanelSize [{0}, {1}]", viewportPanelSize.x, viewportPanelSize.y);
-		//PP_CORE_INFO("Camera.bounds [{0},{1},{2},{3}]", m_OrthoCameraController.GetBounds().Left, m_OrthoCameraController.GetBounds().Right, m_OrthoCameraController.GetBounds().Bottom, m_OrthoCameraController.GetBounds().Top);
 		if (m_ViewportSize != *(glm::vec2*)&viewportPanelSize) {
 			m_ViewportSize = *(glm::vec2*)&viewportPanelSize;
 			m_Framebuffer->Resize(m_ViewportSize.x, m_ViewportSize.y);

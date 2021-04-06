@@ -25,7 +25,7 @@ namespace Pupil {
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 
 		Ref<Scene> m_Scene;
-		Entity m_SquareEntity;
+		Entity m_RedEntity, m_GreenEntity;
 		Entity m_Camera, m_ClipCamera;
 		bool m_PrimaryCamera = true;
 

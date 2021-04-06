@@ -32,6 +32,7 @@ namespace Pupil {
 				nsc.Instance = nsc.CreateNativeScriptComp();
 				nsc.Instance->entity = entity;
 				nsc.Instance->registry = &m_Registry;
+				nsc.Instance->OnCreate();
 			}
 			nsc.Instance->OnUpdate(ts);
 		});

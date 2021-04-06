@@ -71,7 +71,7 @@ namespace Pupil {
 			auto& transform = m_EntitySelected.GetComponent<TransformComponent>();
 
 			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform")) {
-				ImGui::DragFloat3("position", glm::value_ptr(transform.Transform[3]));
+				ImGui::DragFloat3("position", glm::value_ptr(transform.Transform[3]), 0.1f);
 				ImGui::TreePop();
 			}
 
@@ -133,6 +133,17 @@ namespace Pupil {
 						camera.Camera.SetOrthographicFar(Far);
 					}
 				}
+
+				ImGui::TreePop();
+			}
+		}
+
+		// ColorComponent
+		if (m_EntitySelected.HasComponent<ColorComponent>()) {
+			if (ImGui::TreeNodeEx((void*)typeid(ColorComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Color")) {
+				auto& color = m_EntitySelected.GetComponent<ColorComponent>();
+
+				ImGui::ColorEdit4("color", glm::value_ptr(color.Color));
 
 				ImGui::TreePop();
 			}
