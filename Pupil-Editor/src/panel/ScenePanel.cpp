@@ -2,6 +2,7 @@
 #include "ScenePanel.h"
 
 #include <imgui/imgui.h>
+#include <imgui/imgui_internal.h>
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Pupil {
@@ -53,6 +54,60 @@ namespace Pupil {
 		}
 	}
 
+	void DrawVec3Control(const std::string& label, glm::vec3& value, float revalue = 0.0f, float columnWidth = 70.0f) {
+		ImGui::PushID(label.c_str());
+
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
+		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.8f));
+		if (ImGui::Button("X")) {
+			value.x = revalue;
+		}
+		ImGui::PopStyleColor();
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##X", &value.x, 0.1f, 0.0f, 0.0f, "%0.2f");
+		ImGui::SameLine();
+		ImGui::PopItemWidth();
+		
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.8f, 0.0f, 1.0f));
+		if (ImGui::Button("Y")) {
+			value.y = revalue;
+		}
+		ImGui::PopStyleColor();
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##Y", &value.y, 0.1f, 0.0f, 0.0f, "%0.2f");
+		ImGui::SameLine();
+		ImGui::PopItemWidth();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.8f, 1.0f));
+		if (ImGui::Button("Z")) {
+			value.z = revalue;
+		}
+		ImGui::PopStyleColor();
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##Z", &value.z, 0.1f, 0.0f, 0.0f, "%0.2f");
+		ImGui::SameLine();
+		ImGui::PopItemWidth();
+		
+		ImGui::PopStyleVar();
+
+		ImGui::Columns(1);
+
+		ImGui::PopID();
+	}
+
 	void ScenePanel::DrawComponent() {
 		// TagComponent
 		if (m_EntitySelected.HasComponent<TagComponent>()) {
@@ -71,7 +126,10 @@ namespace Pupil {
 			auto& transform = m_EntitySelected.GetComponent<TransformComponent>();
 
 			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform")) {
-				ImGui::DragFloat3("position", glm::value_ptr(transform.Transform[3]), 0.1f);
+				//ImGui::DragFloat3("position", glm::value_ptr(transform.translation), 0.1f);
+				DrawVec3Control("position", transform.translation);
+				DrawVec3Control("rotate", transform.rotation);
+				DrawVec3Control("scale", transform.scale, 1.0f);
 				ImGui::TreePop();
 			}
 
@@ -143,7 +201,7 @@ namespace Pupil {
 			if (ImGui::TreeNodeEx((void*)typeid(ColorComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Color")) {
 				auto& color = m_EntitySelected.GetComponent<ColorComponent>();
 
-				ImGui::ColorEdit4("color", glm::value_ptr(color.Color));
+				ImGui::ColorEdit4("##color", glm::value_ptr(color.Color));
 
 				ImGui::TreePop();
 			}

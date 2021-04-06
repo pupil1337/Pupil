@@ -20,20 +20,25 @@ namespace Pupil {
 
 	struct TransformComponent {
 		TransformComponent() = default;
-		TransformComponent(const glm::mat4& transform) : Transform(transform) { }
-
+		TransformComponent(const glm::vec3& translation) : translation(translation) { }
 		TransformComponent(const TransformComponent& Transform) = default;
 
-		TransformComponent& operator=(TransformComponent & rhs) {
-			Transform = rhs.Transform;
-			return *this;
+		glm::mat4 GetTransform() {
+					// translate
+			return glm::translate(glm::mat4(1.0f), translation)
+					// rotate
+				 * glm::rotate(glm::mat4(1.0f), glm::radians(rotation.x), { 1.0f, 0.0f, 0.0f })
+				 * glm::rotate(glm::mat4(1.0f), glm::radians(rotation.y), { 0.0f, 1.0f, 0.0f })
+				 * glm::rotate(glm::mat4(1.0f), glm::radians(rotation.z), { 0.0f, 0.0f, 1.0f })
+					// scale
+				 * glm::scale(glm::mat4(1.0f), scale);
+				
 		}
 
-		operator glm::mat4() { return Transform; }
-		operator const glm::mat4() const { return Transform; }
-
 		/// data ///
-		glm::mat4 Transform{1.0f};
+		glm::vec3 translation = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 rotation    = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 scale       = { 1.0f, 1.0f, 1.0f };
 	};
 
 

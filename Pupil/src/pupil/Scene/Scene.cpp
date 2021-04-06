@@ -45,7 +45,7 @@ namespace Pupil {
 			auto [cameraComp, transComp] = group1.get<CameraComponent, TransformComponent>(entity);
 			if (cameraComp.Primary) {
 				camera = &cameraComp.Camera;
-				transform = transComp.Transform;
+				transform = transComp.GetTransform();
 				break;
 			}
 		}
@@ -55,7 +55,7 @@ namespace Pupil {
 			auto group2 = m_Registry.group<TransformComponent>(entt::get<ColorComponent>);
 			for (auto entity : group2) {
 				auto [transformComp, colorComp] = group2.get<TransformComponent, ColorComponent>(entity);
-				Renderer2D::DrawQuad(transformComp.Transform, colorComp.Color);
+				Renderer2D::DrawQuad(transformComp.GetTransform(), colorComp.Color);
 			}
 			Renderer2D::EndScene();
 		}

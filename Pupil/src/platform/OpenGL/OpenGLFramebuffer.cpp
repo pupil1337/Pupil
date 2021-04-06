@@ -54,8 +54,8 @@ namespace Pupil {
 	}
 
 	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height) {
-		m_Specification.Width = width;
-		m_Specification.Height = height;
+		m_Specification.Width = width > 0 ? width : 1;
+		m_Specification.Height = height > 0 ? height : 1;
 		Init();
 	}
 

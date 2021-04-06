@@ -24,17 +24,17 @@ namespace Pupil {
 
 		// Red Entity
 		m_RedEntity = m_Scene->CreateEntity("RedEntity");
-		m_RedEntity.AddComponent<TransformComponent>(glm::mat4(1.0f));
+		m_RedEntity.AddComponent<TransformComponent>(glm::vec3(0.0f));
 		m_RedEntity.AddComponent<ColorComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 		// Green Entity
 		m_GreenEntity = m_Scene->CreateEntity("GreenEntity");
-		m_GreenEntity.AddComponent<TransformComponent>(glm::mat4(1.0f));
+		m_GreenEntity.AddComponent<TransformComponent>(glm::vec3(0.0f));
 		m_GreenEntity.AddComponent<ColorComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 
 		// Camera Entity
 		m_Camera = m_Scene->CreateEntity("Camera");
 		m_Camera.AddComponent<CameraComponent>();
-		m_Camera.AddComponent<TransformComponent>(glm::mat4(1.0f));
+		m_Camera.AddComponent<TransformComponent>(glm::vec3(0.0f));
 
 		// NativeScript...  todo C# Script
 		class ScriptCamera : public ScriptEntity {
@@ -48,12 +48,12 @@ namespace Pupil {
 			}
 
 			virtual void OnUpdate(TimeStep ts) override {
-				auto& transform = GetComponent<TransformComponent>().Transform;
+				auto& transform = GetComponent<TransformComponent>().translation;
 				float speed = 5.0f;
-				if (Input::IsKeyPressed(PP_KEY_A)) transform[3][0] -= speed * ts;
-				if (Input::IsKeyPressed(PP_KEY_D)) transform[3][0] += speed * ts;
-				if (Input::IsKeyPressed(PP_KEY_S)) transform[3][1] -= speed * ts;
-				if (Input::IsKeyPressed(PP_KEY_W)) transform[3][1] += speed * ts;
+				if (Input::IsKeyPressed(PP_KEY_A)) transform.x -= speed * ts;
+				if (Input::IsKeyPressed(PP_KEY_D)) transform.x += speed * ts;
+				if (Input::IsKeyPressed(PP_KEY_S)) transform.y -= speed * ts;
+				if (Input::IsKeyPressed(PP_KEY_W)) transform.y += speed * ts;
 			}
 		};
 
@@ -62,7 +62,7 @@ namespace Pupil {
 		// Clip-space Camera
 		m_ClipCamera = m_Scene->CreateEntity("Clip-space Camera");
 		m_ClipCamera.AddComponent<CameraComponent>().Primary = false;
-		m_ClipCamera.AddComponent<TransformComponent>(glm::mat4(1.0f));
+		m_ClipCamera.AddComponent<TransformComponent>(glm::vec3(0.0f));
 		m_ClipCamera.AddComponent<NativeScriptComponent>().Bind<ScriptCamera>();
 
 		// ToDo
@@ -164,15 +164,16 @@ namespace Pupil {
 		// ScenePanel
 		m_ScenePanel.OnImGuiRender();
 
+		// Settings
 		ImGui::Begin("Settings");
-		// render stats
+			// render stats
 		auto stats = Pupil::Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
 		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
 		ImGui::Text("Quads:      %d", stats.QuadCounts);
 		ImGui::Text("Vertices:   %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices:    %d", stats.GetTotalIndexCount());
-		// performance plotLines
+			// performance plotLines
 		ImGui::Text("Performance:");
 		m_FrameTimeGraph[values_offset] = m_TimeStep.GetMilliSecond();
 		values_offset = (values_offset + 1) % 100;
@@ -181,8 +182,10 @@ namespace Pupil {
 
 		ImGui::End();
 
+		// Viewport
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImGui::Begin("Viewport");
+			// viewport size change
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer().BlockEvent(!m_ViewportFocused || !m_ViewportHovered);
@@ -193,7 +196,8 @@ namespace Pupil {
 			m_OrthoCameraController.SetAspectRatio(m_ViewportSize.x, m_ViewportSize.y);
 			m_Scene->OnViewportResize(m_ViewportSize.x, m_ViewportSize.y);
 		}
-		// show texture
+
+			// show texture
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
 		ImGui::End();
