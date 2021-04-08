@@ -15,7 +15,10 @@ namespace Pupil {
 		void OnImGuiRender();
 
 		void DrawEntityNode(const Entity& entity);
-		void DrawComponent();
+		void DrawComponents();
+
+	private:
+		void DrawVec3Control(const std::string& label, glm::vec3& value, float revalue = 0.0f, float columnWidth = 70.0f);
 
 	private:
 		Ref<Scene> m_Context;

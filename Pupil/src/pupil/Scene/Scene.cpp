@@ -24,6 +24,10 @@ namespace Pupil {
 		return { entity, &this->m_Registry };
 	}
 
+	void Scene::DeleteEntity(const Entity& entity) {
+		m_Registry.destroy(entity);
+	}
+
 	void Scene::OnUpdate(TimeStep ts) {
 
 		// Script
@@ -62,6 +66,7 @@ namespace Pupil {
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height) {
+		m_width = width, m_height = height;
 		auto view = m_Registry.view<CameraComponent>();
 		for (auto entity : view) {
 			auto& sceneCameraComp = view.get<CameraComponent>(entity);

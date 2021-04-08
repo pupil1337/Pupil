@@ -10,11 +10,12 @@ namespace Pupil {
 	class Scene {
 	public:
 		friend class ScenePanel;
-
+		
 		Scene();
 		~Scene();
 
 		Entity CreateEntity(const std::string& name = "Entity");
+		void DeleteEntity(const Entity& entity);
 
 		void OnUpdate(TimeStep ts);
 
@@ -22,7 +23,8 @@ namespace Pupil {
 
 	private:
 		entt::registry m_Registry;
-		
+		uint32_t m_width = 0, m_height = 0;
+
 	};
 	
 }

@@ -24,6 +24,7 @@ namespace Pupil {
 
 		void BlockEvent(bool block) { m_BlockEvent = block; }
 
+		void SetDarkThemeColor();
 	private:
 		float m_Time = 0.0f;
 		bool m_BlockEvent = false;
