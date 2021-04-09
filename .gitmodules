@@ -1,0 +1,3 @@
+[submodule "Pupil/vendor/yaml-cpp"]
+	path = Pupil/vendor/yaml-cpp
+	url = https://github.com/pupil1337/yaml-cpp

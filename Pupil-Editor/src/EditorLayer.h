@@ -3,6 +3,8 @@
 #include "Pupil.h"
 
 #include "ParticleSystem.h"
+#include "panel/ScenePanel.h"
+#include "pupil/Scene/SceneSerializer.h"
 
 namespace Pupil {
 

@@ -18,6 +18,8 @@ namespace Pupil {
 		void CalculateProjection();
 		void SetProjectionType(ProjectionType type) { m_ProjectionType = type; CalculateProjection(); }
 		ProjectionType GetProjectionType() { return m_ProjectionType; }
+		float GetAspectRatio() { return m_AspectRatio; }
+		void SetAspectRatio(float aspectRatio) { m_AspectRatio = aspectRatio; }
 
 		// Perspective
 		void SetPersepctive(float Fov, float Near, float Far);

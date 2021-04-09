@@ -10,7 +10,8 @@ namespace Pupil {
 	class Scene {
 	public:
 		friend class ScenePanel;
-		
+		friend class SceneSerializer;
+
 		Scene();
 		~Scene();
 

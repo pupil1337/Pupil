@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifdef _WIN32
 	#ifdef _WIN64
 		#define PP_PLATFORM_WINDOWS
@@ -48,6 +50,7 @@
 	#define PP_ENABLE_ASSERTS
 #endif
 
+#include "Log.h"
 #ifdef PP_ENABLE_ASSERTS
 	#define PP_ASSERT(x, ...) { if(!(x)) { PP_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
 	#define PP_CORE_ASSERT(x, ...) { if(!(x)) { PP_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }

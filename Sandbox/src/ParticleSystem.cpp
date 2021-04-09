@@ -1,4 +1,3 @@
-#include "pppch.h"
 #include "ParticleSystem.h"
 
 #include <random>

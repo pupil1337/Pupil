@@ -1,4 +1,3 @@
-#include "pppch.h"
 #include "EditorLayer.h"
 
 #include <imgui/imgui.h>
@@ -22,6 +21,7 @@ namespace Pupil {
 		m_Scene = std::make_shared<Scene>();
 		m_ScenePanel.SetScenePanel(m_Scene);
 
+#if 0
 		// Red Entity
 		m_RedEntity = m_Scene->CreateEntity("RedEntity");
 		m_RedEntity.AddComponent<TransformComponent>(glm::vec3(0.0f));
@@ -64,6 +64,7 @@ namespace Pupil {
 		m_ClipCamera.AddComponent<CameraComponent>().Primary = false;
 		m_ClipCamera.AddComponent<TransformComponent>(glm::vec3(0.0f));
 		m_ClipCamera.AddComponent<NativeScriptComponent>().Bind<ScriptCamera>();
+#endif
 
 		// ToDo
 		/*glm::mat4 model = glm::translate(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f });
@@ -158,7 +159,18 @@ namespace Pupil {
 		if (ImGui::BeginMenuBar()) {
 			if (ImGui::BeginMenu("File")) {
 
+				if (ImGui::MenuItem("Serialize")) {
+					SceneSerializer serializer(m_Scene);
+					serializer.Serialize("assets/scenes/pupil.yaml");
+				}
+
+				if (ImGui::MenuItem("DeSerialize")) {
+					SceneSerializer serializer(m_Scene);
+					PP_CORE_ASSERT(serializer.DeSerialize("assets/scenes/pupil.yaml"), "cant Deserialize assets/scenes/pupil.yaml");
+				}
+
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
+				
 				ImGui::EndMenu();
 			}
 

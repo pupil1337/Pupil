@@ -1,4 +1,3 @@
-#include "pppch.h"
 #include "ExampleLayer.h"
 
 #include <imgui/imgui.h>

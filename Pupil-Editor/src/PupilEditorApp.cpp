@@ -1,4 +1,3 @@
-#include "pppch.h"
 #include "Pupil.h"
 #include "pupil/Core/EntryPoint.h"
 
