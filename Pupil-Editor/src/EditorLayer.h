@@ -18,6 +18,12 @@ namespace Pupil {
 		virtual void OnUpdate(TimeStep ts) override;
 		virtual void OnImGuiRender() override;
 		virtual void OnEvent(Event& event) override;
+		
+	private:
+		bool OnKeyPressed(KeyPressedEvent& e);
+		void NewScene();
+		void OpenScene();
+		void SaveScene();
 
 	private:
 		Ref<Shader> m_Shader;

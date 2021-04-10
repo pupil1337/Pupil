@@ -9,6 +9,7 @@ namespace Pupil {
 
 	void Pupil::ScenePanel::SetScenePanel(const Ref<Scene>& scene) {
 		m_Context = scene;
+		m_EntitySelected = {};
 	}
 
 	void Pupil::ScenePanel::OnImGuiRender() {

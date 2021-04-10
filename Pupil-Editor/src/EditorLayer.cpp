@@ -5,6 +5,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "pupil/Utils/PlatformUtils.h"
+
 namespace Pupil {
 
 	EditorLayer::EditorLayer()
@@ -159,16 +161,9 @@ namespace Pupil {
 		if (ImGui::BeginMenuBar()) {
 			if (ImGui::BeginMenu("File")) {
 
-				if (ImGui::MenuItem("Serialize")) {
-					SceneSerializer serializer(m_Scene);
-					serializer.Serialize("assets/scenes/pupil.yaml");
-				}
-
-				if (ImGui::MenuItem("DeSerialize")) {
-					SceneSerializer serializer(m_Scene);
-					PP_CORE_ASSERT(serializer.DeSerialize("assets/scenes/pupil.yaml"), "cant Deserialize assets/scenes/pupil.yaml");
-				}
-
+				if (ImGui::MenuItem("New", "Ctrl + N")) NewScene();
+				if (ImGui::MenuItem("Open...", "Ctrl + O")) OpenScene();
+				if (ImGui::MenuItem("Save...", "Ctrl + S")) SaveScene();
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
 				
 				ImGui::EndMenu();
@@ -222,10 +217,63 @@ namespace Pupil {
 		ImGui::End();
 	}
 
+	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e) {
+		if (e.GetRepeatCount() > 0) return false;
+
+		bool control = Input::IsKeyPressed(PP_KEY_LEFT_CONTROL) | Input::IsKeyPressed(PP_KEY_RIGHT_CONTROL);
+		
+		switch (e.GetKeyCode()) {
+		case PP_KEY_N: {
+			if (control) NewScene();
+			break;
+		}
+		case PP_KEY_O: {
+			if (control) OpenScene();
+			break;
+		}
+		case PP_KEY_S: {
+			if (control) SaveScene();
+			break;
+		}
+		}
+
+		return false;
+	}
+
 	void EditorLayer::OnEvent(Event& event) {
 		PP_PROFILE_FUNCTION();
 
 		m_OrthoCameraController.OnEvent(event);
+
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<KeyPressedEvent>(PP_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
+	}
+
+	void EditorLayer::NewScene() {
+		m_Scene = std::make_shared<Scene>();
+		m_Scene->OnViewportResize(m_ViewportSize.x, m_ViewportSize.y);
+		m_ScenePanel.SetScenePanel(m_Scene);
+	}
+
+	void EditorLayer::OpenScene() {
+		std::string filePath = FileDialog::OpenFile("Pupil Scene (*.yaml)\0*.yaml\0");
+		if (!filePath.empty()) {
+			m_Scene = std::make_shared<Scene>();
+			m_Scene->OnViewportResize(m_ViewportSize.x, m_ViewportSize.y);
+			m_ScenePanel.SetScenePanel(m_Scene);
+
+			SceneSerializer serializer(m_Scene);
+			serializer.DeSerialize(filePath);
+		}
+	}
+
+	void EditorLayer::SaveScene() {
+		std::string filePath = FileDialog::SaveFile("Pupil Scene (*.yaml)\0*.yaml\0");
+		if (!filePath.empty()) {
+
+			SceneSerializer serializer(m_Scene);
+			serializer.Serialize(filePath);
+		}
 	}
 
 	void EditorLayer::OnDetach() {

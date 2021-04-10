@@ -55,7 +55,7 @@ namespace Pupil {
 		m_ZoomLevel = std::max(m_ZoomLevel, 0.125f);
 		m_Bounds = { -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
 		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
-		return true;
+		return false;
 	}
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizedEvent& e) {
@@ -65,7 +65,7 @@ namespace Pupil {
 			m_Bounds = { -m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel };
 			m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
 		}
-		return true;
+		return false;
 	}
 
 	void OrthographicCameraController::SetAspectRatio(float width, float height) {
