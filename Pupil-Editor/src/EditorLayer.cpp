@@ -1,11 +1,15 @@
 #include "EditorLayer.h"
 
-#include <imgui/imgui.h>
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <imgui/imgui.h>
+#include <ImGuizmo/ImGuizmo.h>
+
 #include "pupil/Utils/PlatformUtils.h"
+
+#include "pupil/Math/Math.h"
+
 
 namespace Pupil {
 
@@ -91,9 +95,9 @@ namespace Pupil {
 			}
 		}
 
-		{
+		{ 
 			Renderer2D::ResetStats();
-			m_Framebuffer->Bind();
+			m_Framebuffer->Bind(); 
 		}
 
 		{
@@ -101,10 +105,10 @@ namespace Pupil {
 
 			RenderCommand::SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 			RenderCommand::Clear();
-		}
+		}  
 
 		m_Scene->OnUpdate(ts);
-
+		    
 		m_Framebuffer->UnBind();
 	}
 
@@ -191,7 +195,7 @@ namespace Pupil {
 		ImGui::PlotLines("#FrameTime", m_FrameTimeGraph, 100, values_offset, "FrameTime (ms)", 0.0f, 200.0f, ImVec2(0, 100), 100);
 		ImGui::Text("FrameTime: %.2f (Fps: %d)", m_TimeStep.GetMilliSecond(), (int)(1.0f / m_TimeStep.GetSecond()));
 
-		ImGui::End();
+		ImGui::End();// end Settings
 
 		// Viewport
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
@@ -199,7 +203,7 @@ namespace Pupil {
 			// viewport size change
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
-		Application::Get().GetImGuiLayer().BlockEvent(!m_ViewportFocused || !m_ViewportHovered);
+		Application::Get().GetImGuiLayer().BlockEvent(!m_ViewportFocused && !m_ViewportHovered);
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		if (m_ViewportSize != *(glm::vec2*)&viewportPanelSize) {
 			m_ViewportSize = *(glm::vec2*)&viewportPanelSize;
@@ -211,10 +215,52 @@ namespace Pupil {
 			// show texture
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
-		ImGui::End();
+		
+			// Gizmos 必须在要画的framebuffer里面。
+		Entity selectedEntity = m_ScenePanel.GetSelectedEntity();
+		if (selectedEntity && m_GizmoType != -1) {
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+
+			float windowWidth = ImGui::GetWindowWidth();
+			float windowHeight = ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			// Camera
+			auto cameraEntity = m_Scene->GetPrimaryCamera();
+			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+			const glm::mat4& cameraProjection = camera.GetProjection();
+			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+			// Entity transform
+			auto& tc = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = tc.GetTransform();
+
+			// Snapping
+			bool snap = Input::IsKeyPressed(PP_KEY_LEFT_CONTROL);
+			float snapValue = 0.5f;
+			if (m_GizmoType == ImGuizmo::OPERATION::ROTATE) snapValue = 45.0f;
+			float snapValues[3] = { snapValue, snapValue, snapValue };
+
+			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+				(ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr,
+				snap ? snapValues : nullptr);
+
+			if (ImGuizmo::IsUsing()) {
+				glm::vec3 translation, rotation, scale;
+				Math::DecomposeTransform(transform, translation, rotation, scale);
+
+				glm::vec3 deltaRotation = rotation - tc.rotation;
+				tc.translation = translation;
+				tc.rotation = rotation;
+				tc.scale = scale;
+			}
+
+		}
+		ImGui::End();// end Viewport
 		ImGui::PopStyleVar();
 
-		ImGui::End();
+		ImGui::End();// end docking
 	}
 
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e) {
@@ -223,18 +269,35 @@ namespace Pupil {
 		bool control = Input::IsKeyPressed(PP_KEY_LEFT_CONTROL) | Input::IsKeyPressed(PP_KEY_RIGHT_CONTROL);
 		
 		switch (e.GetKeyCode()) {
-		case PP_KEY_N: {
-			if (control) NewScene();
-			break;
-		}
-		case PP_KEY_O: {
-			if (control) OpenScene();
-			break;
-		}
-		case PP_KEY_S: {
-			if (control) SaveScene();
-			break;
-		}
+			case PP_KEY_N: {
+				if (control) NewScene();
+				break;
+			}
+			case PP_KEY_O: {
+				if (control) OpenScene();
+				break;
+			}
+			case PP_KEY_S: {
+				if (control) SaveScene();
+				break;
+			}
+			// Gizmos
+			case PP_KEY_Q: {
+				if (!ImGuizmo::IsUsing()) m_GizmoType = -1;
+				break;
+			}
+			case PP_KEY_W: {
+				if (!ImGuizmo::IsUsing()) m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			}
+			case PP_KEY_E: {
+				if (!ImGuizmo::IsUsing()) m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			}
+			case PP_KEY_R: {
+				if (!ImGuizmo::IsUsing()) m_GizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
+			}
 		}
 
 		return false;
@@ -259,11 +322,11 @@ namespace Pupil {
 		std::string filePath = FileDialog::OpenFile("Pupil Scene (*.yaml)\0*.yaml\0");
 		if (!filePath.empty()) {
 			m_Scene = std::make_shared<Scene>();
-			m_Scene->OnViewportResize(m_ViewportSize.x, m_ViewportSize.y);
-			m_ScenePanel.SetScenePanel(m_Scene);
-
 			SceneSerializer serializer(m_Scene);
 			serializer.DeSerialize(filePath);
+
+			m_ScenePanel.SetScenePanel(m_Scene);
+			m_Scene->OnViewportResize(m_ViewportSize.x, m_ViewportSize.y);
 		}
 	}
 

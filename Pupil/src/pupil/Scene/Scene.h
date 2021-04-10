@@ -22,6 +22,8 @@ namespace Pupil {
 
 		void OnViewportResize(uint32_t width, uint32_t height);
 
+		Entity GetPrimaryCamera();
+
 	private:
 		entt::registry m_Registry;
 		uint32_t m_width = 0, m_height = 0;

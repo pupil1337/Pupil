@@ -76,4 +76,13 @@ namespace Pupil {
 		}
 	}
 
+	Entity Scene::GetPrimaryCamera() {
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto entity : view) {
+			const auto& camera = view.get<CameraComponent>(entity);
+			if (camera.Primary) return Entity{ entity, &this->m_Registry };
+		}
+		return Entity{ };
+	}
+
 }

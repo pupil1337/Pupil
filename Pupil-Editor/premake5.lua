@@ -18,7 +18,8 @@ project "Pupil-Editor"
 		"%{wks.location}/Pupil/vendor",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Entt}",
-		"%{IncludeDir.Imgui}"
+		"%{IncludeDir.Imgui}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links {

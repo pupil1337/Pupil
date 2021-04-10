@@ -1,7 +1,9 @@
 #pragma once
 #include "pupil/Core/Core.h"
 
-#include <glm/glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+
 #include "pupil/Scene/SceneCamera.h"
 #include "pupil/Scene/ScriptEntity.h"
 #include "pupil/Core/TimeStep.h"
@@ -27,12 +29,9 @@ namespace Pupil {
 					// translate
 			return glm::translate(glm::mat4(1.0f), translation)
 					// rotate
-				 * glm::rotate(glm::mat4(1.0f), glm::radians(rotation.x), { 1.0f, 0.0f, 0.0f })
-				 * glm::rotate(glm::mat4(1.0f), glm::radians(rotation.y), { 0.0f, 1.0f, 0.0f })
-				 * glm::rotate(glm::mat4(1.0f), glm::radians(rotation.z), { 0.0f, 0.0f, 1.0f })
+				 * glm::toMat4(glm::quat(rotation))
 					// scale
 				 * glm::scale(glm::mat4(1.0f), scale);
-				
 		}
 
 		/// data ///

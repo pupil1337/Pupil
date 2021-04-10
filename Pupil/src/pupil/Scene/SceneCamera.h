@@ -2,8 +2,8 @@
 #include "pupil/Core/Core.h"
 
 #include "pupil/Renderer/Camera.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Pupil {
 
@@ -19,7 +19,6 @@ namespace Pupil {
 		void SetProjectionType(ProjectionType type) { m_ProjectionType = type; CalculateProjection(); }
 		ProjectionType GetProjectionType() { return m_ProjectionType; }
 		float GetAspectRatio() { return m_AspectRatio; }
-		void SetAspectRatio(float aspectRatio) { m_AspectRatio = aspectRatio; }
 
 		// Perspective
 		void SetPersepctive(float Fov, float Near, float Far);

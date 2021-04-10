@@ -38,6 +38,7 @@ namespace Pupil {
 		bool m_PrimaryCamera = true;
 
 		ScenePanel m_ScenePanel;
+		int m_GizmoType = -1;
 
 		OrthographicCameraController m_OrthoCameraController;
 

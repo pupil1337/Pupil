@@ -171,7 +171,6 @@ namespace Pupil {
 					cc.Primary = cameraComponent["Primary"].as<bool>();
 					cc.FixAspectRatio = cameraComponent["FixAspectRatio"].as<bool>();
 					cc.Camera.SetProjectionType((SceneCamera::ProjectionType)cameraComponent["ProjectionType"].as<int>());
-					cc.Camera.SetAspectRatio(cameraComponent["AspectRatio"].as<float>());
 					cc.Camera.SetPerspectiveFOV(cameraComponent["PerspectiveFov"].as<float>());
 					cc.Camera.SetPerspectiveNear(cameraComponent["PerspectiveNear"].as<float>());
 					cc.Camera.SetPerspectiveFar(cameraComponent["PerspectiveFar"].as<float>());

@@ -1,0 +1,56 @@
+Scene: UnDefine Name
+Entities:
+  - EntityID: 2500698263
+    TagComponent:
+      Tag: square4
+    TransformComponent:
+      Translation: [0, -4, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ColorComponent:
+      Color: [0.67181468, 0.160820514, 0.160820514, 1]
+  - EntityID: 2500698263
+    TagComponent:
+      Tag: square3
+    TransformComponent:
+      Translation: [-4, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ColorComponent:
+      Color: [0.468075007, 0.876447856, 0.13874273, 1]
+  - EntityID: 2500698263
+    TagComponent:
+      Tag: square2
+    TransformComponent:
+      Translation: [3, 1, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ColorComponent:
+      Color: [0.0710633472, 0.493990511, 0.876447856, 1]
+  - EntityID: 2500698263
+    TagComponent:
+      Tag: square1
+    TransformComponent:
+      Translation: [-3, 3, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ColorComponent:
+      Color: [0.876601517, 0.891891897, 0.0998643413, 1]
+  - EntityID: 2500698263
+    TagComponent:
+      Tag: Camrea
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      ProjectionType: 1
+      Primary: true
+      FixAspectRatio: true
+      AspectRatio: 1.09859157
+      PerspectiveFov: 45
+      PerspectiveNear: 0.00999999978
+      PerspectiveFar: 1000
+      OrthographicSize: 10
+      OrthographicNear: -1
+      OrthographicFar: 1
