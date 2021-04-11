@@ -138,7 +138,7 @@ namespace Pupil {
 		ImGui::PopStyleVar();
 		
 		ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
-		if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight})) {
+		if (ImGui::Button("-", ImVec2{ lineHeight, lineHeight})) {
 			ImGui::OpenPopup("Edit Component");
 		}
 		bool deleted = false;
@@ -180,19 +180,32 @@ namespace Pupil {
 		}
 		if (ImGui::BeginPopup("Add Component")) {
 			if (ImGui::MenuItem("Transform")) {
-				m_EntitySelected.AddComponent<TransformComponent>();
+				if (!m_EntitySelected.HasComponent<TransformComponent>()) {
+					m_EntitySelected.AddComponent<TransformComponent>();
+				} else {
+					PP_CORE_WARN("this Entity already has the 'TransformComponent'");
+				}
 
 				ImGui::CloseCurrentPopup();
 			}
 
 			if (ImGui::MenuItem("Color")) {
-				m_EntitySelected.AddComponent<ColorComponent>();
+				if (!m_EntitySelected.HasComponent<ColorComponent>()) {
+					m_EntitySelected.AddComponent<ColorComponent>();
+				}
+				else {
+					PP_CORE_WARN("this Entity already has the 'TransformComponent'");
+				}
 
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("Camera")) {
-				m_EntitySelected.AddComponent<CameraComponent>();
-				m_Context->OnViewportResize(m_Context->m_width, m_Context->m_height);
+				if (!m_EntitySelected.HasComponent<CameraComponent>()) {
+					m_EntitySelected.AddComponent<CameraComponent>().Camera.SetViewportSize(m_Context->m_width, m_Context->m_height);
+				}
+				else {
+					PP_CORE_WARN("this Entity already has the 'TransformComponent'");
+				}
 
 				ImGui::CloseCurrentPopup();
 			}
@@ -205,7 +218,9 @@ namespace Pupil {
 		if (m_EntitySelected.HasComponent<TransformComponent>()) {
 			DrawComponet<TransformComponent>("Transform", m_EntitySelected, [&](auto& component) {
 				DrawVec3Control("position", component.translation);
-				DrawVec3Control("rotate", component.rotation);
+				glm::vec3 rotation = glm::degrees(component.rotation);
+				DrawVec3Control("rotate", rotation);
+				component.rotation = glm::radians(rotation);
 				DrawVec3Control("scale", component.scale, 1.0f);
 			});
 		}

@@ -4,6 +4,7 @@
 #include <entt.hpp>
 #include "pupil/Scene/Component.h"
 #include "pupil/Scene/Entity.h"
+#include "pupil/Renderer/EditorCamera.h"
 
 namespace Pupil {
 
@@ -18,7 +19,8 @@ namespace Pupil {
 		Entity CreateEntity(const std::string& name = "Entity");
 		void DeleteEntity(const Entity& entity);
 
-		void OnUpdate(TimeStep ts);
+		void OnUpdateRuntime(TimeStep ts);
+		void OnUpdateEditor(TimeStep ts, EditorCamera& editorCamera);
 
 		void OnViewportResize(uint32_t width, uint32_t height);
 

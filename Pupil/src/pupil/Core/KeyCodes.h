@@ -1,6 +1,7 @@
 #pragma once
 
 #ifdef PP_PLATFORM_WINDOWS
+
 	// From glfw3.h
 	#define PP_KEY_SPACE              32
 	#define PP_KEY_APOSTROPHE         39  /* ' */
@@ -52,7 +53,7 @@
 	#define PP_KEY_GRAVE_ACCENT       96  /* ` */
 	#define PP_KEY_WORLD_1            161 /* non-US #1 */
 	#define PP_KEY_WORLD_2            162 /* non-US #2 */
-	
+
 	/* Function keys */
 	#define PP_KEY_ESCAPE             256
 	#define PP_KEY_ENTER              257
@@ -124,4 +125,5 @@
 	#define PP_KEY_RIGHT_ALT          346
 	#define PP_KEY_RIGHT_SUPER        347
 	#define PP_KEY_MENU               348
+
 #endif

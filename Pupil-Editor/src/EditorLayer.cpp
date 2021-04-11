@@ -14,7 +14,7 @@
 namespace Pupil {
 
 	EditorLayer::EditorLayer()
-		: Layer("EditorLayer"), m_OrthoCameraController(1280.0f / 720.0f, true), m_Color({ 0.8f, 0.2f, 0.8f, 1.0f }) {
+		: Layer("EditorLayer"), m_OrthoCameraController(1280.0f / 720.0f, true) {
 		m_OrthoCameraController.m_Edit = true;
 	}
 
@@ -26,7 +26,7 @@ namespace Pupil {
 		// Scene
 		m_Scene = std::make_shared<Scene>();
 		m_ScenePanel.SetScenePanel(m_Scene);
-
+		m_EditorCamera = EditorCamera(45.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
 #if 0
 		// Red Entity
 		m_RedEntity = m_Scene->CreateEntity("RedEntity");
@@ -71,16 +71,6 @@ namespace Pupil {
 		m_ClipCamera.AddComponent<TransformComponent>(glm::vec3(0.0f));
 		m_ClipCamera.AddComponent<NativeScriptComponent>().Bind<ScriptCamera>();
 #endif
-
-		// ToDo
-		/*glm::mat4 model = glm::translate(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f });
-		PP_CORE_INFO("{0} {1} {2} {3}", model[0][0], model[0][1], model[0][2], model[0][3]);
-		PP_CORE_INFO("{0} {1} {2} {3}", model[1][0], model[1][1], model[1][2], model[1][3]);
-		PP_CORE_INFO("{0} {1} {2} {3}", model[2][0], model[2][1], model[2][2], model[2][3]);
-		PP_CORE_INFO("{0} {1} {2} {3}", model[3][0], model[3][1], model[3][2], model[3][3]);
-		glm::vec4 pos = { 1.0f, 1.0f, 0.0f, 1.0f };
-		pos = model * pos;
-		PP_CORE_WARN("{0} {1} {2} {3}", pos.x, pos.y, pos.z, pos.w);*/
 	}
 
 	void EditorLayer::OnUpdate(TimeStep ts) {
@@ -93,6 +83,7 @@ namespace Pupil {
 			if (m_ViewportFocused) {
 				m_OrthoCameraController.OnUpdate(ts);
 			}
+			m_EditorCamera.OnUpdate(ts);
 		}
 
 		{ 
@@ -107,7 +98,7 @@ namespace Pupil {
 			RenderCommand::Clear();
 		}  
 
-		m_Scene->OnUpdate(ts);
+		m_Scene->OnUpdateEditor(ts, m_EditorCamera);
 		    
 		m_Framebuffer->UnBind();
 	}
@@ -176,6 +167,10 @@ namespace Pupil {
 			ImGui::EndMenuBar();
 		}
 
+		///////////////////////////////////////////////////////
+		//////               Windows                     //////
+		///////////////////////////////////////////////////////
+
 		// ScenePanel
 		m_ScenePanel.OnImGuiRender();
 
@@ -210,6 +205,7 @@ namespace Pupil {
 			m_Framebuffer->Resize(m_ViewportSize.x, m_ViewportSize.y);
 			m_OrthoCameraController.SetAspectRatio(m_ViewportSize.x, m_ViewportSize.y);
 			m_Scene->OnViewportResize(m_ViewportSize.x, m_ViewportSize.y);
+			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 		}
 
 			// show texture
@@ -218,7 +214,7 @@ namespace Pupil {
 		
 			// Gizmos 必须在要画的framebuffer里面。
 		Entity selectedEntity = m_ScenePanel.GetSelectedEntity();
-		if (selectedEntity && m_GizmoType != -1) {
+		if (selectedEntity && m_GizmoType != -1 && selectedEntity.HasComponent<TransformComponent>()) {
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
 
@@ -227,10 +223,14 @@ namespace Pupil {
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
 			// Camera
-			auto cameraEntity = m_Scene->GetPrimaryCamera();
-			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
-			const glm::mat4& cameraProjection = camera.GetProjection();
-			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+			//auto cameraEntity = m_Scene->GetPrimaryCamera();
+			//const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+			//const glm::mat4& cameraProjection = camera.GetProjection();
+			//glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+			// Editor Camera
+			const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
+			glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
 
 			// Entity transform
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();
@@ -307,6 +307,7 @@ namespace Pupil {
 		PP_PROFILE_FUNCTION();
 
 		m_OrthoCameraController.OnEvent(event);
+		m_EditorCamera.OnEvent(event);
 
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<KeyPressedEvent>(PP_BIND_EVENT_FN(EditorLayer::OnKeyPressed));

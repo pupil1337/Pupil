@@ -126,6 +126,19 @@ namespace Pupil {
 		s_Data.TextureIndex = 1;
 	}
 
+	void Renderer2D::BeginScene(const EditorCamera& camera) {
+
+		glm::mat4 projectionView = camera.GetProjectionView();
+
+		s_Data.TextureShader->Bind();
+		s_Data.TextureShader->SetMat4("ProjectionView", projectionView);
+
+		s_Data.IndicesCount = 0;
+		s_Data.VertexBufferptr = s_Data.VertexBufferBase;
+
+		s_Data.TextureIndex = 1;
+	}
+
 	void Renderer2D::EndScene() {
 		PP_PROFILE_FUNCTION();
 

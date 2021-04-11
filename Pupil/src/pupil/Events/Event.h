@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pupil/Core/Core.h"
-
+#include <sstream>
 
 namespace Pupil {
 

@@ -9,7 +9,8 @@
 #include "pupil/Renderer/Texture.h"
 #include "pupil/Renderer/SubTexture2D.h"
 
-#include  "pupil/Renderer/Camera.h"
+#include "pupil/Renderer/Camera.h"
+#include "pupil/Renderer/EditorCamera.h"
 
 namespace Pupil {
 
@@ -19,6 +20,7 @@ namespace Pupil {
 
 		static void BeginScene(const OrthographicCamera& camera);// ToDo remove
 		static void BeginScene(const Camera& camera, const glm::mat4& transform);
+		static void BeginScene(const EditorCamera& camera);
 		static void EndScene();
 
 		static void Flush();

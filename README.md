@@ -1,6 +1,6 @@
 # Pupil  
 Pupil Engine 制作中。。。  
-following TheCherno!  
+following TheCherno! youtube.com/TheChernoProject  
 #### 第三方库：
 ##### UI: imgui https://github.com/ocornut/imgui  
 ##### ECS: entt https://github.com/skypjack/entt  

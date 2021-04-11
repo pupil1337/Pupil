@@ -133,11 +133,7 @@ namespace Pupil {
 	}
 
 	bool SceneSerializer::DeSerialize(const std::string& filePath) {
-		std::ifstream inFile(filePath);
-		std::stringstream strStream;
-		strStream << inFile.rdbuf();
-
-		YAML::Node data = YAML::Load(strStream.str());
+		YAML::Node data = YAML::LoadFile(filePath);
 		if (!data["Scene"]) return false;
 
 		std::string sceneName = data["Scene"].as<std::string>();

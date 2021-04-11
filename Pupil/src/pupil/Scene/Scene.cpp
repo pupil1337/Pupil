@@ -28,39 +28,54 @@ namespace Pupil {
 		m_Registry.destroy(entity);
 	}
 
-	void Scene::OnUpdate(TimeStep ts) {
+	void Scene::OnUpdateRuntime(TimeStep ts) {
+		if (!m_Registry.empty()) {
+			// Script
+			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc) {
+				if (!nsc.Instance) {
+					nsc.Instance = nsc.CreateNativeScriptComp();
+					nsc.Instance->entity = entity;
+					nsc.Instance->registry = &m_Registry;
+					nsc.Instance->OnCreate();
+				}
+				nsc.Instance->OnUpdate(ts);
+			});
 
-		// Script
-		m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc) {
-			if (!nsc.Instance) {
-				nsc.Instance = nsc.CreateNativeScriptComp();
-				nsc.Instance->entity = entity;
-				nsc.Instance->registry = &m_Registry;
-				nsc.Instance->OnCreate();
+			// GetCamera
+			Camera* camera = nullptr;
+			glm::mat4 transform = glm::mat4(1.0f);
+			auto group1 = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
+			for (auto entity : group1) {
+				auto [cameraComp, transComp] = group1.get<CameraComponent, TransformComponent>(entity);
+				if (cameraComp.Primary) {
+					camera = &cameraComp.Camera;
+					transform = transComp.GetTransform();
+					break;
+				}
 			}
-			nsc.Instance->OnUpdate(ts);
-		});
 
-		// GetCamera
-		Camera* camera = nullptr;
-		glm::mat4 transform = glm::mat4(1.0f);
-		auto group1 = m_Registry.group<CameraComponent>(entt::get<TransformComponent>);
-		for (auto entity : group1) {
-			auto [cameraComp, transComp] = group1.get<CameraComponent, TransformComponent>(entity);
-			if (cameraComp.Primary) {
-				camera = &cameraComp.Camera;
-				transform = transComp.GetTransform();
-				break;
+			if (camera) {
+				Renderer2D::BeginScene(*camera, transform);
+				auto group2 = m_Registry.group<TransformComponent>(entt::get<ColorComponent>);
+				for (auto entity : group2) {
+					auto [transformComp, colorComp] = group2.get<TransformComponent, ColorComponent>(entity);
+					Renderer2D::DrawQuad(transformComp.GetTransform(), colorComp.Color);
+				}
+				Renderer2D::EndScene();
 			}
 		}
+	}
 
-		if (camera) {
-			Renderer2D::BeginScene(*camera, transform);
-			auto group2 = m_Registry.group<TransformComponent>(entt::get<ColorComponent>);
-			for (auto entity : group2) {
-				auto [transformComp, colorComp] = group2.get<TransformComponent, ColorComponent>(entity);
+	void Scene::OnUpdateEditor(TimeStep ts, EditorCamera& editorCamera) {
+		if (!m_Registry.empty()) {
+			Renderer2D::BeginScene(editorCamera);
+
+			auto group = m_Registry.group<TransformComponent>(entt::get<ColorComponent>);
+			for (auto entity : group) {
+				auto [transformComp, colorComp] = group.get<TransformComponent, ColorComponent>(entity);
 				Renderer2D::DrawQuad(transformComp.GetTransform(), colorComp.Color);
 			}
+
 			Renderer2D::EndScene();
 		}
 	}
