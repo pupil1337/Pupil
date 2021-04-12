@@ -3,8 +3,34 @@
 
 namespace Pupil {
 
+	enum class FramebufferTextureFormt {
+		None = 0,
+		RGBA,
+		DEPTH32STENCIL8
+	};
+
+	struct FramebufferTextureSpecification {
+		FramebufferTextureSpecification() = default;
+		FramebufferTextureSpecification(FramebufferTextureFormt formt): TextureFormt(formt) { }
+
+		/// data ///
+		FramebufferTextureFormt TextureFormt = FramebufferTextureFormt::None;
+		// ToDo: wrap
+	};
+
+	struct FramebufferAttachmentSpecification {
+		FramebufferAttachmentSpecification() = default;
+		FramebufferAttachmentSpecification(std::initializer_list<FramebufferTextureSpecification> attachments): Attachments(attachments) { }
+
+		/// data ///
+		std::vector<FramebufferTextureSpecification> Attachments;
+	};
+
 	struct FramebufferSpecification {
+		
+		/// data ///
 		uint32_t Width, Height;
+		FramebufferAttachmentSpecification Attachments;
 	};
 
 	class Framebuffer {
@@ -16,7 +42,7 @@ namespace Pupil {
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 
-		virtual uint32_t GetColorAttachmentRendererID() const = 0;
+		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const = 0;
 		virtual uint32_t GetDepthAttachmentRendererID() const = 0;
 
 		static Ref<Framebuffer> Create(const FramebufferSpecification& spec);

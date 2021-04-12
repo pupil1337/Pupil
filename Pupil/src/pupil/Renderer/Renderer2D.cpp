@@ -49,16 +49,16 @@ namespace Pupil {
 
 		// ------------------------------------------------------------------
 		// VAO
-		s_Data.VertexArray = Pupil::VertexArray::Create();
+		s_Data.VertexArray = VertexArray::Create();
 
 		// VBO + VertexAttribPointer
-		s_Data.VertexBuffer = Pupil::VertexBuffer::Create(s_Data.MaxVertexs * sizeof(QuadVertex));
+		s_Data.VertexBuffer = VertexBuffer::Create(s_Data.MaxVertexs * sizeof(QuadVertex));
 		s_Data.VertexBuffer->SetLayout({
-			{ Pupil::ShaderDataType::Float3, "aPos"          },
-			{ Pupil::ShaderDataType::Float4, "aColor"        },
-			{ Pupil::ShaderDataType::Float2, "aTexCoord"     },
-			{ Pupil::ShaderDataType::Float , "aTexIndex"     },
-			{ Pupil::ShaderDataType::Float , "aTilingFactor" }
+			{ ShaderDataType::Float3, "aPos"          },
+			{ ShaderDataType::Float4, "aColor"        },
+			{ ShaderDataType::Float2, "aTexCoord"     },
+			{ ShaderDataType::Float , "aTexIndex"     },
+			{ ShaderDataType::Float , "aTilingFactor" }
 		});
 		s_Data.VertexArray->AddVertexBuffer(s_Data.VertexBuffer);
 
@@ -75,7 +75,7 @@ namespace Pupil {
 			indices[i + 5] = offset + 3;
 			offset += 4;
 		}
-		Pupil::Ref<Pupil::IndexBuffer> quadIBO = Pupil::IndexBuffer::Create(indices, s_Data.MaxIndexs);
+		Ref<IndexBuffer> quadIBO = IndexBuffer::Create(indices, s_Data.MaxIndexs);
 		s_Data.VertexArray->SetIndexBuffer(quadIBO);
 		delete[] indices;
 

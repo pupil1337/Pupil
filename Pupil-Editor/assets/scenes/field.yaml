@@ -1,0 +1,11 @@
+Scene: UnDefine Name
+Entities:
+  - EntityID: 2500698263
+    TagComponent:
+      Tag: Empty Entity
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ColorComponent:
+      Color: [0.745173752, 0.19276695, 0.19276695, 1]

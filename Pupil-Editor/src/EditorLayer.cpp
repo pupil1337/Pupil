@@ -21,7 +21,10 @@ namespace Pupil {
 	void EditorLayer::OnAttach() {
 		PP_PROFILE_FUNCTION();
 
-		m_Framebuffer = Framebuffer::Create({ 1280, 720 });
+		FramebufferSpecification spc;
+		spc.Width = 1280, spc.Height = 720;
+		spc.Attachments = { FramebufferTextureFormt::RGBA, FramebufferTextureFormt::RGBA, FramebufferTextureFormt::DEPTH32STENCIL8 };
+		m_Framebuffer = Framebuffer::Create(spc);
 
 		// Scene
 		m_Scene = std::make_shared<Scene>();
@@ -209,7 +212,7 @@ namespace Pupil {
 		}
 
 			// show texture
-		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID(1);
 		ImGui::Image((void*)textureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
 		
 			// Gizmos 必须在要画的framebuffer里面。
