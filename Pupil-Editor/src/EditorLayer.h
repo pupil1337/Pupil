@@ -22,6 +22,8 @@ namespace Pupil {
 		
 	private:
 		bool OnKeyPressed(KeyPressedEvent& e);
+		//bool OnMousePressed(MouseButtonPressedEvent& event);
+		void ViewportEvent();
 		void NewScene();
 		void OpenScene();
 		void SaveScene();
@@ -32,6 +34,7 @@ namespace Pupil {
 		
 		glm::vec2 m_ViewportSize;
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
+		glm::vec2 m_ViewportPos;
 
 		Ref<Scene> m_Scene;
 		ScenePanel m_ScenePanel;

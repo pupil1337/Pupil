@@ -20,7 +20,7 @@ namespace Pupil {
 		void DeleteEntity(const Entity& entity);
 
 		void OnUpdateRuntime(TimeStep ts);
-		void OnUpdateEditor(TimeStep ts, EditorCamera& editorCamera);
+		void OnUpdateEditor(Entity selectedEntity, EditorCamera& editorCamera);
 
 		void OnViewportResize(uint32_t width, uint32_t height);
 

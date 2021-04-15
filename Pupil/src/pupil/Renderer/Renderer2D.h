@@ -25,13 +25,16 @@ namespace Pupil {
 
 		static void Flush();
 
+		static void DrawQuad(int entityID, const glm::mat4& transform, const glm::vec4& color);
+		static void DrawLinear(const glm::mat4& transform, const EditorCamera& camera);
+
+		// ToDo¡ý¡ý¡ý Delete
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor = 1, const glm::vec4& tintColor = glm::vec4(1.0f));
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor = 1, const glm::vec4& tintColor = glm::vec4(1.0f));
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& subTexture, float tilingFactor = 1, const glm::vec4& tintColor = glm::vec4(1.0f));
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subTexture, float tilingFactor = 1, const glm::vec4& tintColor = glm::vec4(1.0f));
-		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
 		// todo     DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture)
 		// todo AndSoON...
 		static void DrawRotateQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color);
@@ -40,7 +43,7 @@ namespace Pupil {
 		static void DrawRotateQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor = 1, const glm::vec4& tintColor = glm::vec4(1.0f));
 		static void DrawRotateQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subTexture, float tilingFactor = 1, const glm::vec4& tintColor = glm::vec4(1.0f));
 		static void DrawRotateQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subTexture, float tilingFactor = 1, const glm::vec4& tintColor = glm::vec4(1.0f));
-
+		// ToDo¡ü¡ü¡ü Delete
 		// Stats
 		struct Statistics {
 			uint32_t DrawCalls = 0;

@@ -6,6 +6,7 @@ namespace Pupil {
 	enum class FramebufferTextureFormt {
 		None = 0,
 		RGBA,
+		RED_INT,
 		DEPTH32STENCIL8
 	};
 
@@ -41,6 +42,7 @@ namespace Pupil {
 		virtual void UnBind() const = 0;
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
+		virtual int ReadPixel(uint32_t attachmentID, int x, int y) = 0;
 
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const = 0;
 		virtual uint32_t GetDepthAttachmentRendererID() const = 0;

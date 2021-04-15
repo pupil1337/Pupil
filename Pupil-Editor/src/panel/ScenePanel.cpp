@@ -287,4 +287,12 @@ namespace Pupil {
 		}
 	}
 
+	void ScenePanel::SetSelectedEntity(int id) {
+		if (id >= 0 && m_Context->m_Registry.valid((entt::entity)(uint32_t)id)) {
+			m_EntitySelected = Entity{ (entt::entity)(uint32_t)id, &m_Context->m_Registry };
+		} else {
+			m_EntitySelected = { };
+		}
+	}
+
 }

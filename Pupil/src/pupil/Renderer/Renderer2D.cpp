@@ -6,9 +6,13 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 namespace Pupil {
 
 	struct QuadVertex {
+		float EntityID;
 		glm::vec3 Pos;
 		glm::vec4 Color;
 		glm::vec2 TexCoord;
@@ -54,6 +58,7 @@ namespace Pupil {
 		// VBO + VertexAttribPointer
 		s_Data.VertexBuffer = VertexBuffer::Create(s_Data.MaxVertexs * sizeof(QuadVertex));
 		s_Data.VertexBuffer->SetLayout({
+			{ ShaderDataType::Float , "aEntityID"     },
 			{ ShaderDataType::Float3, "aPos"          },
 			{ ShaderDataType::Float4, "aColor"        },
 			{ ShaderDataType::Float2, "aTexCoord"     },
@@ -166,6 +171,88 @@ namespace Pupil {
 
 		s_Data.TextureIndex = 1;
 	}
+
+	/// Draw Flat ///
+	void Renderer2D::DrawQuad(int entityID, const glm::mat4& transform, const glm::vec4& color) {
+		if (s_Data.IndicesCount >= s_Data.MaxIndexs) {
+			PP_CORE_INFO("IndicesCount > MaxIndexs, Reset Batch");
+			FlushAndReset();
+		}
+
+		constexpr glm::vec2 texCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f } , { 0.0f, 1.0f } };
+
+		glm::mat4 model = transform;
+
+		const int texIndex = 0; // whiteTexture
+		const float tilingFactor = 1.0f;
+
+		constexpr uint32_t quadVertexCount = 4;
+		for (uint32_t i = 0; i != quadVertexCount; ++i) {
+			s_Data.VertexBufferptr->EntityID = entityID;
+			s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[i];
+			s_Data.VertexBufferptr->Color = color;
+			s_Data.VertexBufferptr->TexCoord = texCoords[i];
+			s_Data.VertexBufferptr->TexIndex = texIndex;
+			s_Data.VertexBufferptr->TilingFactor = tilingFactor;
+
+			s_Data.VertexBufferptr++;
+		}
+
+		s_Data.IndicesCount += 6;
+
+		s_Data.Stats.QuadCounts++;
+	}
+
+	/// Draw Flat ///
+	static uint32_t quadVAO = 0;
+	static uint32_t quadVBO;
+	static Ref<Shader> linearShader;
+	void Renderer2D::DrawLinear(const glm::mat4& transform, const EditorCamera& camera) {
+		glm::mat4 model = transform;
+
+		if (quadVAO == 0) {
+			linearShader = Shader::Create("assets/shaders/Linear");
+			float quadVertices[] = {
+				// positions        // texture Coords
+				-0.5f,  0.5f, 0.0f,
+				-0.5f, -0.5f, 0.0f,
+				 0.5f,  0.5f, 0.0f,
+				 0.5f, -0.5f, 0.0f
+			};
+			// setup plane VAO
+			glGenVertexArrays(1, &quadVAO);
+			glGenBuffers(1, &quadVBO);
+			glBindVertexArray(quadVAO);
+			glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		}
+
+		linearShader->Bind();
+		linearShader->SetMat4("model", model);
+		linearShader->SetMat4("projectionView", camera.GetProjectionView());
+		
+		glBindVertexArray(quadVAO);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		
+		glBindVertexArray(0);
+	}
+
+	void Renderer2D::ResetStats() {
+		memset(&s_Data.Stats, 0, sizeof(s_Data.Stats));
+	}
+
+	Renderer2D::Statistics Renderer2D::GetStats() {
+		return s_Data.Stats;
+	}
+
+
+
+
+	//    ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
+	//    ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý        Delete!!!                          ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
+	//    ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
 
 	/// Draw Flat ///
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color) {
@@ -296,34 +383,6 @@ namespace Pupil {
 		s_Data.Stats.QuadCounts++;
 	}
 
-	/// Draw Flat ///
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color) {
-		if (s_Data.IndicesCount >= s_Data.MaxIndexs) {
-			PP_CORE_INFO("IndicesCount > MaxIndexs, Reset Batch");
-			FlushAndReset();
-		}
-
-		constexpr glm::vec2 texCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f } , { 0.0f, 1.0f } };
-
-		glm::mat4 model = transform;
-
-		const int texIndex = 0; // whiteTexture
-		const float tilingFactor = 1.0f;
-
-		constexpr uint32_t quadVertexCount = 4;
-		for (uint32_t i = 0; i != quadVertexCount; ++i) {
-			s_Data.VertexBufferptr->Pos = model * s_Data.VertexPosition[i];
-			s_Data.VertexBufferptr->Color = color;
-			s_Data.VertexBufferptr->TexCoord = texCoords[i];
-			s_Data.VertexBufferptr->TexIndex = texIndex;
-			s_Data.VertexBufferptr->TilingFactor = tilingFactor;
-			s_Data.VertexBufferptr++;
-		}
-
-		s_Data.IndicesCount += 6;
-
-		s_Data.Stats.QuadCounts++;
-	}
 
 	/// Draw Rotate Flat ///
 	void Renderer2D::DrawRotateQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color) {
@@ -455,14 +514,6 @@ namespace Pupil {
 		s_Data.IndicesCount += 6;
 
 		s_Data.Stats.QuadCounts++;
-	}
-
-	void Renderer2D::ResetStats() {
-		memset(&s_Data.Stats, 0, sizeof(s_Data.Stats));
-	}
-
-	Renderer2D::Statistics Renderer2D::GetStats() {
-		return s_Data.Stats;
 	}
 
 }

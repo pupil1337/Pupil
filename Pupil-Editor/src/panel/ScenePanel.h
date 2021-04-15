@@ -17,7 +17,8 @@ namespace Pupil {
 		void DrawEntityNode(const Entity& entity);
 		void DrawComponents();
 
-		Entity GetSelectedEntity() { return m_EntitySelected; }
+		const Entity& GetSelectedEntity() { return m_EntitySelected; }
+		void SetSelectedEntity(int id);
 
 	private:
 		void DrawVec3Control(const std::string& label, glm::vec3& value, float revalue = 0.0f, float columnWidth = 70.0f);

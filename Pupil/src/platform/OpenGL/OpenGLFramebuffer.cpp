@@ -66,6 +66,7 @@ namespace Pupil {
 			for (size_t i = 0; i != m_ColorTextureSpecifications.size(); ++i) {
 				switch (m_ColorTextureSpecifications[i].TextureFormt) {
 					case FramebufferTextureFormt::RGBA: CreateColorAttachment(i, GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, m_Specification.Width, m_Specification.Height); break;
+					case FramebufferTextureFormt::RED_INT: CreateColorAttachment(i, GL_R32I, GL_RED_INTEGER, GL_INT, m_Specification.Width, m_Specification.Height); break;
 				}
 			}
 		}
@@ -108,6 +109,17 @@ namespace Pupil {
 		m_Specification.Width = width > 0 ? width : 1;
 		m_Specification.Height = height > 0 ? height : 1;
 		Init();
+	}
+
+	int OpenGLFramebuffer::ReadPixel(uint32_t attachmentID, int x, int y) {
+		PP_CORE_ASSERT(attachmentID < m_ColorAttachments.size(), "have not this attachmentID");
+
+		Bind();// must!!!
+		glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentID);
+		int pixelData = -1;
+		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+		UnBind();
+		return pixelData;
 	}
 
 }

@@ -19,6 +19,7 @@ namespace Pupil {
 		virtual void UnBind() const override;
 
 		virtual void Resize(uint32_t width, uint32_t height) override;
+		virtual int ReadPixel(uint32_t attachmentID, int x, int y) override;
 
 		inline virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const override { return m_ColorAttachments[index]; };
 		inline virtual uint32_t GetDepthAttachmentRendererID() const override { return m_DepthAttachment; };

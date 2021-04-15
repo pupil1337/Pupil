@@ -23,7 +23,7 @@ namespace Pupil {
 
 		FramebufferSpecification spc;
 		spc.Width = 1280, spc.Height = 720;
-		spc.Attachments = { FramebufferTextureFormt::RGBA, FramebufferTextureFormt::RGBA, FramebufferTextureFormt::DEPTH32STENCIL8 };
+		spc.Attachments = { FramebufferTextureFormt::RGBA, FramebufferTextureFormt::RED_INT, FramebufferTextureFormt::DEPTH32STENCIL8 };
 		m_Framebuffer = Framebuffer::Create(spc);
 
 		// Scene
@@ -101,7 +101,7 @@ namespace Pupil {
 			RenderCommand::Clear();
 		}  
 
-		m_Scene->OnUpdateEditor(ts, m_EditorCamera);
+		m_Scene->OnUpdateEditor(m_ScenePanel.GetSelectedEntity(), m_EditorCamera);
 		    
 		m_Framebuffer->UnBind();
 	}
@@ -202,6 +202,7 @@ namespace Pupil {
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer().BlockEvent(!m_ViewportFocused && !m_ViewportHovered);
+		if (m_GizmoType == -1 && m_ViewportHovered && m_ViewportFocused && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) ViewportEvent();
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		if (m_ViewportSize != *(glm::vec2*)&viewportPanelSize) {
 			m_ViewportSize = *(glm::vec2*)&viewportPanelSize;
@@ -212,7 +213,7 @@ namespace Pupil {
 		}
 
 			// show texture
-		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID(1);
+		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID(0);
 		ImGui::Image((void*)textureID, viewportPanelSize, { 0, 1 }, { 1, 0 });
 		
 			// Gizmos 必须在要画的framebuffer里面。
@@ -224,12 +225,6 @@ namespace Pupil {
 			float windowWidth = ImGui::GetWindowWidth();
 			float windowHeight = ImGui::GetWindowHeight();
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-
-			// Camera
-			//auto cameraEntity = m_Scene->GetPrimaryCamera();
-			//const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
-			//const glm::mat4& cameraProjection = camera.GetProjection();
-			//glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
 
 			// Editor Camera
 			const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
@@ -306,6 +301,12 @@ namespace Pupil {
 		return false;
 	}
 
+	//bool EditorLayer::OnMousePressed(MouseButtonPressedEvent& event) {
+	//	
+	//
+	//	return false;
+	//}
+
 	void EditorLayer::OnEvent(Event& event) {
 		PP_PROFILE_FUNCTION();
 
@@ -314,6 +315,22 @@ namespace Pupil {
 
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<KeyPressedEvent>(PP_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
+		//dispatcher.Dispatch<MouseButtonPressedEvent>(PP_BIND_EVENT_FN(EditorLayer::OnMousePressed));
+	}
+
+	void EditorLayer::ViewportEvent() {
+		ImVec2 viewportPos = ImGui::GetWindowPos();
+		ImVec2 mousePos = ImGui::GetMousePos();
+		
+		int mx = mousePos.x - viewportPos.x;
+		int my = mousePos.y - viewportPos.y;
+
+		if (mx >= 0 && my >= 0 && mx <= m_ViewportSize.x && my <= m_ViewportSize.y) {
+			int id = m_Framebuffer->ReadPixel(1, mx, m_ViewportSize.y - my);
+			m_ScenePanel.SetSelectedEntity(id);
+			PP_CORE_INFO("entityID: {0}", id);
+		}
+
 	}
 
 	void EditorLayer::NewScene() {

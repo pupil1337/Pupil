@@ -5,6 +5,9 @@
 #include "pupil/Renderer/Renderer2D.h"
 #include "pupil/Renderer/Camera.h"
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 namespace Pupil {
 
 
@@ -59,24 +62,44 @@ namespace Pupil {
 				auto group2 = m_Registry.group<TransformComponent>(entt::get<ColorComponent>);
 				for (auto entity : group2) {
 					auto [transformComp, colorComp] = group2.get<TransformComponent, ColorComponent>(entity);
-					Renderer2D::DrawQuad(transformComp.GetTransform(), colorComp.Color);
+					Renderer2D::DrawQuad((int)entity, transformComp.GetTransform(), colorComp.Color);
 				}
 				Renderer2D::EndScene();
 			}
 		}
 	}
 
-	void Scene::OnUpdateEditor(TimeStep ts, EditorCamera& editorCamera) {
+	void Scene::OnUpdateEditor(Entity selectedEntity, EditorCamera& editorCamera) {
 		if (!m_Registry.empty()) {
 			Renderer2D::BeginScene(editorCamera);
-
+			glStencilMask(0x00);
 			auto group = m_Registry.group<TransformComponent>(entt::get<ColorComponent>);
 			for (auto entity : group) {
+				if (selectedEntity == entity) continue;
 				auto [transformComp, colorComp] = group.get<TransformComponent, ColorComponent>(entity);
-				Renderer2D::DrawQuad(transformComp.GetTransform(), colorComp.Color);
+				Renderer2D::DrawQuad((int)entity, transformComp.GetTransform(), colorComp.Color);
 			}
-
 			Renderer2D::EndScene();
+			
+			// ToDo fix
+			if (selectedEntity && selectedEntity.HasComponent<TransformComponent>() && selectedEntity.HasComponent<ColorComponent>()) {
+				auto& tc = selectedEntity.GetComponent<TransformComponent>();
+				auto& cc = selectedEntity.GetComponent<ColorComponent>();
+				glStencilFunc(GL_ALWAYS, 1, 0xFF);
+				glStencilMask(0xFF);
+				Renderer2D::BeginScene(editorCamera);
+				Renderer2D::DrawQuad((int)(uint32_t)selectedEntity, tc.GetTransform(), cc.Color);
+				Renderer2D::EndScene();
+				glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+				glStencilMask(0x00);
+				glDisable(GL_DEPTH_TEST);
+				tc.scale.x *= 1.08f, tc.scale.y *= 1.08f, tc.scale.z *= 1.08f;
+				Renderer2D::DrawLinear(tc.GetTransform(), editorCamera);
+				tc.scale.x /= 1.08f, tc.scale.y /= 1.08f, tc.scale.z /= 1.08f;
+				glStencilMask(0xFF);
+				glStencilFunc(GL_ALWAYS, 0, 0xFF);
+				glEnable(GL_DEPTH_TEST);
+			}
 		}
 	}
 

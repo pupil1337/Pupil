@@ -8,4 +8,13 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     ColorComponent:
-      Color: [0.745173752, 0.19276695, 0.19276695, 1]
+      Color: [0.795366764, 0.460637093, 0.460637093, 1]
+  - EntityID: 2500698263
+    TagComponent:
+      Tag: Empty Entity
+    TransformComponent:
+      Translation: [-1.09398198, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    ColorComponent:
+      Color: [1, 1, 1, 1]
